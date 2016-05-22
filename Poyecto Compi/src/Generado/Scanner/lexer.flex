@@ -33,10 +33,10 @@ import java_cup.runtime.*;
     }
 
     private Symbol symbol(int type) {
-        return new Symbol(type, yyline, yycolumn);
+        return new Symbol(type, yyline+1, yycolumn+1);
     }
     private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline, yycolumn, value);
+        return new Symbol(type, yyline+1, yycolumn+1, value);
     }
 %}
 
@@ -69,94 +69,94 @@ opDelimitadores ="("|")"|","|"."|":"|"\t"|"["|"]"|"{"|"}"
 
 
 <YYINITIAL> {
- \"\"\"                         { string.setLength(0); yybegin(COMENTARIOBLOQUE);}
- \'\'\'                         { string.setLength(0); yybegin(COMENTARIOBLOQUE2);}
- \"                             { string.setLength(0); cambioLinea = false; yybegin(MYSTRING); }
- {WhiteSpace}                   {/* ignore */}
- {Comentario}                   {/* ignore */}
- 0("b"|"B")                     {Binario}+ {lexeme=yytext(); return symbol(sym.INT);}
- 0("o"|"O")                     {Octal}+  {lexeme=yytext(); return symbol(sym.INT);}
- 0("x"|"X")                     {Hexadecimal}+  {lexeme=yytext(); return symbol(sym.INT);}
- {Numero}+({Letra}+{Numero}*)+ {lexeme = yytext(); return symbol(sym.ERROR);}
- {Numero}+ {lexeme=yytext(); return symbol(sym.INT);}
- ({Numero}+"."{Numero}+) {lexeme=yytext(); return symbol(sym.FLOAT);}
+    \"\"\"                         { string.setLength(0); yybegin(COMENTARIOBLOQUE);}
+    \'\'\'                         { string.setLength(0); yybegin(COMENTARIOBLOQUE2);}
+    \"                             { string.setLength(0); cambioLinea = false; yybegin(MYSTRING); }
+    {WhiteSpace}                   {/* ignore */}
+    {Comentario}                   {/* ignore */}
+    0("b"|"B")                     {Binario}+ {lexeme=yytext(); return symbol(sym.INT);}
+    0("o"|"O")                     {Octal}+  {lexeme=yytext(); return symbol(sym.INT);}
+    0("x"|"X")                     {Hexadecimal}+  {lexeme=yytext(); return symbol(sym.INT);}
+    {Numero}+({Letra}+{Numero}*)+ {lexeme = yytext(); return symbol(sym.ERROR);}
+    {Numero}+ {lexeme=yytext(); return symbol(sym.INT);}
+    ({Numero}+"."{Numero}+) {lexeme=yytext(); return symbol(sym.FLOAT);}
 
- \' {string.setLength(0); yybegin(MYCHAR);} 
+    \' {string.setLength(0); yybegin(MYCHAR);} 
 
 
 
-/* Operadores */
-{opAritmeticos}     {lexeme = yytext(); return symbol(sym.opAritmeticos);}
-{opComparadores}    {lexeme = yytext(); return symbol(sym.opComparadores);}
-{opLogicos}         {lexeme = yytext(); return symbol(sym.opLogicos);}
-{opBits}            {lexeme = yytext(); return symbol(sym.opBits);}
-{opAsignaciones}    {lexeme = yytext(); return symbol(sym.opAsignaciones);}
-{opDelimitadores}   {lexeme = yytext(); return symbol(sym.opDelimitadores);}
+   /* Operadores */
+   {opAritmeticos}     {lexeme = yytext(); return symbol(sym.opAritmeticos);}
+   {opComparadores}    {lexeme = yytext(); return symbol(sym.opComparadores);}
+   {opLogicos}         {lexeme = yytext(); return symbol(sym.opLogicos);}
+   {opBits}            {lexeme = yytext(); return symbol(sym.opBits);}
+   {opAsignaciones}    {lexeme = yytext(); return symbol(sym.opAsignaciones);}
+   {opDelimitadores}   {lexeme = yytext(); return symbol(sym.opDelimitadores);}
 
-/* Palabras reservadas */
-{PalabraRerservada} {lexeme = yytext(); return symbol(sym.PalabraReservada);}
+   /* Palabras reservadas */
+   {PalabraRerservada} {lexeme = yytext(); return symbol(sym.PalabraReservada);}
 
-{Letra}(({Letra}|{Numero})*({IdentificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR);} 
-{Letra}({Letra}|{Numero})* {lexeme=yytext(); return symbol(sym.Identificador);}
+   {Letra}(({Letra}|{Numero})*({IdentificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR);} 
+   {Letra}({Letra}|{Numero})* {lexeme=yytext(); return symbol(sym.Identificador);}
 
 }
 
 <MYCHAR> {
 
-\'                              {yybegin(YYINITIAL); lexeme = "'"+ string.toString()+"'"; 
-                                 if(string.length()>1)
-                                    return symbol(sym.ERROR);
-                                 else
-                                    return symbol(sym.CHAR);   }
-<<EOF>>                          { yybegin(YYINITIAL); lexeme = "Char sin terminar: " + string.toString(); return symbol(sym.ERROR);}
-\S                               { string.append( yytext() );}
-\s                               { string.append( yytext() );}
+    \'                              {yybegin(YYINITIAL); lexeme = "'"+ string.toString()+"'"; 
+                                     if(string.length()>1)
+                                        return symbol(sym.ERROR);
+                                     else
+                                        return symbol(sym.CHAR);   }
+    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Char sin terminar: " + string.toString(); return symbol(sym.ERROR);}
+    \S                               { string.append( yytext() );}
+    \s                               { string.append( yytext() );}
 
 
 }
 <MYSTRING> {
-  {LineTerminator}               { cambioLinea = true; string.append('\n');}
-  \"                             { yybegin(YYINITIAL);
-                                   lexeme = "\"" +string.toString()+"\"";
-                                   if(cambioLinea){
-                                        return symbol(sym.ERROR);
-                                   }else{
-                                        return symbol(sym.STRING);
-                                   }} /*Numero linea = adonde terminO*/
- <<EOF>>                         { yybegin(YYINITIAL); lexeme = "String sin terminar: " + string.toString(); return symbol(sym.ERROR);}
-  \t                             { string.append('\t'); } 
-  \u0020                         {string.append(' ');}
-  \\t                            { string.append('\t'); }
-  \\n                            { string.append('\n'); }
-  \\r                            { string.append('\r'); }
-  \\\"                           { string.append('\"'); }
-  \S                             { string.append( yytext() ); }
+    {LineTerminator}               { cambioLinea = true; string.append('\n');}
+    \"                             { yybegin(YYINITIAL);
+                                     lexeme = "\"" +string.toString()+"\"";
+                                     if(cambioLinea){
+                                          return symbol(sym.ERROR);
+                                     }else{
+                                          return symbol(sym.STRING);
+                                     }} /*Numero linea = adonde terminO*/
+   <<EOF>>                         { yybegin(YYINITIAL); lexeme = "String sin terminar: " + string.toString(); return symbol(sym.ERROR);}
+    \t                             { string.append('\t'); } 
+    \u0020                         {string.append(' ');}
+    \\t                            { string.append('\t'); }
+    \\n                            { string.append('\n'); }
+    \\r                            { string.append('\r'); }
+    \\\"                           { string.append('\"'); }
+    \S                             { string.append( yytext() ); }
 
 }
 
 <COMENTARIOBLOQUE> {
-  \"\"\"                           { yybegin(YYINITIAL);}
-  \S                               { string.append( yytext() ); }
-  <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Comentario de bloque sin terminar: " + "\"\"\"" + string.toString(); return symbol(sym.ERROR);}
-  \\t                              { string.append('\t'); }
-  \\n                              { string.append('\n'); }
-  \\r                              { string.append('\r'); }
-  \\\"                             { string.append('\"'); }
-  [ ]                              { string.append(' '); }
-  {LineTerminator}                 { string.append(yytext()); }
-  \s                               { string.append(yytext()); }
+    \"\"\"                           { yybegin(YYINITIAL);}
+    \S                               { string.append( yytext() ); }
+    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Comentario de bloque sin terminar: " + "\"\"\"" + string.toString(); return symbol(sym.ERROR);}
+    \\t                              { string.append('\t'); }
+    \\n                              { string.append('\n'); }
+    \\r                              { string.append('\r'); }
+    \\\"                             { string.append('\"'); }
+    [ ]                              { string.append(' '); }
+    {LineTerminator}                 { string.append(yytext()); }
+    \s                               { string.append(yytext()); }
 }
 <COMENTARIOBLOQUE2> {
-  \'\'\'                           { yybegin(YYINITIAL);}
-  \S                               { string.append( yytext() ); }
-  <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Comentario de bloque sin terminar: " + "\'\'\'" + string.toString(); return symbol(sym.ERROR);}
-  \\t                              { string.append('\t'); }
-  \\n                              { string.append('\n'); }
-  \\r                              { string.append('\r'); }
-  \\\"                             { string.append('\"'); }
-  [ ]                              { string.append(' '); }
-  {LineTerminator}                 { string.append(yytext()); }
-  \s                               { string.append(yytext()); }
+    \'\'\'                           { yybegin(YYINITIAL);}
+    \S                               { string.append( yytext() ); }
+    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Comentario de bloque sin terminar: " + "\'\'\'" + string.toString(); return symbol(sym.ERROR);}
+    \\t                              { string.append('\t'); }
+    \\n                              { string.append('\n'); }
+    \\r                              { string.append('\r'); }
+    \\\"                             { string.append('\"'); }
+    [ ]                              { string.append(' '); }
+    {LineTerminator}                 { string.append(yytext()); }
+    \s                               { string.append(yytext()); }
 }
 
 

@@ -421,10 +421,10 @@ public class Lexer implements java_cup.runtime.Scanner {
     }
 
     private Symbol symbol(int type) {
-        return new Symbol(type, yyline, yycolumn);
+        return new Symbol(type, yyline+1, yycolumn+1);
     }
     private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline, yycolumn, value);
+        return new Symbol(type, yyline+1, yycolumn+1, value);
     }
 
 
@@ -890,12 +890,12 @@ public class Lexer implements java_cup.runtime.Scanner {
           case 43: break;
           case 15: 
             { yybegin(YYINITIAL);
-                                   lexeme = "\"" +string.toString()+"\"";
-                                   if(cambioLinea){
-                                        return symbol(sym.ERROR);
-                                   }else{
-                                        return symbol(sym.STRING);
-                                   }
+                                     lexeme = "\"" +string.toString()+"\"";
+                                     if(cambioLinea){
+                                          return symbol(sym.ERROR);
+                                     }else{
+                                          return symbol(sym.STRING);
+                                     }
             }
           case 44: break;
           case 16: 
@@ -904,10 +904,10 @@ public class Lexer implements java_cup.runtime.Scanner {
           case 45: break;
           case 17: 
             { yybegin(YYINITIAL); lexeme = "'"+ string.toString()+"'"; 
-                                 if(string.length()>1)
-                                    return symbol(sym.ERROR);
-                                 else
-                                    return symbol(sym.CHAR);
+                                     if(string.length()>1)
+                                        return symbol(sym.ERROR);
+                                     else
+                                        return symbol(sym.CHAR);
             }
           case 46: break;
           case 18: 

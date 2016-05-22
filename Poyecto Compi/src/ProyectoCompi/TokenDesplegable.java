@@ -1,4 +1,4 @@
-package lexer;
+package ProyectoCompi;
 
 import java.util.ArrayList;
 

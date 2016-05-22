@@ -1,4 +1,4 @@
-package lexer;
+package ProyectoCompi;
 
 
 public class Linea {
