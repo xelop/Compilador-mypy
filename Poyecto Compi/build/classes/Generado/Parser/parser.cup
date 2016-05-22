@@ -1,0 +1,36 @@
+package Generado.Parser;
+import java_cup.runtime.*;
+parser code
+{:
+    /* metodo cuando hay un error */
+    public void syntax_error(Symbol s){
+        System.out.println("Error en la linea " + s.right + " Identificador: " + s.value + " no reconocido.");
+    }
+    /* error cuando no es posible recuperación de errores */
+    public void unrecovered_syntax_error(Symbol s){
+        System.out.println("Error en la linea " + s.right + " Identificador: " + s.value + " no reconocido.");
+    }
+:}
+action code
+{:
+:}
+/* Declaracion de terminales */
+terminal Identificador,PalabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
+
+/* Declaracion de no terminales */
+non terminal S, PROGRAMA, VARIABLE, FUNCION, DEFPARAMETROSINIT, DEFPARAMETROSVARIOS;
+
+precedence left opDelimitadores;
+
+/* inicio de gramatica */
+start with PROGRAMA;
+
+S::= PROGRAMA;
+PROGRAMA::= FUNCION {: System.out.println("Identificador"); :}
+| INT {: System.out.println("ebtero"); :};
+
+VARIABLE::= PalabraReservada Identificador;
+
+FUNCION::= PalabraReservada Identificador opDelimitadores DEFPARAMETROSINIT opDelimitadores;
+DEFPARAMETROSINIT::= PalabraReservada Identificador DEFPARAMETROSVARIOS | ;
+DEFPARAMETROSVARIOS::= opDelimitadores PalabraReservada Identificador DEFPARAMETROSVARIOS ;
