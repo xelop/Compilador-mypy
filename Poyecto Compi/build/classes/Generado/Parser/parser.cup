@@ -4,21 +4,25 @@ parser code
 {:
     /* metodo cuando hay un error */
     public void syntax_error(Symbol s){
-        System.out.println("Error en la linea " + s.right + " Identificador: " + s.value + " no reconocido.");
+        System.out.println("Error sintático en la linea " + s.right + ". Identificador: " + s.value + " no reconocido.");
     }
     /* error cuando no es posible recuperación de errores */
     public void unrecovered_syntax_error(Symbol s){
-        System.out.println("Error en la linea " + s.right + " Identificador: " + s.value + " no reconocido.");
+        
     }
 :}
 action code
 {:
 :}
 /* Declaracion de terminales */
-terminal Identificador,PalabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
+terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
+terminal var,clas;
+terminal dosPuntos;
 
 /* Declaracion de no terminales */
 non terminal S, PROGRAMA, VARIABLE, FUNCION, DEFPARAMETROSINIT, DEFPARAMETROSVARIOS;
+non terminal Variables;
+non terminal OOP;
 
 precedence left opDelimitadores;
 
@@ -26,11 +30,18 @@ precedence left opDelimitadores;
 start with PROGRAMA;
 
 S::= PROGRAMA;
-PROGRAMA::= FUNCION {: System.out.println("Identificador"); :}
-| INT {: System.out.println("ebtero"); :};
+PROGRAMA::= FUNCION {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo FUNCIONAL."); :}
+| OOP               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
+| ;
 
-VARIABLE::= PalabraReservada Identificador;
+VARIABLE::= var identificador;
 
-FUNCION::= PalabraReservada Identificador opDelimitadores DEFPARAMETROSINIT opDelimitadores;
-DEFPARAMETROSINIT::= PalabraReservada Identificador DEFPARAMETROSVARIOS | ;
-DEFPARAMETROSVARIOS::= opDelimitadores PalabraReservada Identificador DEFPARAMETROSVARIOS ;
+FUNCION::= palabraReservada identificador opDelimitadores DEFPARAMETROSINIT opDelimitadores; /* hay que hacerlo más específico */
+DEFPARAMETROSINIT::= palabraReservada identificador DEFPARAMETROSVARIOS | ;
+DEFPARAMETROSVARIOS::= opDelimitadores palabraReservada identificador DEFPARAMETROSVARIOS ; /* creo que esta no aterriza */
+
+
+/*-----------------------------------------------------------------------------------------*/
+Variables ::= VARIABLE Variables | ;
+
+OOP::= clas identificador dosPuntos Variables;

@@ -4,12 +4,19 @@ import java.io.IOException;
 
 public class PoyectoCompi {
 
+        public static Consola consola;
     public static void main(String[] args) throws IOException{
-        generarScanner();
+        consola = new Consola();
+        consola.setVisible(true);
         generarCup();
+        generarScanner();      
         ScannerController controllers = new ScannerController("Prueba.mypy");
+        consola.impirmir("Se procede a scannear:");
         controllers.Scan();
+        consola.impirmir("Análisis léxico terminado.");
         ParserController controller = new ParserController("Prueba.mypy");
+        consola.impirmir("\n");
+        consola.impirmir("Ahora se procede a parsear:");
         controller.parsear();
     }
     

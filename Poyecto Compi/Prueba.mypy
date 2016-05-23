@@ -1,1 +1,7 @@
-def hola()
+class caca    :
+	int caca
+	list caca
+	float caca
+	boolean caca
+	string caca
+	char caca

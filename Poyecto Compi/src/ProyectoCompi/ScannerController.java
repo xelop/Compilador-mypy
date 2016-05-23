@@ -35,13 +35,13 @@ public class ScannerController {
             }
             else{
                 switch(currentToken.sym){
-                    case 13:
-                        String error = "Error : " + lexer.lexeme + ". En la línea: " + (lexer.getLine()+1);
+                    case 14:
+                        String error = "Error Léxico: " + lexer.lexeme + ". En la línea: " + (lexer.getLine()+1);
                         errores.add(error);
                         break;
                     default:
                         
-                        createToken(lexer.lexeme, String.valueOf(currentToken.sym), lexer.getLine()+1); 
+                        createToken(currentToken.value.toString(), String.valueOf(currentToken.sym), lexer.getLine()+1); 
                         break;
                 }
             }
@@ -57,13 +57,13 @@ public class ScannerController {
         Collections.sort(tokens); 
         
         for(TokenDesplegable token: tokens)
-            System.out.println(token.toString());
+            ProyectoCompi.PoyectoCompi.consola.impirmir(token.toString());
         
     }
     
     private void printErrores(){
         for (String error: errores) {
-            System.out.println(error);
+            ProyectoCompi.PoyectoCompi.consola.impirmir(error);
         }
     }
     

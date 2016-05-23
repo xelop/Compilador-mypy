@@ -8,27 +8,30 @@ package Generado.Parser;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
+  public static final int clas = 17;
   public static final int INT = 4;
-  public static final int opAritmeticos = 8;
+  public static final int CHAR = 6;
   public static final int opComparadores = 9;
-  public static final int ERROR = 14;
-  public static final int EOF = 0;
-  public static final int STRING = 7;
-  public static final int opBits = 12;
-  public static final int opAsignaciones = 10;
-  public static final int Identificador = 2;
-  public static final int PalabraReservada = 3;
-  public static final int error = 1;
-  public static final int opLogicos = 13;
   public static final int opDelimitadores = 11;
   public static final int END = 15;
+  public static final int ERROR = 14;
+  public static final int opLogicos = 13;
+  public static final int opAsignaciones = 10;
+  public static final int STRING = 7;
+  public static final int opAritmeticos = 8;
   public static final int FLOAT = 5;
-  public static final int CHAR = 6;
+  public static final int EOF = 0;
+  public static final int palabraReservada = 3;
+  public static final int opBits = 12;
+  public static final int error = 1;
+  public static final int dosPuntos = 18;
+  public static final int var = 16;
+  public static final int identificador = 2;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "Identificador",
-  "PalabraReservada",
+  "identificador",
+  "palabraReservada",
   "INT",
   "FLOAT",
   "CHAR",
@@ -40,7 +43,10 @@ public class sym {
   "opBits",
   "opLogicos",
   "ERROR",
-  "END"
+  "END",
+  "var",
+  "clas",
+  "dosPuntos"
   };
 }
 
