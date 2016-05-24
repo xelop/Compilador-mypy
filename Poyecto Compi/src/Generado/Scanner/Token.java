@@ -17,10 +17,9 @@ public enum Token {
         rGlobal,rIf,rImport,rIn,rIs,rLambda,rNot,rOr,rPass,rPrint,rRaise,rReturn,rTry,rWhile,
         rInt,rFloat,rString,rList,rBool,//sera un python tipado*/
         PalabraReservada,
-        
     //Literales
         INT,FLOAT,CHAR,STRING,PRUEBA,
-        
+
     //ERROR
         ERROR
 }

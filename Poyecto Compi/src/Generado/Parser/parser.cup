@@ -1,47 +1,67 @@
 package Generado.Parser;
 import java_cup.runtime.*;
+import java.util.ArrayList;
 parser code
 {:
-    /* metodo cuando hay un error */
-    public void syntax_error(Symbol s){
-        System.out.println("Error sintático en la linea " + s.right + ". Identificador: " + s.value + " no reconocido.");
-    }
-    /* error cuando no es posible recuperación de errores */
-    public void unrecovered_syntax_error(Symbol s){
-        
-    }
+  public boolean syntaxErrors;
+
+  ArrayList<String> errores;
+
+  public Analizador(java_cup.runtime.Scanner s, boolean type) {
+    super(s);
+    errores = new ArrayList<String>();
+  }
+  
+  public void addError(String error){
+    errores.add(error);
+  }
+  public ArrayList<String> retornarLista(){
+    return errores;
+  }
+  public void syntax_error(Symbol s){
+  }
 :}
 action code
 {:
 :}
+
+/*----------------------------------------------------------------------*/
 /* Declaracion de terminales */
 terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
-terminal var,clas;
-terminal dosPuntos;
+
+terminal var,clas,def;
+
+/*Delimitadores*/
+terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma;
+
+/*--------------------------------------------------------------------------*/
 
 /* Declaracion de no terminales */
-non terminal S, PROGRAMA, VARIABLE, FUNCION, DEFPARAMETROSINIT, DEFPARAMETROSVARIOS;
+non terminal Programa, Variable;
+non terminal Funcional,Funcion,Funciones,FuncionesFact,ParametrosFact,Parametros;
 non terminal Variables;
 non terminal OOP;
 
 precedence left opDelimitadores;
 
 /* inicio de gramatica */
-start with PROGRAMA;
+start with Programa;
 
-S::= PROGRAMA;
-PROGRAMA::= FUNCION {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo FUNCIONAL."); :}
+Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
 | ;
 
-VARIABLE::= var identificador;
 
-FUNCION::= palabraReservada identificador opDelimitadores DEFPARAMETROSINIT opDelimitadores; /* hay que hacerlo más específico */
-DEFPARAMETROSINIT::= palabraReservada identificador DEFPARAMETROSVARIOS | ;
-DEFPARAMETROSVARIOS::= opDelimitadores palabraReservada identificador DEFPARAMETROSVARIOS ; /* creo que esta no aterriza */
+Funcional ::= FuncionesFact;
 
+FuncionesFact ::= Funcion Funciones;
+Funciones ::= Funcion Funciones | ;
+Funcion ::= def identificador parenAbierto ParametrosFact parenCerrado dosPuntos;
 
+ParametrosFact ::= Variable Parametros | ; /* si variable se inicializa en isma linea se debe cambiar */
+Parametros::= coma Variable  Parametros | ; 
 /*-----------------------------------------------------------------------------------------*/
-Variables ::= VARIABLE Variables | ;
+Variable::= var identificador | error:e        {: parser.addError("Falta Identificador en la linea:" + ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left); :};
+Variables ::= Variable Variables | ;
 
 OOP::= clas identificador dosPuntos Variables;

@@ -1,0 +1,2 @@
+En el funcional debe haber una funcion o puede no tener funciones.
+Se puede declarar variables e inicializarlas al mismo tiempo

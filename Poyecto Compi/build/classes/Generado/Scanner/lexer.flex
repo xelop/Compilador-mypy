@@ -56,8 +56,7 @@ ComentarioDeLinea = "#" {InputCharacter}* {LineTerminator}?
 ComentarioDeBloque = \"\"\"([\s\S]*)\"\"\"
 
 var = ("int"|"float"|"string"|"boolean"|"char"|"list")
-palabraRerservada = ("assert"|"break"|"class"|"continue"|"def"|"del"|"elif"|"else"|"except"|"exec"|"finally"|"for"|"from"|"global"|"if"|"import"|"in"|"is"|"lambda"|"pass"|"print"|"raise"|"return"|"try"|"while"|"None")
-
+palabraRerservada = ("assert"|"break"|"continue"|"del"|"elif"|"else"|"except"|"exec"|"finally"|"for"|"from"|"global"|"if"|"import"|"in"|"is"|"lambda"|"pass"|"print"|"raise"|"return"|"try"|"while"|"None")
 
 opAritmeticos = "+"|"-"|"*"|"/"|"//"|"%"|"**"
 opComparadores = "=="|"!="|"<>"|">"|"<"|">="|"<="
@@ -65,7 +64,7 @@ opLogicos = "and"|"or"|"not"
 opBits = ">>"|"<<"|"&"|"^"|"~"|\u007C
 opAsignaciones = "+="|"-="|"*="|"/="|"**="|"//="|"="
 opDelimitadores ="("|")"|","|"."|":"|"["|"]"|"{"|"}" /* ojo que ya no se va a usar el TAB*/
-
+opPuntoComa = ";"
 %%
 /* Comentarios y espacios en blanco son ignorados */
 
@@ -88,6 +87,10 @@ opDelimitadores ="("|")"|","|"."|":"|"["|"]"|"{"|"}" /* ojo que ya no se va a us
 
    /* Delimitadores */
    ":"                 {lexeme = yytext(); return symbol(sym.dosPuntos, lexeme);}
+   ";"                 {lexeme = yytext(); return symbol(sym.puntoComa, lexeme);}
+   "("                 {lexeme = yytext(); return symbol(sym.parenAbierto, lexeme);}
+   ")"                 {lexeme = yytext(); return symbol(sym.parenCerrado, lexeme);}
+   ","                 {lexeme = yytext(); return symbol(sym.coma, lexeme);}
 
    /* Operadores */
    {opAritmeticos}     {lexeme = yytext(); return symbol(sym.opAritmeticos, lexeme);}
@@ -101,6 +104,7 @@ opDelimitadores ="("|")"|","|"."|":"|"["|"]"|"{"|"}" /* ojo que ya no se va a us
    {var}               {lexeme = yytext(); return symbol(sym.var, lexeme);}
    "class"             {lexeme = yytext(); return symbol(sym.clas, lexeme);}
    {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
+   "def"               {lexeme = yytext(); return symbol(sym.def, lexeme);}
 
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 
    {Letra}({Letra}|{Numero})* {lexeme=yytext(); return symbol(sym.identificador, lexeme);}

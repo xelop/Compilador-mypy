@@ -1,6 +1,7 @@
 package ProyectoCompi;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class PoyectoCompi {
 
@@ -14,7 +15,7 @@ public class PoyectoCompi {
         consola.impirmir("Se procede a scannear:");
         controllers.Scan();
         consola.impirmir("Análisis léxico terminado.");
-        ParserController controller = new ParserController("Prueba.mypy");
+        ParserController controller = new ParserController("Prueba.mypy",consola);
         consola.impirmir("\n");
         consola.impirmir("Ahora se procede a parsear:");
         controller.parsear();
