@@ -15,6 +15,7 @@ parser code
   public void addError(String error){
     errores.add(error);
   }
+
   public ArrayList<String> retornarLista(){
     return errores;
   }
@@ -41,6 +42,8 @@ non terminal Programa, Variable;
 non terminal Funcional,Funcion,Funciones,FuncionesFact,ParametrosFact,Parametros;
 non terminal Variables;
 non terminal OOP;
+non terminal Clas;
+non terminal DosPuntos;
 
 precedence left opDelimitadores;
 
@@ -49,7 +52,8 @@ start with Programa;
 
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| ;
+| error:e {: parser.addError("Hubo algún error misterioso en la línea : " + ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left); :}
+; 
 
 
 Funcional ::= FuncionesFact;
@@ -61,7 +65,13 @@ Funcion ::= def identificador parenAbierto ParametrosFact parenCerrado dosPuntos
 ParametrosFact ::= Variable Parametros | ; /* si variable se inicializa en isma linea se debe cambiar */
 Parametros::= coma Variable  Parametros | ; 
 /*-----------------------------------------------------------------------------------------*/
-Variable::= var identificador | error:e        {: parser.addError("Falta Identificador en la linea:" + ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left); :};
+Variable::= var identificador | error:e        {: parser.addError("Falta Identificador en la linea: " + eleft); :};
 Variables ::= Variable Variables | ;
 
-OOP::= clas identificador dosPuntos Variables;
+OOP::= Clas identificador DosPuntos Variables;
+
+/*-----------------------------------------------------------------------------------------*/
+DosPuntos ::= dosPuntos | error:e        {: parser.addError("Error con ':'. en la línea: "  + eleft); :}
+;
+Clas ::= clas | error:e                  {: parser.addError("Se espera la palabra reservada 'class' en la línea: "  + eleft); :}
+;
