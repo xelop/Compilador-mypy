@@ -32,15 +32,15 @@ public class Analizador extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\033\000\002\002\004\000\002\002\003\000\002\002" +
+    "\000\034\000\002\002\004\000\002\002\003\000\002\002" +
     "\003\000\002\005\003\000\002\010\004\000\002\007\004" +
     "\000\002\007\002\000\002\006\010\000\002\011\004\000" +
     "\002\011\002\000\002\012\005\000\002\012\002\000\002" +
-    "\004\003\000\002\003\004\000\002\003\003\000\002\013" +
-    "\004\000\002\013\002\000\002\020\003\000\002\020\003" +
-    "\000\002\016\004\000\002\014\003\000\002\017\004\000" +
-    "\002\015\005\000\002\015\003\000\002\021\003\000\002" +
-    "\022\003\000\002\023\003" });
+    "\004\003\000\002\003\004\000\002\013\004\000\002\013" +
+    "\002\000\002\022\004\000\002\022\004\000\002\016\004" +
+    "\000\002\014\003\000\002\017\003\000\002\020\003\000" +
+    "\002\015\006\000\002\015\004\000\002\023\003\000\002" +
+    "\024\003\000\002\025\003\000\002\026\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -48,26 +48,30 @@ public class Analizador extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\044\000\010\003\011\023\014\024\004\001\002\000" +
-    "\004\004\031\001\002\000\004\002\uffff\001\002\000\006" +
-    "\003\uffea\026\uffea\001\002\000\004\002\000\001\002\000" +
-    "\004\002\uffed\001\002\000\006\003\uffe9\026\uffe9\001\002" +
-    "\000\004\002\030\001\002\000\004\002\ufffe\001\002\000" +
-    "\004\004\026\001\002\000\006\002\ufffb\024\004\001\002" +
-    "\000\006\003\017\026\021\001\002\000\004\002\uffe7\001" +
-    "\002\000\004\002\uffef\001\002\000\004\002\ufff0\001\002" +
-    "\000\004\002\uffec\001\002\000\006\002\ufffb\024\004\001" +
-    "\002\000\004\002\ufffd\001\002\000\004\002\ufffc\001\002" +
-    "\000\004\025\027\001\002\000\006\003\uffeb\026\uffeb\001" +
-    "\002\000\004\002\001\001\002\000\004\027\032\001\002" +
-    "\000\010\003\034\022\035\030\ufff8\001\002\000\006\030" +
-    "\ufff3\031\ufff3\001\002\000\006\030\uffe8\031\uffe8\001\002" +
-    "\000\004\004\046\001\002\000\006\030\ufff6\031\042\001" +
-    "\002\000\004\030\040\001\002\000\004\025\041\001\002" +
-    "\000\006\002\ufffa\024\ufffa\001\002\000\006\003\034\022" +
-    "\035\001\002\000\004\030\ufff9\001\002\000\006\030\ufff6" +
-    "\031\042\001\002\000\004\030\ufff7\001\002\000\006\030" +
-    "\ufff4\031\ufff4\001\002" });
+    "\000\051\000\010\003\011\023\016\024\004\001\002\000" +
+    "\004\004\042\001\002\000\004\002\uffff\001\002\000\010" +
+    "\003\ufff2\022\ufff2\026\ufff2\001\002\000\004\002\000\001" +
+    "\002\000\004\002\uffee\001\002\000\010\003\uffe9\022\uffe9" +
+    "\026\uffe9\001\002\000\004\002\uffed\001\002\000\004\002" +
+    "\040\001\002\000\004\002\ufffe\001\002\000\004\002\uffec" +
+    "\001\002\000\004\004\023\001\002\000\006\002\ufffb\024" +
+    "\004\001\002\000\006\002\ufffb\024\004\001\002\000\004" +
+    "\002\ufffd\001\002\000\004\002\ufffc\001\002\000\004\025" +
+    "\024\001\002\000\010\003\ufff2\022\ufff2\026\ufff2\001\002" +
+    "\000\004\002\uffeb\001\002\000\010\003\027\022\030\026" +
+    "\034\001\002\000\006\002\uffe7\022\uffe7\001\002\000\004" +
+    "\004\037\001\002\000\012\002\ufff3\003\ufff3\022\ufff3\026" +
+    "\ufff3\001\002\000\006\002\ufff2\022\ufff2\001\002\000\004" +
+    "\002\uffef\001\002\000\006\002\ufff2\022\ufff2\001\002\000" +
+    "\006\002\ufff1\022\030\001\002\000\006\002\ufff0\022\030" +
+    "\001\002\000\016\002\ufff4\003\ufff4\022\ufff4\026\ufff4\030" +
+    "\ufff4\031\ufff4\001\002\000\004\002\001\001\002\000\004" +
+    "\002\uffea\001\002\000\004\027\043\001\002\000\006\022" +
+    "\030\030\ufff8\001\002\000\006\030\ufff6\031\050\001\002" +
+    "\000\004\030\046\001\002\000\004\025\047\001\002\000" +
+    "\006\002\ufffa\024\ufffa\001\002\000\004\022\030\001\002" +
+    "\000\004\030\ufff9\001\002\000\006\030\ufff6\031\050\001" +
+    "\002\000\004\030\ufff7\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -75,21 +79,24 @@ public class Analizador extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\044\000\022\002\011\005\006\006\014\010\012\014" +
-    "\004\015\015\017\007\021\005\001\001\000\002\001\001" +
+    "\000\051\000\024\002\012\005\006\006\016\010\013\014" +
+    "\004\015\014\017\007\020\011\023\005\001\001\000\002" +
+    "\001\001\000\002\001\001\000\006\013\025\016\040\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\006\006\022\007\023\001" +
-    "\001\000\006\020\021\023\017\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\006\006\022\007\024\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\010\003\035\011\036\022\032" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\004\012\042\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\006\003\043\022\032\001" +
-    "\001\000\002\001\001\000\004\012\044\001\001\000\002" +
-    "\001\001\000\002\001\001" });
+    "\002\001\001\000\002\001\001\000\006\006\017\007\020" +
+    "\001\001\000\006\006\017\007\021\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\006\013\025" +
+    "\016\024\001\001\000\002\001\001\000\010\003\030\022" +
+    "\032\025\031\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\004\013\035\001\001\000\002\001" +
+    "\001\000\004\013\034\001\001\000\004\003\030\001\001" +
+    "\000\004\003\030\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\006\003\043" +
+    "\011\044\001\001\000\004\012\050\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\004\003\051" +
+    "\001\001\000\002\001\001\000\004\012\052\001\001\000" +
+    "\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -139,6 +146,7 @@ public class Analizador extends java_cup.runtime.lr_parser {
   
   public void addError(String error){
     errores.add(error);
+    /*ProyectoCompi.PoyectoCompi.consola.impirmir(error);*/
   }
 
   public ArrayList<String> retornarLista(){
@@ -147,12 +155,10 @@ public class Analizador extends java_cup.runtime.lr_parser {
   public void syntax_error(Symbol s){
     System.out.println("Error en la linea : " + s.left);
   }
-    /*public void unrecovered_syntax_error(Symbol s){ 
-    System.out.println("Error en la linea : " + s.left); 
-    }
-    public int  error_sync_size(){
-        return 2;
-    } */
+/*public void unrecovered_syntax_error(Symbol s){
+    System.out.println("Error en la linea : " + s.left);
+  }*/
+
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -314,16 +320,7 @@ class CUP$Analizador$actions {
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // Variable ::= errDecVariables 
-            {
-              Object RESULT =null;
-
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Variable",1, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
-            }
-          return CUP$Analizador$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 15: // Variables ::= Variable Variables 
+          case 14: // Variables ::= Variables Variable 
             {
               Object RESULT =null;
 
@@ -332,7 +329,7 @@ class CUP$Analizador$actions {
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // Variables ::= 
+          case 15: // Variables ::= 
             {
               Object RESULT =null;
 
@@ -341,25 +338,25 @@ class CUP$Analizador$actions {
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // PuntoComa ::= puntoComa 
+          case 16: // PuntoComa ::= puntoComa Variables 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("PuntoComa",14, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("PuntoComa",16, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // PuntoComa ::= errPuntoYComa 
+          case 17: // PuntoComa ::= errPuntoYComa Variables 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("PuntoComa",14, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("PuntoComa",16, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // VariablesOOP ::= Variable Variables 
+          case 18: // VariablesOOP ::= Variables PuntoComa 
             {
               Object RESULT =null;
 
@@ -368,7 +365,7 @@ class CUP$Analizador$actions {
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // OOP ::= Clase 
+          case 19: // OOP ::= Clase 
             {
               Object RESULT =null;
 
@@ -377,29 +374,38 @@ class CUP$Analizador$actions {
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // Clase ::= HeaderOOP PuntoComa 
+          case 20: // Clase ::= BloqueOOP 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Clase",13, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Clase",13, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 22: // HeaderOOP ::= clas identificador dosPuntos 
+          case 21: // BloqueOOP ::= HeaderOOP 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("HeaderOOP",11, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-2)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("BloqueOOP",14, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // HeaderOOP ::= errHeaderOOP 
+          case 22: // HeaderOOP ::= clas identificador dosPuntos VariablesOOP 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("HeaderOOP",11, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("HeaderOOP",11, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-3)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+            }
+          return CUP$Analizador$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 23: // HeaderOOP ::= errHeaderOOP VariablesOOP 
+            {
+              Object RESULT =null;
+
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("HeaderOOP",11, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
@@ -411,7 +417,7 @@ class CUP$Analizador$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
 		 parser.addError("Hay un error en el header del fuente de tipo OOP. Línea: "  + eleft+ ". Columna: " + eright); 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errHeaderOOP",15, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errHeaderOOP",17, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
@@ -423,7 +429,7 @@ class CUP$Analizador$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
 		 parser.addError("Hay un error al declarar variables. Línea: "  + eleft+ ". Columna: " + eright); 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errDecVariables",16, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errDecVariables",18, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
@@ -435,7 +441,19 @@ class CUP$Analizador$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
 		 parser.addError("Falto cerrar un bloque con ';'. Línea: "  + eleft+ ". Columna: " + eright); 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errPuntoYComa",17, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errPuntoYComa",19, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+            }
+          return CUP$Analizador$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 27: // errClase ::= error 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
+		 parser.addError("Hay un error en la clase. Línea: "  + eleft+ ". Columna: " + eright); 
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errClase",20, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
