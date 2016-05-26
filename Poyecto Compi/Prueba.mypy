@@ -1,13 +1,11 @@
 class caca:
-	intt d
-	int 
+	int t
+	int d
 	int c
-	int 
+	int d
 	int b
 	int v 
-=
-
-
+;
 	char x
-	char 
+	chart z
 	char z

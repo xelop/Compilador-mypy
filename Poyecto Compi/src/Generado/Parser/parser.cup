@@ -22,10 +22,14 @@ parser code
   }
   public void syntax_error(Symbol s){
     System.out.println("Error en la linea : " + s.value);
+   
   }
 /*public void unrecovered_syntax_error(Symbol s){
-    System.out.println("Error en la linea : " + s.value);
+    System.out.println("Error crítico en la linea : " + s.value);
   }*/
+protected int error_sync_size(){
+return 1;
+}
 
 :}
 action code
@@ -82,15 +86,15 @@ Parametros::= coma Variable  Parametros | ;
 CodigoPrincipal::=  identificador;
 /*-----------------------------------------------------------------------------------------*/
 
-Variable::= var identificador | errDecVariables Variables; 
+Variable::= var identificador | errDecVariables; 
 Variables ::= Variables Variable| ;
 
-PuntoComa ::= puntoComa Variables| errPuntoYComa Variables;
+PuntoComa ::= puntoComa| errPuntoYComa;
 /*----------------------------------------------------------------------------------------*/
 
 VariablesOOP ::= Variables PuntoComa;
 
-OOP ::= Clase;
+OOP ::= Clase Variables;
 Clase ::= BloqueOOP;
 BloqueOOP::= HeaderOOP;
 
