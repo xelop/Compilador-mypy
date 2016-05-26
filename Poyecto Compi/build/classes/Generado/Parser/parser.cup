@@ -21,10 +21,10 @@ parser code
     return errores;
   }
   public void syntax_error(Symbol s){
-    System.out.println("Error en la linea : " + s.left);
+    System.out.println("Error en la linea : " + s.value);
   }
 /*public void unrecovered_syntax_error(Symbol s){
-    System.out.println("Error en la linea : " + s.left);
+    System.out.println("Error en la linea : " + s.value);
   }*/
 
 :}
@@ -46,7 +46,7 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma;
 /* Declaracion de no terminales */
 non terminal Programa, Variable, CodigoPrincipal;
 non terminal Funcional,Funcion,Funciones,FuncionesFact,ParametrosFact,Parametros;
-non terminal Variables;
+non terminal Variables,VariableRec;
 
 /* Zona OOP */
 non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP;
@@ -58,7 +58,7 @@ non terminal PuntoComa;
 non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase;
 
 /*--------------------- Configuraciones -------------- */
-precedence left opDelimitadores;
+precedence left opDelimitadores,var;
 
 /* inicio de gramatica */
 start with Programa;
@@ -82,8 +82,9 @@ Parametros::= coma Variable  Parametros | ;
 CodigoPrincipal::=  identificador;
 /*-----------------------------------------------------------------------------------------*/
 
-Variable::= var identificador | error:e 
-Variables ::= Variables Variable | ;
+Variable::= var identificador | errDecVariables Variables; 
+Variables ::= Variables Variable| ;
+
 PuntoComa ::= puntoComa Variables| errPuntoYComa Variables;
 /*----------------------------------------------------------------------------------------*/
 

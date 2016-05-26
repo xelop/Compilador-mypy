@@ -22,7 +22,7 @@ public class PoyectoCompi {
     }
     
     public static void generarCup(){
-        String opciones[] = new String[5];
+        String opciones[] = new String[7];
         //Seleccionamos la opción de dirección de destino
         opciones[0] = "-destdir";
         //Le damos la dirección
@@ -31,8 +31,11 @@ public class PoyectoCompi {
         opciones[2] = "-parser";
         //Le damos el nombre que queremos que tenga
         opciones[3] = "Analizador";
+        opciones[4] = "-expect";
+        //Le damos el nombre que queremos que tenga
+        opciones[5] = "100";
         //Le decimos donde se encuentra el archivo .cup
-        opciones[4] = "src\\Generado\\Parser\\parser.cup";
+        opciones[6] = "src\\Generado\\Parser\\parser.cup";
         try {
             java_cup.Main.main(opciones);
         } catch (Exception e) {
