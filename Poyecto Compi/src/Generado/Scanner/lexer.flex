@@ -33,10 +33,10 @@ import java_cup.runtime.*;
     }
 
     private Symbol symbol(int type) {
-        return new Symbol(type, yyline+1, yyline+1);
+        return new Symbol(type, yyline+1, yycolumn+1);
     }
     private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline+1, yyline+1, value);
+        return new Symbol(type, yyline+1, yycolumn+1, value);
     }
 %}
 

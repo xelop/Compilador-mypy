@@ -20,7 +20,14 @@ parser code
     return errores;
   }
   public void syntax_error(Symbol s){
+    System.out.println("Error en la linea : " + s.left);
   }
+    /*public void unrecovered_syntax_error(Symbol s){ 
+    System.out.println("Error en la linea : " + s.left); 
+    }
+    public int  error_sync_size(){
+        return 2;
+    } */
 :}
 action code
 {:
@@ -38,21 +45,29 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma;
 /*--------------------------------------------------------------------------*/
 
 /* Declaracion de no terminales */
-non terminal Programa, Variable;
+non terminal Programa, Variable, CodigoPrincipal;
 non terminal Funcional,Funcion,Funciones,FuncionesFact,ParametrosFact,Parametros;
 non terminal Variables;
-non terminal OOP;
-non terminal Clas;
-non terminal DosPuntos;
 
+/* Zona OOP */
+non terminal OOP, HeaderOOP, VariablesOOP, Clase;
+
+/* Operadores*/
+non terminal PuntoComa;
+
+/**Errores**/
+non terminal errHeaderOOP, errDecVariables, errPuntoYComa;
+
+/*--------------------- Configuraciones -------------- */
 precedence left opDelimitadores;
 
 /* inicio de gramatica */
 start with Programa;
 
+
+/*----------------- Producciones ---------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| error:e {: parser.addError("Hubo algún error misterioso en la línea : " + ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left); :}
 ; 
 
 
@@ -64,14 +79,24 @@ Funcion ::= def identificador parenAbierto ParametrosFact parenCerrado dosPuntos
 
 ParametrosFact ::= Variable Parametros | ; /* si variable se inicializa en isma linea se debe cambiar */
 Parametros::= coma Variable  Parametros | ; 
+
+CodigoPrincipal::=  identificador;
 /*-----------------------------------------------------------------------------------------*/
-Variable::= var identificador | error:e        {: parser.addError("Falta Identificador en la linea: " + eleft); :};
+
+Variable::= var identificador| errDecVariables;
 Variables ::= Variable Variables | ;
+PuntoComa ::= puntoComa | errPuntoYComa;
+/*----------------------------------------------------------------------------------------*/
 
-OOP::= Clas identificador DosPuntos Variables;
+VariablesOOP ::= Variable Variables;
+OOP ::= Clase;
+Clase ::= HeaderOOP PuntoComa;
+HeaderOOP ::= clas identificador dosPuntos | errHeaderOOP;
 
 /*-----------------------------------------------------------------------------------------*/
-DosPuntos ::= dosPuntos | error:e        {: parser.addError("Error con ':'. en la línea: "  + eleft); :}
-;
-Clas ::= clas | error:e                  {: parser.addError("Se espera la palabra reservada 'class' en la línea: "  + eleft); :}
-;
+
+
+/* --- Errores personalizados --- */
+errHeaderOOP::= error:e       {: parser.addError("Hay un error en el header del fuente de tipo OOP. Línea: "  + eleft+ ". Columna: " + eright); :};
+errDecVariables::= error:e    {: parser.addError("Hay un error al declarar variables. Línea: "  + eleft+ ". Columna: " + eright); :};
+errPuntoYComa ::= error:e     {: parser.addError("Falto cerrar un bloque con ';'. Línea: "  + eleft+ ". Columna: " + eright); :};

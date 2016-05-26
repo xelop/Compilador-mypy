@@ -32,13 +32,15 @@ public class Analizador extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\026\000\002\002\004\000\002\002\003\000\002\002" +
-    "\003\000\002\002\003\000\002\004\003\000\002\007\004" +
-    "\000\002\006\004\000\002\006\002\000\002\005\010\000" +
-    "\002\010\004\000\002\010\002\000\002\011\005\000\002" +
-    "\011\002\000\002\003\004\000\002\003\003\000\002\012" +
-    "\004\000\002\012\002\000\002\013\006\000\002\015\003" +
-    "\000\002\015\003\000\002\014\003\000\002\014\003" });
+    "\000\033\000\002\002\004\000\002\002\003\000\002\002" +
+    "\003\000\002\005\003\000\002\010\004\000\002\007\004" +
+    "\000\002\007\002\000\002\006\010\000\002\011\004\000" +
+    "\002\011\002\000\002\012\005\000\002\012\002\000\002" +
+    "\004\003\000\002\003\004\000\002\003\003\000\002\013" +
+    "\004\000\002\013\002\000\002\020\003\000\002\020\003" +
+    "\000\002\016\004\000\002\014\003\000\002\017\004\000" +
+    "\002\015\005\000\002\015\003\000\002\021\003\000\002" +
+    "\022\003\000\002\023\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -46,27 +48,26 @@ public class Analizador extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\042\000\010\003\010\023\013\024\004\001\002\000" +
-    "\004\004\033\001\002\000\004\002\uffff\001\002\000\004" +
-    "\004\021\001\002\000\004\002\000\001\002\000\006\002" +
-    "\ufffe\004\uffec\001\002\000\004\002\020\001\002\000\004" +
-    "\002\ufffd\001\002\000\004\004\uffed\001\002\000\006\002" +
-    "\ufffa\024\004\001\002\000\006\002\ufffa\024\004\001\002" +
-    "\000\004\002\ufffc\001\002\000\004\002\ufffb\001\002\000" +
-    "\004\002\001\001\002\000\006\003\022\025\024\001\002" +
-    "\000\010\002\uffee\003\uffee\022\uffee\001\002\000\010\002" +
-    "\ufff1\003\025\022\026\001\002\000\010\002\uffef\003\uffef" +
-    "\022\uffef\001\002\000\014\002\ufff3\003\ufff3\022\ufff3\030" +
-    "\ufff3\031\ufff3\001\002\000\004\004\032\001\002\000\010" +
-    "\002\ufff1\003\025\022\026\001\002\000\004\002\ufff0\001" +
-    "\002\000\004\002\ufff2\001\002\000\014\002\ufff4\003\ufff4" +
-    "\022\ufff4\030\ufff4\031\ufff4\001\002\000\004\027\034\001" +
-    "\002\000\010\003\025\022\026\030\ufff7\001\002\000\006" +
-    "\030\ufff5\031\041\001\002\000\004\030\037\001\002\000" +
-    "\004\025\040\001\002\000\006\002\ufff9\024\ufff9\001\002" +
-    "\000\006\003\025\022\026\001\002\000\004\030\ufff8\001" +
-    "\002\000\006\030\ufff5\031\041\001\002\000\004\030\ufff6" +
-    "\001\002" });
+    "\000\044\000\010\003\011\023\014\024\004\001\002\000" +
+    "\004\004\031\001\002\000\004\002\uffff\001\002\000\006" +
+    "\003\uffea\026\uffea\001\002\000\004\002\000\001\002\000" +
+    "\004\002\uffed\001\002\000\006\003\uffe9\026\uffe9\001\002" +
+    "\000\004\002\030\001\002\000\004\002\ufffe\001\002\000" +
+    "\004\004\026\001\002\000\006\002\ufffb\024\004\001\002" +
+    "\000\006\003\017\026\021\001\002\000\004\002\uffe7\001" +
+    "\002\000\004\002\uffef\001\002\000\004\002\ufff0\001\002" +
+    "\000\004\002\uffec\001\002\000\006\002\ufffb\024\004\001" +
+    "\002\000\004\002\ufffd\001\002\000\004\002\ufffc\001\002" +
+    "\000\004\025\027\001\002\000\006\003\uffeb\026\uffeb\001" +
+    "\002\000\004\002\001\001\002\000\004\027\032\001\002" +
+    "\000\010\003\034\022\035\030\ufff8\001\002\000\006\030" +
+    "\ufff3\031\ufff3\001\002\000\006\030\uffe8\031\uffe8\001\002" +
+    "\000\004\004\046\001\002\000\006\030\ufff6\031\042\001" +
+    "\002\000\004\030\040\001\002\000\004\025\041\001\002" +
+    "\000\006\002\ufffa\024\ufffa\001\002\000\006\003\034\022" +
+    "\035\001\002\000\004\030\ufff9\001\002\000\006\030\ufff6" +
+    "\031\042\001\002\000\004\030\ufff7\001\002\000\006\030" +
+    "\ufff4\031\ufff4\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -74,20 +75,21 @@ public class Analizador extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\042\000\016\002\010\004\006\005\013\007\011\013" +
-    "\004\014\005\001\001\000\002\001\001\000\002\001\001" +
+    "\000\044\000\022\002\011\005\006\006\014\010\012\014" +
+    "\004\015\015\017\007\021\005\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\006" +
-    "\005\014\006\015\001\001\000\006\005\014\006\016\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\004\015\022\001\001\000\002\001\001\000\006\003" +
-    "\026\012\027\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\006\003\026\012\030\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\006\003\034\010\035\001\001\000\004\011" +
-    "\041\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\003\042\001\001\000\002\001\001\000" +
-    "\004\011\043\001\001\000\002\001\001" });
+    "\001\001\000\002\001\001\000\006\006\022\007\023\001" +
+    "\001\000\006\020\021\023\017\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\006\006\022\007\024\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\010\003\035\011\036\022\032" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\004\012\042\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\006\003\043\022\032\001" +
+    "\001\000\002\001\001\000\004\012\044\001\001\000\002" +
+    "\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -143,7 +145,14 @@ public class Analizador extends java_cup.runtime.lr_parser {
     return errores;
   }
   public void syntax_error(Symbol s){
+    System.out.println("Error en la linea : " + s.left);
   }
+    /*public void unrecovered_syntax_error(Symbol s){ 
+    System.out.println("Error en la linea : " + s.left); 
+    }
+    public int  error_sync_size(){
+        return 2;
+    } */
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -206,95 +215,92 @@ class CUP$Analizador$actions {
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // Programa ::= error 
+          case 3: // Funcional ::= FuncionesFact 
             {
               Object RESULT =null;
-		int eleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
-		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
-		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
-		 parser.addError("Hubo algún error misterioso en la línea : " + ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left); 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Programa",0, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Funcional",3, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // Funcional ::= FuncionesFact 
+          case 4: // FuncionesFact ::= Funcion Funciones 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Funcional",2, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("FuncionesFact",6, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // FuncionesFact ::= Funcion Funciones 
+          case 5: // Funciones ::= Funcion Funciones 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("FuncionesFact",5, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Funciones",5, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // Funciones ::= Funcion Funciones 
+          case 6: // Funciones ::= 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Funciones",4, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Funciones",5, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // Funciones ::= 
+          case 7: // Funcion ::= def identificador parenAbierto ParametrosFact parenCerrado dosPuntos 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Funciones",4, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Funcion",4, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-5)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // Funcion ::= def identificador parenAbierto ParametrosFact parenCerrado dosPuntos 
+          case 8: // ParametrosFact ::= Variable Parametros 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Funcion",3, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-5)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("ParametrosFact",7, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // ParametrosFact ::= Variable Parametros 
+          case 9: // ParametrosFact ::= 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("ParametrosFact",6, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("ParametrosFact",7, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // ParametrosFact ::= 
+          case 10: // Parametros ::= coma Variable Parametros 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("ParametrosFact",6, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Parametros",8, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-2)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // Parametros ::= coma Variable Parametros 
+          case 11: // Parametros ::= 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Parametros",7, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-2)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Parametros",8, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // Parametros ::= 
+          case 12: // CodigoPrincipal ::= identificador 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Parametros",7, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("CodigoPrincipal",2, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
@@ -308,13 +314,10 @@ class CUP$Analizador$actions {
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // Variable ::= error 
+          case 14: // Variable ::= errDecVariables 
             {
               Object RESULT =null;
-		int eleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
-		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
-		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
-		 parser.addError("Falta Identificador en la linea: " + eleft); 
+
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Variable",1, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -324,7 +327,7 @@ class CUP$Analizador$actions {
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Variables",8, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Variables",9, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
@@ -333,58 +336,106 @@ class CUP$Analizador$actions {
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Variables",8, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Variables",9, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // OOP ::= Clas identificador DosPuntos Variables 
+          case 17: // PuntoComa ::= puntoComa 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("OOP",9, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-3)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("PuntoComa",14, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // DosPuntos ::= dosPuntos 
+          case 18: // PuntoComa ::= errPuntoYComa 
             {
               Object RESULT =null;
 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("DosPuntos",11, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("PuntoComa",14, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // DosPuntos ::= error 
+          case 19: // VariablesOOP ::= Variable Variables 
+            {
+              Object RESULT =null;
+
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("VariablesOOP",12, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+            }
+          return CUP$Analizador$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 20: // OOP ::= Clase 
+            {
+              Object RESULT =null;
+
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("OOP",10, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+            }
+          return CUP$Analizador$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 21: // Clase ::= HeaderOOP PuntoComa 
+            {
+              Object RESULT =null;
+
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Clase",13, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+            }
+          return CUP$Analizador$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 22: // HeaderOOP ::= clas identificador dosPuntos 
+            {
+              Object RESULT =null;
+
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("HeaderOOP",11, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-2)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+            }
+          return CUP$Analizador$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 23: // HeaderOOP ::= errHeaderOOP 
+            {
+              Object RESULT =null;
+
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("HeaderOOP",11, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+            }
+          return CUP$Analizador$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 24: // errHeaderOOP ::= error 
             {
               Object RESULT =null;
 		int eleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
-		 parser.addError("Error con ':'. en la línea: "  + eleft); 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("DosPuntos",11, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+		 parser.addError("Hay un error en el header del fuente de tipo OOP. Línea: "  + eleft+ ". Columna: " + eright); 
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errHeaderOOP",15, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // Clas ::= clas 
-            {
-              Object RESULT =null;
-
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Clas",10, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
-            }
-          return CUP$Analizador$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // Clas ::= error 
+          case 25: // errDecVariables ::= error 
             {
               Object RESULT =null;
 		int eleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
-		 parser.addError("Se espera la palabra reservada 'class' en la línea: "  + eleft); 
-              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Clas",10, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+		 parser.addError("Hay un error al declarar variables. Línea: "  + eleft+ ". Columna: " + eright); 
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errDecVariables",16, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
+            }
+          return CUP$Analizador$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 26: // errPuntoYComa ::= error 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
+		 parser.addError("Falto cerrar un bloque con ';'. Línea: "  + eleft+ ". Columna: " + eright); 
+              CUP$Analizador$result = parser.getSymbolFactory().newSymbol("errPuntoYComa",17, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
 
