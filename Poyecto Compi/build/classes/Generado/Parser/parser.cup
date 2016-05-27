@@ -43,7 +43,7 @@ terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opC
 terminal var,clas,def;
 
 /*Delimitadores*/
-terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma;
+terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuadradoAbierto;
 
 /*--------------------------------------------------------------------------*/
 
@@ -59,7 +59,10 @@ non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP;
 non terminal PuntoComa;
 
 /**Errores**/
-non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase;
+non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion;
+
+/* Común para todos */
+non terminal Expresion,Literal,Lista,ElementosLista,MasElementosLista;
 
 /*--------------------- Configuraciones -------------- */
 precedence left opDelimitadores,var;
@@ -71,6 +74,7 @@ start with Programa;
 /*----------------- Producciones ---------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
+| Expresion           {: ProyectoCompi.PoyectoCompi.consola.impirmir("Expresion reconocida."); :}
 ; 
 
 
@@ -79,6 +83,7 @@ Funcional ::= FuncionesFact;
 FuncionesFact ::= Funcion Funciones;
 Funciones ::= Funcion Funciones | ;
 Funcion ::= def identificador parenAbierto ParametrosFact parenCerrado dosPuntos;
+/* mae creo que hay que hacer una diferencia entre función y declaración función. La diferencia es el def pero es que una funcion es una expresion y así la podemos usar en otro lado*/
 
 ParametrosFact ::= Variable Parametros | ; /* si variable se inicializa en isma linea se debe cambiar */
 Parametros::= coma Variable  Parametros | ; 
@@ -90,6 +95,14 @@ Variable::= var identificador | errDecVariables;
 Variables ::= Variables Variable| ;
 
 PuntoComa ::= puntoComa| errPuntoYComa;
+/*---------------------------------------------------------------------------------------*/
+Literal ::= INT|FLOAT|CHAR|STRING;
+Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
+ElementosLista::= Expresion MasElementosLista| ;
+MasElementosLista::= coma Expresion MasElementosLista | ;
+Expresion ::= Literal|Lista|identificador|errExpresion; /*solo un error general para expresiones */
+Expresion ::= Expresion opComparadores Expresion|Expresion opLogicos Expresion|Expresion opAritmeticos Expresion;
+/* hace falta que una llamada a una funcion. Ej: caca(2,3,"ad") sea una expresion
 /*----------------------------------------------------------------------------------------*/
 
 VariablesOOP ::= Variables PuntoComa;
@@ -111,3 +124,4 @@ errHeaderOOP::= error:e       {: parser.addError("Hay un error en el header del 
 errDecVariables::= error:e    {: parser.addError("Hay un error al declarar variables. Línea: "  + eleft+ ". Columna: " + eright); :};
 errPuntoYComa::= error:e      {: parser.addError("Falto cerrar un bloque con ';'. Línea: "  + eleft+ ". Columna: " + eright); :};
 errClase::= error:e           {: parser.addError("Hay un error en la clase. Línea: "  + eleft+ ". Columna: " + eright); :};
+errExpresion::= error:e       {: parser.addError("Hay un error en la expresión. Línea: "  + eleft+ ". Columna: " + eright); :};

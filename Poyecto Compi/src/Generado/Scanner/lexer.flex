@@ -90,6 +90,8 @@ opPuntoComa = ";"
    ";"                 {lexeme = yytext(); return symbol(sym.puntoComa, lexeme);}
    "("                 {lexeme = yytext(); return symbol(sym.parenAbierto, lexeme);}
    ")"                 {lexeme = yytext(); return symbol(sym.parenCerrado, lexeme);}
+   "["                 {lexeme = yytext(); return symbol(sym.cuadradoAbierto, lexeme);}
+   "]"                 {lexeme = yytext(); return symbol(sym.cuadradoCerrado, lexeme);}
    ","                 {lexeme = yytext(); return symbol(sym.coma, lexeme);}
 
    /* Operadores */

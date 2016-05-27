@@ -9,6 +9,7 @@ package Generado.Parser;
 public class sym {
   /* terminals */
   public static final int clas = 17;
+  public static final int cuadradoCerrado = 24;
   public static final int INT = 4;
   public static final int coma = 23;
   public static final int CHAR = 6;
@@ -27,6 +28,7 @@ public class sym {
   public static final int palabraReservada = 3;
   public static final int opBits = 12;
   public static final int error = 1;
+  public static final int cuadradoAbierto = 25;
   public static final int parenCerrado = 22;
   public static final int puntoComa = 20;
   public static final int dosPuntos = 19;
@@ -56,7 +58,9 @@ public class sym {
   "puntoComa",
   "parenAbierto",
   "parenCerrado",
-  "coma"
+  "coma",
+  "cuadradoCerrado",
+  "cuadradoAbierto"
   };
 }
 
