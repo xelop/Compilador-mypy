@@ -49,7 +49,7 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuad
 
 /* Declaracion de no terminales */
 non terminal Programa, Variable, CodigoPrincipal;
-non terminal Funcional,Funcion,Funciones,FuncionesFact,ParametrosFact,Parametros;
+non terminal Funcional,DefFuncion,DefFunciones,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros;
 non terminal Variables,VariableRec;
 
 /* Zona OOP */
@@ -78,15 +78,16 @@ Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo rea
 ; 
 
 
-Funcional ::= FuncionesFact;
+Funcional ::= DefFuncionesFact;
 
-FuncionesFact ::= Funcion Funciones;
-Funciones ::= Funcion Funciones | ;
-Funcion ::= def identificador parenAbierto ParametrosFact parenCerrado dosPuntos;
+DefFuncionesFact ::= DefFuncion DefFunciones;
+DefFunciones ::= DefFuncion DefFunciones | ;
+DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos;
+
 /* mae creo que hay que hacer una diferencia entre función y declaración función. La diferencia es el def pero es que una funcion es una expresion y así la podemos usar en otro lado*/
 
-ParametrosFact ::= Variable Parametros | ; /* si variable se inicializa en isma linea se debe cambiar */
-Parametros::= coma Variable  Parametros | ; 
+DefParametrosFact ::= Variable DefParametros | ; 
+DefParametros::= coma Variable  DefParametros | ; 
 
 CodigoPrincipal::=  identificador;
 /*-----------------------------------------------------------------------------------------*/
@@ -96,11 +97,15 @@ Variables ::= Variables Variable| ;
 
 PuntoComa ::= puntoComa| errPuntoYComa;
 /*---------------------------------------------------------------------------------------*/
+Funcion::= identificador parenAbierto Parametro parenCerrado;
+Parametros ::= Literal Parametro | ; 
+Parametro ::= coma Literal Parametro | ;
+
 Literal ::= INT|FLOAT|CHAR|STRING;
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
 ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
-Expresion ::= Literal|Lista|identificador|errExpresion; /*solo un error general para expresiones */
+Expresion ::= Literal|Lista|identificador|Funcion|errExpresion; /*solo un error general para expresiones */
 Expresion ::= Expresion opComparadores Expresion|Expresion opLogicos Expresion|Expresion opAritmeticos Expresion;
 /* hace falta que una llamada a una funcion. Ej: caca(2,3,"ad") sea una expresion
 /*----------------------------------------------------------------------------------------*/
