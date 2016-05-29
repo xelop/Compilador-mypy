@@ -56,14 +56,14 @@ ComentarioDeLinea = "#" {InputCharacter}* {LineTerminator}?
 ComentarioDeBloque = \"\"\"([\s\S]*)\"\"\"
 
 var = ("int"|"float"|"string"|"boolean"|"char"|"list")
-palabraRerservada = ("assert"|"break"|"continue"|"del"|"elif"|"else"|"except"|"exec"|"finally"|"for"|"from"|"global"|"if"|"import"|"in"|"is"|"lambda"|"pass"|"print"|"raise"|"return"|"try"|"while"|"None")
+palabraRerservada = ("assert"|"break"|"continue"|"del"|"except"|"exec"|"finally"|"for"|"from"|"global"|"import"|"in"|"is"|"lambda"|"pass"|"print"|"raise"|"return"|"try"|"while"|"None")
 
 opAritmeticos = "+"|"-"|"*"|"/"|"//"|"%"|"**"
 opComparadores = "=="|"!="|"<>"|">"|"<"|">="|"<="
 opLogicos = "and"|"or"|"not"
 opBits = ">>"|"<<"|"&"|"^"|"~"|\u007C
 opAsignaciones = "+="|"-="|"*="|"/="|"**="|"//="|"="
-opDelimitadores ="("|")"|","|"."|":"|"["|"]"|"{"|"}" /* ojo que ya no se va a usar el TAB*/
+opDelimitadores ="."|":"|"{"|"}" /* ojo que ya no se va a usar el TAB*/
 opPuntoComa = ";"
 %%
 /* Comentarios y espacios en blanco son ignorados */
@@ -107,8 +107,12 @@ opPuntoComa = ";"
    "class"             {lexeme = yytext(); return symbol(sym.clas, lexeme);}
    {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
    "def"               {lexeme = yytext(); return symbol(sym.def, lexeme);}
-   "False"             {lexeme = yytext(); return symbol(sym.False, lexeme);}
-   "True"              {lexeme = yytext(); return symbol(sym.True, lexeme);}    
+   "False"             {lexeme = yytext(); return symbol(sym.ffalse, lexeme);}
+   "True"              {lexeme = yytext(); return symbol(sym.ttrue, lexeme);}
+   "if"                {lexeme = yytext(); return symbol(sym.iif, lexeme);}
+   "else"             {lexeme = yytext(); return symbol(sym.eelse, lexeme);}
+   "elif"             {lexeme = yytext(); return symbol(sym.elif, lexeme);}
+    
 
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 
    {Letra}({Letra}|{Numero})* {lexeme=yytext(); return symbol(sym.identificador, lexeme);}

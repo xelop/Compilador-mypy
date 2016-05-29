@@ -40,7 +40,7 @@ action code
 /* Declaracion de terminales */
 terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
 
-terminal var,clas,def,False,True;
+terminal var,clas,def,ffalse,ttrue,iif,eelse,elif;
 
 /*Delimitadores*/
 terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuadradoAbierto;
@@ -51,15 +51,16 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuad
 non terminal Programa, Variable, CodigoPrincipal;
 non terminal Funcional,DefFuncion,DefFunciones,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros;
 non terminal Variables,VariableRec;
+non terminal Bloque, If, Else, Elif, Finif;
 
 /* Zona OOP */
 non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP;
 
 /* Operadores*/
-non terminal PuntoComa;
+non terminal PuntoComa,DosPuntos;
 
 /**Errores**/
-non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion;
+non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion, errIf;
 
 /* Común para todos */
 non terminal Expresion,Literal,Lista,ElementosLista,MasElementosLista;
@@ -74,7 +75,8 @@ start with Programa;
 /*----------------- Producciones ---------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| Expresion           {: ProyectoCompi.PoyectoCompi.consola.impirmir("Expresion reconocida."); :}
+| If                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("if reconocido"); :}
+| 
 ; 
 
 
@@ -96,10 +98,18 @@ Variable::= var identificador | errDecVariables;
 Variables ::= Variables Variable| ;
 
 PuntoComa ::= puntoComa| errPuntoYComa;
+DosPuntos ::= dosPuntos | errDecVariables;
 /*---------------------------------------------------------------------------------------*/
-Funcion::= identificador parenAbierto Parametro parenCerrado;
+Funcion::= identificador parenAbierto Parametros parenCerrado;
 Parametros ::= Literal Parametro | ; 
 Parametro ::= coma Literal Parametro | ;
+
+If ::= iif Expresion DosPuntos Elif Else PuntoComa | errIf; 
+Finif ::= PuntoComa;
+Else::= eelse Bloque | ;
+Elif ::= elif Expresion dosPuntos Bloque Elif | ;
+
+Bloque ::=  ;
 
 Literal ::= INT|FLOAT|CHAR|STRING;
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
@@ -107,8 +117,7 @@ ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
 Expresion ::= Literal|Lista|identificador|Funcion
         | parenAbierto Expresion parenCerrado |
-        | False | True | errExpresion; /*solo un error general para expresiones */
-Expresion ::= Expresion opComparadores Expresion|Expresion opLogicos Expresion|Expresion opAritmeticos Expresion;
+        | ffalse | ttrue | errExpresion; /*solo un error general para expresiones */
 
 /*----------------------------------------------------------------------------------------*/
 
@@ -118,7 +127,7 @@ OOP ::= Clase Variables;
 Clase ::= BloqueOOP;
 BloqueOOP::= HeaderOOP;
 
-HeaderOOP ::= clas identificador dosPuntos VariablesOOP| errHeaderOOP VariablesOOP;
+HeaderOOP ::= clas identificador dosPuntos VariablesOOP| clas errHeaderOOP VariablesOOP;
 
 
 
@@ -132,3 +141,4 @@ errDecVariables::= error:e    {: parser.addError("Hay un error al declarar varia
 errPuntoYComa::= error:e      {: parser.addError("Falto cerrar un bloque con ';'. Línea: "  + eleft+ ". Columna: " + eright); :};
 errClase::= error:e           {: parser.addError("Hay un error en la clase. Línea: "  + eleft+ ". Columna: " + eright); :};
 errExpresion::= error:e       {: parser.addError("Hay un error en la expresión. Línea: "  + eleft+ ". Columna: " + eright); :};
+errIf::= error:e              {: parser.addError("Hay un error en el if. Línea: "  + eleft+ ". Columna: " + eright); :};
