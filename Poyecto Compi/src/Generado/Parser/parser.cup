@@ -105,7 +105,7 @@ Literal ::= INT|FLOAT|CHAR|STRING;
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
 ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
-Expresion ::= Literal|Lista|identificador|Funcion|errExpresion; /*solo un error general para expresiones */
+Expresion ::= Literal|Lista|identificador|Funcion|errExpresion| parenAbierto Expresion parenCerrado; /*solo un error general para expresiones */
 Expresion ::= Expresion opComparadores Expresion|Expresion opLogicos Expresion|Expresion opAritmeticos Expresion;
 /* hace falta que una llamada a una funcion. Ej: caca(2,3,"ad") sea una expresion
 /*----------------------------------------------------------------------------------------*/
