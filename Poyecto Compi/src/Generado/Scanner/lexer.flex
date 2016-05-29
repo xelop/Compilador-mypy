@@ -107,6 +107,8 @@ opPuntoComa = ";"
    "class"             {lexeme = yytext(); return symbol(sym.clas, lexeme);}
    {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
    "def"               {lexeme = yytext(); return symbol(sym.def, lexeme);}
+   "False"             {lexeme = yytext(); return symbol(sym.False, lexeme);}
+   "True"              {lexeme = yytext(); return symbol(sym.True, lexeme);}    
 
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 
    {Letra}({Letra}|{Numero})* {lexeme=yytext(); return symbol(sym.identificador, lexeme);}

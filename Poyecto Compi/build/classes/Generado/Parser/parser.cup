@@ -40,7 +40,7 @@ action code
 /* Declaracion de terminales */
 terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
 
-terminal var,clas,def;
+terminal var,clas,def,False,True;
 
 /*Delimitadores*/
 terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuadradoAbierto;
@@ -105,9 +105,11 @@ Literal ::= INT|FLOAT|CHAR|STRING;
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
 ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
-Expresion ::= Literal|Lista|identificador|Funcion|errExpresion| parenAbierto Expresion parenCerrado; /*solo un error general para expresiones */
+Expresion ::= Literal|Lista|identificador|Funcion
+        | parenAbierto Expresion parenCerrado |
+        | False | True | errExpresion; /*solo un error general para expresiones */
 Expresion ::= Expresion opComparadores Expresion|Expresion opLogicos Expresion|Expresion opAritmeticos Expresion;
-/* hace falta que una llamada a una funcion. Ej: caca(2,3,"ad") sea una expresion
+
 /*----------------------------------------------------------------------------------------*/
 
 VariablesOOP ::= Variables PuntoComa;

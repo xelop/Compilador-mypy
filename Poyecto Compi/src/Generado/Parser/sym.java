@@ -9,17 +9,19 @@ package Generado.Parser;
 public class sym {
   /* terminals */
   public static final int clas = 17;
-  public static final int cuadradoCerrado = 24;
+  public static final int cuadradoCerrado = 26;
   public static final int INT = 4;
-  public static final int coma = 23;
+  public static final int coma = 25;
   public static final int CHAR = 6;
   public static final int opComparadores = 9;
+  public static final int True = 20;
   public static final int opDelimitadores = 11;
   public static final int END = 15;
   public static final int ERROR = 14;
   public static final int opLogicos = 13;
   public static final int opAsignaciones = 10;
-  public static final int parenAbierto = 21;
+  public static final int parenAbierto = 23;
+  public static final int False = 19;
   public static final int STRING = 7;
   public static final int opAritmeticos = 8;
   public static final int def = 18;
@@ -28,10 +30,10 @@ public class sym {
   public static final int palabraReservada = 3;
   public static final int opBits = 12;
   public static final int error = 1;
-  public static final int cuadradoAbierto = 25;
-  public static final int parenCerrado = 22;
-  public static final int puntoComa = 20;
-  public static final int dosPuntos = 19;
+  public static final int cuadradoAbierto = 27;
+  public static final int parenCerrado = 24;
+  public static final int puntoComa = 22;
+  public static final int dosPuntos = 21;
   public static final int var = 16;
   public static final int identificador = 2;
   public static final String[] terminalNames = new String[] {
@@ -54,6 +56,8 @@ public class sym {
   "var",
   "clas",
   "def",
+  "False",
+  "True",
   "dosPuntos",
   "puntoComa",
   "parenAbierto",
