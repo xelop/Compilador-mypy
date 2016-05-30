@@ -1,3 +1,15 @@
-while 5: ;
-while (x>5) : ;
-else ;
+2 + 2
+ []
+ [["hola"],[identificador]]
+ (a<=3)and(b==4)
+ 2 and 8
+ -3
+ not []
+ 2 + 3 * 4
+ True + False
+("string" * 4) // (id or (not True))
+funcion(2,4,[lista],identificador)
+ 'c'
+""" las siguientes son errores """
+b += 2
+(("string") * 4) (//) id or True

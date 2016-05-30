@@ -28,7 +28,7 @@ parser code
     System.out.println("Error crítico en la linea : " + s.value);
   }*/
 protected int error_sync_size(){
-return 1;
+    return 1;
 }
 
 :}
@@ -44,6 +44,9 @@ terminal var,clas,def,ffalse,ttrue,iif,eelse,elif;
 
 terminal ffor,in,range,wwhile;
 
+/* operadores */
+terminal opSuma, opResta, opMultiplicacion, opDivision, opDivisionE,opModulo,opPotencia;
+terminal opAnd, opOr, opNot;
 
 /*Delimitadores*/
 terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuadradoAbierto;
@@ -66,19 +69,20 @@ non terminal PuntoComa,DosPuntos;
 non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion, errIf;
 
 /* Común para todos */
-non terminal Expresion,Literal,Lista,ElementosLista,MasElementosLista;
+non terminal Expresion,Literal,Lista,ElementosLista,MasElementosLista, Expresiones;
+non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario;
 
-/*--------------------- Configuraciones -------------- */
+/*--------------------- Configuraciones --------------------------------------- */
 precedence left opDelimitadores,var;
 
 /* inicio de gramatica */
 start with Programa;
 
 
-/*----------------- Producciones ---------------------- */
+/*----------------- Producciones ----------------------------------------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| Bloque             {: ProyectoCompi.PoyectoCompi.consola.impirmir("while reconocido"); :}
+| Expresiones         {: ProyectoCompi.PoyectoCompi.consola.impirmir("Expresion reconocida"); :}
 | 
 ; 
 
@@ -89,7 +93,6 @@ DefFuncionesFact ::= DefFuncion DefFunciones;
 DefFunciones ::= DefFuncion DefFunciones | ;
 DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos;
 
-/* mae creo que hay que hacer una diferencia entre función y declaración función. La diferencia es el def pero es que una funcion es una expresion y así la podemos usar en otro lado*/
 
 DefParametrosFact ::= Variable DefParametros | ; 
 DefParametros::= coma Variable  DefParametros | ; 
@@ -104,8 +107,8 @@ PuntoComa ::= puntoComa| errPuntoYComa;
 DosPuntos ::= dosPuntos | errDecVariables;
 /*---------------------------------------------------------------------------------------*/
 Funcion::= identificador parenAbierto Parametros parenCerrado;
-Parametros ::= Literal Parametro | ; 
-Parametro ::= coma Literal Parametro | ;
+Parametros ::= Expresion Parametro | ;
+Parametro ::= coma Expresion Parametro | ;
 
 If ::= iif Expresion DosPuntos Elif Else PuntoComa | errIf; 
 Finif ::= PuntoComa;
@@ -116,7 +119,7 @@ ForFact ::= ffor identificador in For DosPuntos Bloque PuntoComa;
 For ::= STRING | identificador | Range ;
 Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado;
 
-WhileFact ::= wwhile Expresion DosPuntos Bloque PuntoComa While;
+WhileFact ::= wwhile Expresion DosPuntos Bloque PuntoComa While; /* Ojo que puede ser un while() dodne no hay expresion*/
 While ::= Else PuntoComa | ;
 
 Bloque ::= ForFact Bloque | WhileFact Bloque |  ;
@@ -129,9 +132,14 @@ Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
 ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
 Expresion ::= Literal|Lista|identificador|Funcion
-        | parenAbierto Expresion parenCerrado |
-        | ffalse | ttrue | errExpresion; /*solo un error general para expresiones */
-Expresion ::= Expresion opComparadores Expresion|Expresion opLogicos Expresion|Expresion opAritmeticos Expresion;
+        | parenAbierto Expresion parenCerrado
+        | ffalse | ttrue |errExpresion; /*solo un error general para expresiones */
+Expresion ::= Expresion OpBinario Expresion;
+Expresion ::= OpUnario Expresion;
+
+
+
+Expresiones ::= Expresiones Expresion | ;
 
 /*----------------------------------------------------------------------------------------*/
 
@@ -144,7 +152,10 @@ BloqueOOP::= HeaderOOP;
 HeaderOOP ::= clas identificador dosPuntos VariablesOOP| clas errHeaderOOP VariablesOOP;
 
 
-
+OpAritmeticos ::= opSuma | opResta | opMultiplicacion | opDivision | opDivisionE | opModulo ;
+OpLogicos ::= opAnd | opOr | opNot;
+OpUnario ::= opSuma | opResta | opNot;
+OpBinario ::= OpAritmeticos | opComparadores | OpLogicos;
 
 /*-----------------------------------------------------------------------------------------*/
 

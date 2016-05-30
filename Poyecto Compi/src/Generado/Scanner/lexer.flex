@@ -94,6 +94,20 @@ opPuntoComa = ";"
    "]"                 {lexeme = yytext(); return symbol(sym.cuadradoCerrado, lexeme);}
    ","                 {lexeme = yytext(); return symbol(sym.coma, lexeme);}
 
+    /* Operadores aritmeticos */
+    "+"                {lexeme = yytext(); return symbol(sym.opSuma, lexeme);}
+    "-"                {lexeme = yytext(); return symbol(sym.opResta, lexeme);}
+    "*"                {lexeme = yytext(); return symbol(sym.opMultiplicacion, lexeme);}
+    "/"                {lexeme = yytext(); return symbol(sym.opDivision, lexeme);}
+    "//"               {lexeme = yytext(); return symbol(sym.opDivisionE, lexeme);}
+    "%"                {lexeme = yytext(); return symbol(sym.opModulo, lexeme);}
+    "**"               {lexeme = yytext(); return symbol(sym.opPotencia, lexeme);}
+
+    /* Operadores Logicos */ 
+    "and"              {lexeme = yytext(); return symbol(sym.opAnd, lexeme);}
+    "or"               {lexeme = yytext(); return symbol(sym.opOr, lexeme);}
+    "not"              {lexeme = yytext(); return symbol(sym.opNot, lexeme);}
+
    /* Operadores */
    {opAritmeticos}     {lexeme = yytext(); return symbol(sym.opAritmeticos, lexeme);}
    {opComparadores}    {lexeme = yytext(); return symbol(sym.opComparadores, lexeme);}
