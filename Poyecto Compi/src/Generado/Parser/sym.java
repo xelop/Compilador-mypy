@@ -10,21 +10,24 @@ public class sym {
   /* terminals */
   public static final int clas = 17;
   public static final int eelse = 22;
-  public static final int cuadradoCerrado = 29;
+  public static final int cuadradoCerrado = 33;
   public static final int INT = 4;
-  public static final int coma = 28;
+  public static final int coma = 32;
   public static final int CHAR = 6;
   public static final int opComparadores = 9;
+  public static final int wwhile = 27;
   public static final int opDelimitadores = 11;
   public static final int END = 15;
   public static final int ERROR = 14;
   public static final int opLogicos = 13;
   public static final int opAsignaciones = 10;
   public static final int elif = 23;
-  public static final int parenAbierto = 26;
+  public static final int parenAbierto = 30;
+  public static final int in = 25;
   public static final int STRING = 7;
   public static final int opAritmeticos = 8;
   public static final int def = 18;
+  public static final int range = 26;
   public static final int FLOAT = 5;
   public static final int EOF = 0;
   public static final int ttrue = 20;
@@ -33,11 +36,12 @@ public class sym {
   public static final int iif = 21;
   public static final int opBits = 12;
   public static final int error = 1;
-  public static final int cuadradoAbierto = 30;
-  public static final int parenCerrado = 27;
-  public static final int puntoComa = 25;
-  public static final int dosPuntos = 24;
+  public static final int cuadradoAbierto = 34;
+  public static final int parenCerrado = 31;
+  public static final int puntoComa = 29;
+  public static final int dosPuntos = 28;
   public static final int var = 16;
+  public static final int ffor = 24;
   public static final int identificador = 2;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -64,6 +68,10 @@ public class sym {
   "iif",
   "eelse",
   "elif",
+  "ffor",
+  "in",
+  "range",
+  "wwhile",
   "dosPuntos",
   "puntoComa",
   "parenAbierto",

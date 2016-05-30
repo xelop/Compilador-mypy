@@ -42,6 +42,9 @@ terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opC
 
 terminal var,clas,def,ffalse,ttrue,iif,eelse,elif;
 
+terminal ffor,in,range,wwhile;
+
+
 /*Delimitadores*/
 terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuadradoAbierto;
 
@@ -51,7 +54,7 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuad
 non terminal Programa, Variable, CodigoPrincipal;
 non terminal Funcional,DefFuncion,DefFunciones,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros;
 non terminal Variables,VariableRec;
-non terminal Bloque, If, Else, Elif, Finif;
+non terminal Bloque, If, Else, Elif, Finif, ForFact, For, Range, While, WhileFact;
 
 /* Zona OOP */
 non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP;
@@ -75,7 +78,7 @@ start with Programa;
 /*----------------- Producciones ---------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| If                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("if reconocido"); :}
+| Bloque             {: ProyectoCompi.PoyectoCompi.consola.impirmir("while reconocido"); :}
 | 
 ; 
 
@@ -109,7 +112,17 @@ Finif ::= PuntoComa;
 Else::= eelse Bloque | ;
 Elif ::= elif Expresion dosPuntos Bloque Elif | ;
 
-Bloque ::=  ;
+ForFact ::= ffor identificador in For DosPuntos Bloque PuntoComa;
+For ::= STRING | identificador | Range ;
+Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado;
+
+WhileFact ::= wwhile Expresion DosPuntos Bloque PuntoComa While;
+While ::= Else PuntoComa | ;
+
+Bloque ::= ForFact Bloque | WhileFact Bloque |  ;
+
+/* Palabras reservadas que faltan:
+and break continue except finally for in input is not or print return try while list boolean */
 
 Literal ::= INT|FLOAT|CHAR|STRING;
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
@@ -118,6 +131,7 @@ MasElementosLista::= coma Expresion MasElementosLista | ;
 Expresion ::= Literal|Lista|identificador|Funcion
         | parenAbierto Expresion parenCerrado |
         | ffalse | ttrue | errExpresion; /*solo un error general para expresiones */
+Expresion ::= Expresion opComparadores Expresion|Expresion opLogicos Expresion|Expresion opAritmeticos Expresion;
 
 /*----------------------------------------------------------------------------------------*/
 

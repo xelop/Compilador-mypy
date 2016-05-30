@@ -56,7 +56,7 @@ ComentarioDeLinea = "#" {InputCharacter}* {LineTerminator}?
 ComentarioDeBloque = \"\"\"([\s\S]*)\"\"\"
 
 var = ("int"|"float"|"string"|"boolean"|"char"|"list")
-palabraRerservada = ("assert"|"break"|"continue"|"del"|"except"|"exec"|"finally"|"for"|"from"|"global"|"import"|"in"|"is"|"lambda"|"pass"|"print"|"raise"|"return"|"try"|"while"|"None")
+palabraRerservada = ("assert"|"break"|"continue"|"del"|"except"|"exec"|"finally"|"from"|"global"|"import"|"is"|"lambda"|"pass"|"print"|"raise"|"return"|"try"|"None")
 
 opAritmeticos = "+"|"-"|"*"|"/"|"//"|"%"|"**"
 opComparadores = "=="|"!="|"<>"|">"|"<"|">="|"<="
@@ -110,9 +110,12 @@ opPuntoComa = ";"
    "False"             {lexeme = yytext(); return symbol(sym.ffalse, lexeme);}
    "True"              {lexeme = yytext(); return symbol(sym.ttrue, lexeme);}
    "if"                {lexeme = yytext(); return symbol(sym.iif, lexeme);}
-   "else"             {lexeme = yytext(); return symbol(sym.eelse, lexeme);}
-   "elif"             {lexeme = yytext(); return symbol(sym.elif, lexeme);}
-    
+   "else"              {lexeme = yytext(); return symbol(sym.eelse, lexeme);}
+   "elif"              {lexeme = yytext(); return symbol(sym.elif, lexeme);}
+   "for"               {lexeme = yytext(); return symbol(sym.ffor, lexeme);}
+   "in"                {lexeme = yytext(); return symbol(sym.in, lexeme);}
+   "range"             {lexeme = yytext(); return symbol(sym.range, lexeme);}
+   "while"             {lexeme = yytext(); return symbol(sym.wwhile, lexeme);}    
 
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 
    {Letra}({Letra}|{Numero})* {lexeme=yytext(); return symbol(sym.identificador, lexeme);}
