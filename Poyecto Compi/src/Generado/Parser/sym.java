@@ -39,6 +39,7 @@ public class sym {
   public static final int opSuma = 28;
   public static final int opDivisionE = 32;
   public static final int in = 25;
+  public static final int punto = 45;
   public static final int opOr = 36;
   public static final int elif = 23;
   public static final int ffor = 24;
@@ -98,7 +99,8 @@ public class sym {
   "parenCerrado",
   "coma",
   "cuadradoCerrado",
-  "cuadradoAbierto"
+  "cuadradoAbierto",
+  "punto"
   };
 }
 

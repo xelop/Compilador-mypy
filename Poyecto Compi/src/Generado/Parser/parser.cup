@@ -49,7 +49,7 @@ terminal opSuma, opResta, opMultiplicacion, opDivision, opDivisionE,opModulo,opP
 terminal opAnd, opOr, opNot;
 
 /*Delimitadores*/
-terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuadradoAbierto;
+terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuadradoAbierto,punto;
 
 /*--------------------------------------------------------------------------*/
 
@@ -66,11 +66,12 @@ non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP;
 non terminal PuntoComa,DosPuntos;
 
 /**Errores**/
-non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion, errIf;
+non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion, errIf, errAsignacion;
 
 /* Común para todos */
 non terminal Expresion,Literal,Lista,ElementosLista,MasElementosLista, Expresiones;
 non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario;
+non terminal Asignacion,Asignaciones;
 
 /*--------------------- Configuraciones --------------------------------------- */
 precedence left opDelimitadores,var;
@@ -82,7 +83,7 @@ start with Programa;
 /*----------------- Producciones ----------------------------------------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| Expresiones         {: ProyectoCompi.PoyectoCompi.consola.impirmir("Expresion reconocida"); :}
+| Asignaciones        {: ProyectoCompi.PoyectoCompi.consola.impirmir("Asignaciones Reconocidas"); :}
 | 
 ; 
 
@@ -136,10 +137,13 @@ Expresion ::= Literal|Lista|identificador|Funcion
         | ffalse | ttrue |errExpresion; /*solo un error general para expresiones */
 Expresion ::= Expresion OpBinario Expresion;
 Expresion ::= OpUnario Expresion;
+Expresion ::= identificador punto Funcion;
 
+Asignacion ::= identificador opAsignaciones Expresion | errAsignacion;
 
 
 Expresiones ::= Expresiones Expresion | ;
+Asignaciones ::= Asignaciones Asignacion | ;
 
 /*----------------------------------------------------------------------------------------*/
 
@@ -166,4 +170,5 @@ errDecVariables::= error:e    {: parser.addError("Hay un error al declarar varia
 errPuntoYComa::= error:e      {: parser.addError("Falto cerrar un bloque con ';'. Línea: "  + eleft+ ". Columna: " + eright); :};
 errClase::= error:e           {: parser.addError("Hay un error en la clase. Línea: "  + eleft+ ". Columna: " + eright); :};
 errExpresion::= error:e       {: parser.addError("Hay un error en la expresión. Línea: "  + eleft+ ". Columna: " + eright); :};
+errAsignacion::= error:e      {: parser.addError("Hay un error en la asignación. Línea: "  + eleft+ ". Columna: " + eright); :};
 errIf::= error:e              {: parser.addError("Hay un error en el if. Línea: "  + eleft+ ". Columna: " + eright); :};

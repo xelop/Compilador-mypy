@@ -1,15 +1,8 @@
-2 + 2
- []
- [["hola"],[identificador]]
- (a<=3)and(b==4)
- 2 and 8
- -3
- not []
- 2 + 3 * 4
- True + False
-("string" * 4) // (id or (not True))
-funcion(2,4,[lista],identificador)
- 'c'
-""" las siguientes son errores """
-b += 2
-(("string") * 4) (//) id or True
+variable **= 2
+variable //= [lista,2,"hola"]
+c -=  Clase.Funcion()
+funcion += 2 + funcion(variable,c,3)
+x + 2  """ este es un error """
+var = 0
+c = Clase()
+
