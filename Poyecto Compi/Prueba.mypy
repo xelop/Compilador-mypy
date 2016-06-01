@@ -1,8 +1,9 @@
-variable **= 2
-variable //= [lista,2,"hola"]
-c -=  Clase.Funcion()
-funcion += 2 + funcion(variable,c,3)
-x + 2  """ este es un error """
-var = 0
-c = Clase()
+print("hola")
+print(funcion())
+printt("hola") """ error """
+print(["hola",2])
+print(2=2) """error"""
+input("-->")
+input(+)   """error"""
+input(clase.funcion())
 

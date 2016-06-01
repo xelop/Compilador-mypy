@@ -120,7 +120,7 @@ opPuntoComa = ";"
    /* Palabras reservadas */
    {var}               {lexeme = yytext(); return symbol(sym.var, lexeme);}
    "class"             {lexeme = yytext(); return symbol(sym.clas, lexeme);}
-   {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
+   
    "def"               {lexeme = yytext(); return symbol(sym.def, lexeme);}
    "False"             {lexeme = yytext(); return symbol(sym.ffalse, lexeme);}
    "True"              {lexeme = yytext(); return symbol(sym.ttrue, lexeme);}
@@ -130,8 +130,11 @@ opPuntoComa = ";"
    "for"               {lexeme = yytext(); return symbol(sym.ffor, lexeme);}
    "in"                {lexeme = yytext(); return symbol(sym.in, lexeme);}
    "range"             {lexeme = yytext(); return symbol(sym.range, lexeme);}
-   "while"             {lexeme = yytext(); return symbol(sym.wwhile, lexeme);}    
+   "while"             {lexeme = yytext(); return symbol(sym.wwhile, lexeme);}
+   "print"             {lexeme = yytext(); return symbol(sym.pprint, lexeme);}
+   "input"             {lexeme = yytext(); return symbol(sym.iinput, lexeme);}     
 
+   {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 
    {Letra}({Letra}|{Numero})* {lexeme=yytext(); return symbol(sym.identificador, lexeme);}
 
