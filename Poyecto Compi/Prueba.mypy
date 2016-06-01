@@ -1,9 +1,12 @@
-print("hola")
-print(funcion())
-printt("hola") """ error """
-print(["hola",2])
-print(2=2) """error"""
-input("-->")
-input(+)   """error"""
-input(clase.funcion())
-
+class caca:
+	def funcion(int x):
+	
+	
+	
+	
+;
+;
+2+4
+9
+7
+8
