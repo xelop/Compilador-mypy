@@ -104,10 +104,9 @@ Funcional ::= DefFuncionesFact;
 
 DefFuncionesFact ::= DefFuncion DefFunciones;
 DefFunciones ::= DefFuncion DefFunciones | ;
-DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloquePuntoComa
-| def identificador parenAbierto DefParametrosFact parenCerrado errDecFuncion BloquePuntoComa  
+DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloquePuntoComa 
 | def errDecFuncion dosPuntos BloquePuntoComa
-| def errDecFuncion BloquePuntoComa
+| def errDecFuncion DefFunciones  /* si no ponen los dos puntos no lee todo el bloque siguiente */
 ;
  
 
