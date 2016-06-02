@@ -57,7 +57,7 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuad
 non terminal Programa, Variable, CodigoPrincipal;
 non terminal Funcional,DefFuncion,DefFunciones,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros;
 non terminal Variables,VariableRec;
-non terminal Bloque, If, Else, Elif, Finif, ForFact, For, Range, While, WhileFact;
+non terminal Bloque, If, Else, Elif, Finif, ForFact, For, Range, While;
 
 /* Zona OOP */
 non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP,FuncionesOOP,PuntoComaOOP;
@@ -67,16 +67,16 @@ non terminal PuntoComa,DosPuntos;
 
 /**Errores**/
 non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion, errIf, errAsignacion,errExpresionB;
-non terminal errInput, errPrint;
+non terminal errInput, errPrint,errDecFuncion,errParametro1;
 
 /* Común para todos */
 non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionesB ;
 non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario,OpBinarioB;
 non terminal Asignacion,Asignaciones;
-non terminal FuncionPredefinida,FuncionesPredefinidas, Input, Print;
+non terminal FuncionPredefinida,FuncionesPredefinidas, Input, Print,BloquePuntoComa;
 
 /*------------------------------Precendencias--------------------------------------*/
-
+precedence left def;
 precedence left opNot,opOr,opAnd;
 precedence left opAsignaciones;
 precedence left opComparadores;
@@ -84,6 +84,7 @@ precedence left opSuma, opResta;
 precedence left opMultiplicacion, opDivision, opModulo, opDivisionE;
 precedence left opPotencia;
 precedence left parenAbierto, parenCerrado;
+
 
 
 /*--------------------- Configuraciones --------------------------------------- */
@@ -95,6 +96,7 @@ start with Programa;
 /*----------------- Producciones ----------------------------------------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
+| error               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Error por final de archivo.");:}
 ;
 
 
@@ -102,11 +104,16 @@ Funcional ::= DefFuncionesFact;
 
 DefFuncionesFact ::= DefFuncion DefFunciones;
 DefFunciones ::= DefFuncion DefFunciones | ;
-DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos;
+DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloquePuntoComa
+| def identificador parenAbierto DefParametrosFact parenCerrado errDecFuncion BloquePuntoComa  
+| def errDecFuncion dosPuntos BloquePuntoComa
+| def errDecFuncion BloquePuntoComa
+;
+ 
 
 
-DefParametrosFact ::= Variable DefParametros | ; 
-DefParametros::= coma Variable  DefParametros | ; 
+DefParametrosFact ::= var identificador DefParametros | var errParametro1 DefParametros| ; 
+DefParametros::= coma var identificador  DefParametros | ; 
 
 CodigoPrincipal::=  Expresiones;
 /*-----------------------------------------------------------------------------------------*/
@@ -123,17 +130,17 @@ Parametro ::= coma Expresion Parametro | ;
 
 If ::= iif Expresion DosPuntos Elif Else PuntoComa | errIf; 
 Finif ::= PuntoComa;
-Else::= eelse Bloque | ;
+Else::= eelse dosPuntos Bloque puntoComa | ;
 Elif ::= elif Expresion dosPuntos Bloque Elif | ;
 
 ForFact ::= ffor identificador in For DosPuntos Bloque PuntoComa;
 For ::= STRING | identificador | Range ;
 Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado;
 
-WhileFact ::= wwhile Expresion DosPuntos Bloque PuntoComa While; /* Ojo que puede ser un while() dodne no hay expresion*/
-While ::= Else PuntoComa | ;
+While ::= wwhile Expresion DosPuntos Bloque PuntoComa Else; /* Ojo que puede ser un while() dodne no hay expresion*/
 
-Bloque ::= ForFact Bloque | WhileFact Bloque |  ;
+BloquePuntoComa ::= Bloque puntoComa | errPuntoYComa;
+Bloque ::= ForFact Bloque | While Bloque | ;
 
 /* Palabras reservadas que faltan:
 and break continue except finally for in input is not or print return try while list boolean */
@@ -202,3 +209,5 @@ errAsignacion::= error:e      {: parser.addError("Hay un error en la asignación
 errIf::= error:e              {: parser.addError("Hay un error en el if. Línea: "  + eleft+ ". Columna: " + eright); :};
 errInput::= error:e           {: parser.addError("Hay un error en input(). Línea: "  + eleft+ ". Columna: " + eright); :};
 errPrint::= error:e           {: parser.addError("Hay un error en print() Línea: "  + eleft+ ". Columna: " + eright); :};
+errDecFuncion::= error:e      {: parser.addError("Hay un error en la declaracion de la funcion. Linea: "+eleft+ ". Columna: " + eright); :};
+errParametro1::= error:e      {: parser.addError("Hay un error en la declaracion de los parametros de la funcion. Linea: "+eleft+ ". Columna: " + eright); :};
