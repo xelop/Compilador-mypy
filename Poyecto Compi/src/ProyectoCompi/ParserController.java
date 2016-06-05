@@ -5,6 +5,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Reader;
 import Generado.Scanner.*;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ParserController {
@@ -18,10 +21,15 @@ public class ParserController {
     }
     
     public void parsear(){
-        try{
-            Reader reader = new BufferedReader(new FileReader(path));
+            Reader reader = null;
+        try {
+            reader= new BufferedReader(new FileReader(path));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ParserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
             Lexer lexer = new Lexer(reader);
             Analizador parser = new Analizador(lexer,true);
+        try{
             parser.parse();
             for(String error : parser.retornarLista()){
                 console.impirmir(error);
@@ -31,6 +39,9 @@ public class ParserController {
         catch(Exception e){
             System.out.println(e.getMessage());
             System.out.println("Hubo excepcion");
+            for(String error : parser.retornarLista()){
+                console.impirmir(error);
+            }
         }
     }
 }
