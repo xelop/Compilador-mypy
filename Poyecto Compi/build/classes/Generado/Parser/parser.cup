@@ -57,7 +57,7 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuad
 non terminal Programa, Variable, CodigoPrincipal;
 non terminal Funcional,DefFuncion,DefFunciones,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros;
 non terminal Variables,VariableRec;
-non terminal Bloque, DecIf,If, Else, Elif, Finif, ForFact, For, Range, While;
+non terminal Bloque,Bloques,BloqueNuevo, DecIf,If, Else, Elif, ForFact, For, Range, While;
 
 /* Zona OOP */
 non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP,FuncionesOOP,PuntoComaOOP;
@@ -76,7 +76,6 @@ non terminal Asignacion,Asignaciones;
 non terminal FuncionPredefinida,FuncionesPredefinidas, Input, Print,BloquePuntoComa;
 
 /*------------------------------Precendencias--------------------------------------*/
-precedence left def,error;
 precedence left opNot,opOr,opAnd;
 precedence left opAsignaciones;
 precedence left opComparadores;
@@ -84,6 +83,8 @@ precedence left opSuma, opResta;
 precedence left opMultiplicacion, opDivision, opModulo, opDivisionE;
 precedence left opPotencia;
 precedence left parenAbierto, parenCerrado;
+precedence left eelse,elif,iif,wwhile,ffor;
+precedence left def,dosPuntos,puntoComa;
 
 
 
@@ -96,31 +97,34 @@ start with Programa;
 /*----------------- Producciones ----------------------------------------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| If               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Error por final de archivo.");:}
+| error               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Error por final de archivo.");:}
 ;
 
 
-Funcional ::= DefFuncionesFact;
+Funcional ::= DefFunciones;
 
-DefFuncionesFact ::= DefFuncion DefFunciones | errDecFuncion identificador error DefFunciones ;
-DefFunciones ::= DefFuncion DefFunciones | ;
-DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloquePuntoComa 
-| def errDecFuncion dosPuntos BloquePuntoComa
-| def errDecFuncion DefFunciones  /* si no ponen los dos puntos no lee todo el bloque siguiente */
-| errDecFuncion identificador error BloquePuntoComa;
- 
+DefFunciones ::= DefFuncion DefFunciones | DefFuncion ;
+DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloqueNuevo puntoComa 
+| def errDecFuncion dosPuntos BloqueNuevo puntoComa
+| def errDecFuncion puntoComa  /* si no ponen los dos puntos no lee todo el bloque siguiente */
+| def errPuntoYComa DefFuncion
+| def errPuntoYComa /* usado para EOF por falta de punto y coma */
+| errDecFuncion DefFuncion
+| errDecFuncion puntoComa
+;
+
+BloqueNuevo ::= If BloqueNuevo | ; 
 
 
 DefParametrosFact ::= var identificador DefParametros | var errParametro1 DefParametros| ; 
-DefParametros::= coma var identificador  DefParametros | ; 
+DefParametros::= coma var identificador  DefParametros |  ; 
 
 CodigoPrincipal::=  Expresiones;
 /*-----------------------------------------------------------------------------------------*/
 
-Variable::= var identificador | errDecVariables; 
+Variable::= var identificador | var errDecVariables | errDecVariables identificador  ; 
 Variables ::= Variables Variable| ;
 
-PuntoComa ::= puntoComa| errPuntoYComa;
 DosPuntos ::= dosPuntos | errDecVariables;
 /*---------------------------------------------------------------------------------------*/
 Funcion::= identificador parenAbierto Parametros parenCerrado;
@@ -129,29 +133,35 @@ Parametro ::= coma Expresion Parametro | ;
 
 DecIf ::= DecIf Elif Else ;
 
-If ::= iif ExpresionB dosPuntos BloquePuntoComa Elif
-| iif errExpresionB dosPuntos BloquePuntoComa Elif
-| iif errIf BloquePuntoComa Elif
+If ::= iif ExpresionB dosPuntos BloqueNuevo puntoComa Elif
+| iif errExpresionB dosPuntos BloqueNuevo puntoComa Elif
+| iif errIf puntoComa Elif
+| iif errPuntoYComa Elif
 ;
 
-Finif ::= PuntoComa;
-Else::= eelse dosPuntos BloquePuntoComa 
-| eelse errIf BloquePuntoComa
+Elif ::= elif ExpresionB dosPuntos BloqueNuevo puntoComa Elif 
+| elif errExpresionB dosPuntos BloqueNuevo puntoComa Elif
+| elif errIf puntoComa Elif
+| elif errPuntoYComa Elif
+| Else; 
+
+Else::= eelse dosPuntos BloqueNuevo puntoComa
+| eelse errIf puntoComa
+| eelse errPuntoYComa BloqueNuevo
 |
 ;
 
-Elif ::= elif ExpresionB dosPuntos BloquePuntoComa Elif 
-| elif errExpresionB dosPuntos BloquePuntoComa Elif
-| elif errIf BloquePuntoComa Elif
-| Else; 
 
-ForFact ::= ffor identificador in For DosPuntos Bloque PuntoComa;
+ForFact ::= ffor identificador in For DosPuntos BloquePuntoComa;
+
 For ::= STRING | identificador | Range ;
 Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado;
 
-While ::= wwhile ExpresionB DosPuntos Bloque PuntoComa Else; /* Ojo que puede ser un while() dodne no hay expresion*/
+While ::= wwhile ExpresionB DosPuntos BloquePuntoComa Else; /* Ojo que puede ser un while() dodne no hay expresion*/
 
-BloquePuntoComa ::= Bloque puntoComa | errPuntoYComa;
+BloquePuntoComa ::= Bloque puntoComa | Bloque errPuntoYComa;
+
+Bloques::= Bloque Bloques | Bloque;
 Bloque ::= ForFact Bloque | While Bloque | If Bloque | ;
 
 /* Palabras reservadas que faltan:
