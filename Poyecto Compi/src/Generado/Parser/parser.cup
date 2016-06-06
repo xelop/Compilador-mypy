@@ -60,7 +60,7 @@ non terminal Variables,VariableRec;
 non terminal Bloque,Bloques,BloqueNuevo, DecIf,If, Else, Elif, ForFact, For, Range, While;
 
 /* Zona OOP */
-non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP,FuncionesOOP,PuntoComaOOP;
+non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP,FuncionesOOP,PuntoComaOOP, VariableOOP;
 
 /* Operadores*/
 non terminal PuntoComa,DosPuntos;
@@ -119,10 +119,10 @@ BloqueNuevo ::= If BloqueNuevo | ;
 DefParametrosFact ::= var identificador DefParametros | var errParametro1 DefParametros| ; 
 DefParametros::= coma var identificador  DefParametros |  ; 
 
-CodigoPrincipal::=  Expresiones;
+
 /*-----------------------------------------------------------------------------------------*/
 
-Variable::= var identificador | var errDecVariables | errDecVariables identificador  ; 
+Variable::= var identificador | var errDecVariables | errDecVariables identificador; 
 Variables ::= Variables Variable| ;
 
 DosPuntos ::= dosPuntos | errDecVariables;
@@ -196,17 +196,23 @@ FuncionPredefinida::= Input | Print;
 Input ::= iinput parenAbierto Expresion parenCerrado | errInput;
 Print ::= pprint parenAbierto Expresion parenCerrado | errPrint;
 
+CodigoPrincipal::=  Variables;
 /*----------------------------------------------------------------------------------------*/
+VariableOOP  ::= var identificador | var errDecVariables | errDecVariables identificador; 
+VariablesOOP ::= VariablesOOP VariableOOP | VariableOOP;
+/*PuntoComaOOP ::= puntoComa CodigoPrincipal | errPuntoYComa CodigoPrincipal;*/
 
-VariablesOOP ::= Variable Variables PuntoComaOOP;
-PuntoComaOOP ::= puntoComa CodigoPrincipal| errPuntoYComa CodigoPrincipal;
-FuncionesOOP ::= DefFuncionesFact VariablesOOP;
+FuncionesOOP ::= DefFunciones puntoComa CodigoPrincipal 
+| DefFunciones:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); :} CodigoPrincipal 
+; 
 
-OOP ::= Clase Variables;
-Clase ::= BloqueOOP;
-BloqueOOP::= HeaderOOP;
 
-HeaderOOP ::= clas identificador dosPuntos FuncionesOOP| errHeaderOOP FuncionesOOP;
+
+OOP ::= HeaderOOP;
+/*Clase ::= BloqueOOP;*/
+BloqueOOP::= VariablesOOP FuncionesOOP;
+
+HeaderOOP ::= clas identificador dosPuntos BloqueOOP| clas errHeaderOOP BloqueOOP;
 
 
 OpAritmeticos ::= opSuma | opResta | opMultiplicacion | opDivision | opDivisionE | opModulo ;
@@ -233,4 +239,4 @@ errInput::= error:e           {: parser.addError("Hay un error en input(). Líne
 errPrint::= error:e           {: parser.addError("Hay un error en print() Línea: "  + eleft+ ". Columna: " + eright); :};
 errDecFuncion::= error:e      {: parser.addError("Hay un error en la declaracion de la funcion. Linea: "+eleft+ ". Columna: " + eright); :};
 errParametro1::= error:e      {: parser.addError("Hay un error en la declaracion de los parametros de la funcion. Linea: "+eleft+ ". Columna: " + eright); :};
-errBloque::= error:e      {: parser.addError("Hay un error Bloque. Linea: "+eleft+ ". Columna: " + eright); :};
+errBloque::= error:e          {: parser.addError("Hay un error Bloque. Linea: "+eleft+ ". Columna: " + eright); :};
