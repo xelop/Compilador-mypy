@@ -74,8 +74,11 @@ non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista
 non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario,OpBinarioB;
 non terminal Asignacion,Asignaciones;
 non terminal FuncionPredefinida,FuncionesPredefinidas, Input, Print,BloquePuntoComa;
+non terminal CualquierCosas,CualquierCosa;
 
 /*------------------------------Precendencias--------------------------------------*/
+
+
 precedence left opNot,opOr,opAnd;
 precedence left opAsignaciones;
 precedence left opComparadores;
@@ -85,6 +88,7 @@ precedence left opPotencia;
 precedence left parenAbierto, parenCerrado;
 precedence left eelse,elif,iif,wwhile,ffor;
 precedence left def,dosPuntos,puntoComa;
+precedence left pprint, iinput;
 
 
 
@@ -196,7 +200,9 @@ FuncionPredefinida::= Input | Print;
 Input ::= iinput parenAbierto Expresion parenCerrado | errInput;
 Print ::= pprint parenAbierto Expresion parenCerrado | errPrint;
 
-CodigoPrincipal::=  Variables;
+CodigoPrincipal::=  Variables CualquierCosas;
+CualquierCosas::= CualquierCosas CualquierCosa | ;
+CualquierCosa::= FuncionPredefinida| Asignacion | Expresion; /* hace falta while for if try ... y listo*/
 /*----------------------------------------------------------------------------------------*/
 VariableOOP  ::= var identificador | var errDecVariables | errDecVariables identificador; 
 VariablesOOP ::= VariablesOOP VariableOOP | VariableOOP;

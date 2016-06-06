@@ -6,9 +6,12 @@ class caca:
 	def funcion() : ;
 
 	
-	
+	;
 	
 	string c
-	;
 	char caca
+	
+	print ("hola")
+	2+
+	x = caca
 	
