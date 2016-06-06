@@ -42,7 +42,7 @@ terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opC
 
 terminal var,clas,def,ffalse,ttrue,iif,eelse,elif;
 
-terminal ffor,in,range,wwhile,pprint,iinput;
+terminal ffor,in,range,wwhile,pprint,iinput,ttry,eexcept,ffinally;
 
 /* operadores */
 terminal opSuma, opResta, opMultiplicacion, opDivision, opDivisionE,opModulo,opPotencia;
@@ -68,6 +68,7 @@ non terminal PuntoComa,DosPuntos;
 /**Errores**/
 non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion, errIf, errAsignacion,errExpresionB;
 non terminal errInput, errPrint,errDecFuncion,errParametro1,errBloque,errIn,errRange,errFor,errElse,errDosPuntos;
+non terminal errTry, errExcept, errFinally;
 
 /* Común para todos */
 non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionesB ;
@@ -75,6 +76,7 @@ non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario,OpBinarioB;
 non terminal Asignacion,Asignaciones;
 non terminal FuncionPredefinida,FuncionesPredefinidas, Input, Print,BloquePuntoComa;
 non terminal CualquierCosas,CualquierCosa;
+non terminal TryExceptFinally, Try , Except , Finally;
 
 /*------------------------------Precendencias--------------------------------------*/
 
@@ -101,7 +103,7 @@ start with Programa ;
 /*----------------- Producciones ----------------------------------------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| error             {: ProyectoCompi.PoyectoCompi.consola.impirmir("Error por final de archivo. (Simbolos extra?)");:}
+| error               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Error por final de archivo. (Simbolos extra?)");:}
 ;
 
 
@@ -111,10 +113,9 @@ DefFunciones ::= DefFuncion DefFunciones | ;
 DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloquePuntoComa 
 | def errDecFuncion dosPuntos BloquePuntoComa
 | def errDecFuncion puntoComa  /* si no ponen los dos puntos no lee todo el bloque siguiente */
-
 ;
 
-BloqueNuevo ::= If BloqueNuevo | ForFact BloqueNuevo | While BloqueNuevo |  ; 
+
 
 
 DefParametrosFact ::= var identificador DefParametros | var errParametro1 DefParametros| ; 
@@ -141,6 +142,7 @@ If ::= iif ExpresionB dosPuntos BloquePuntoComa Elif
 " (revisar dos puntos). Línea: "  + eleft+ ". Columna: " + eright); :}
  dosPuntos BloquePuntoComa Elif
 ;
+
 Elif ::= elif ExpresionB dosPuntos BloquePuntoComa Elif 
 | elif error:e {: parser.addError("Hay un error en la expresion del If" + 
 " (revisar dos puntos). Línea: "  + eleft+ ". Columna: " + eright); :}
@@ -173,8 +175,30 @@ While ::= wwhile ExpresionB DosPuntos BloquePuntoComa Else
 BloquePuntoComa ::= BloqueNuevo puntoComa | errPuntoYComa puntoComa ;
 DosPuntos ::= dosPuntos | errDosPuntos dosPuntos;
 
+BloqueNuevo ::= If BloqueNuevo | ForFact BloqueNuevo | While BloqueNuevo 
+| Try BloqueNuevo |  
+; 
+
 Bloques::= Bloque Bloques | Bloque;
-Bloque ::= ForFact Bloque | While Bloque | If Bloque | ;
+Bloque ::= ForFact Bloque | While Bloque | If Bloque | Try Bloque;
+
+
+Try::= ttry dosPuntos BloquePuntoComa Except
+| ttry errTry  BloquePuntoComa Except
+;
+
+
+Except::= eexcept identificador dosPuntos BloquePuntoComa Finally
+| eexcept error:e {: parser.addError("Hay un error con la definición del except" + 
+" (revisar dos puntos o identificador). Línea: "  + eleft+ ". Columna: " + eright); :}
+dosPuntos BloquePuntoComa Finally
+;
+
+Finally::= ffinally dosPuntos BloquePuntoComa
+| ffinally errFinally dosPuntos BloquePuntoComa
+|
+;
+
 
 /* Palabras reservadas que faltan:
 and break continue except finally for in input is not or print return try while list boolean */
@@ -261,3 +285,7 @@ errIn::= error:e              {: parser.addError("Hay un error, falta 'in'. Line
 errFor::= error:e             {: parser.addError("Hay un error en el for. Linea: "+eleft+ ". Columna: " + eright); :};
 errElse::= error:e            {: parser.addError("Hay un error, faltan dos puntos en else. Línea: "  + eleft+ ". Columna: " + eright); :};
 errDosPuntos ::= error:e      {: parser.addError("Hay un error, faltan los dos puntos. Línea: "  + eleft+ ". Columna: " + eright); :};
+
+errTry ::= error:e                      {: parser.addError("Hay un error, en el try. Faltan dos puntos. Línea: "  + eleft+ ". Columna: " + eright); :};
+errExcept ::= error:e                   {: parser.addError("Hay un error, except. Línea: "  + eleft+ ". Columna: " + eright); :};
+errFinally ::= error:e                  {: parser.addError("Hay un error, finally. Faltan dos puntos. Línea: "  + eleft+ ". Columna: " + eright); :};

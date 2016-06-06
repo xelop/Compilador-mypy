@@ -132,7 +132,10 @@ opPuntoComa = ";"
    "range"             {lexeme = yytext(); return symbol(sym.range, lexeme);}
    "while"             {lexeme = yytext(); return symbol(sym.wwhile, lexeme);}
    "print"             {lexeme = yytext(); return symbol(sym.pprint, lexeme);}
-   "input"             {lexeme = yytext(); return symbol(sym.iinput, lexeme);}     
+   "input"             {lexeme = yytext(); return symbol(sym.iinput, lexeme);}
+   "try"               {lexeme = yytext(); return symbol(sym.ttry, lexeme);}
+   "except"            {lexeme = yytext(); return symbol(sym.eexcept, lexeme);}
+   "finally"           {lexeme = yytext(); return symbol(sym.ffinally, lexeme);}     
 
    {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 

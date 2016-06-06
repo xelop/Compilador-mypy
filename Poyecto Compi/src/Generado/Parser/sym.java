@@ -10,24 +10,25 @@ public class sym {
   /* terminals */
   public static final int palabraReservada = 3;
   public static final int wwhile = 27;
-  public static final int opMultiplicacion = 32;
+  public static final int opMultiplicacion = 35;
   public static final int CHAR = 6;
-  public static final int opNot = 39;
-  public static final int opAnd = 37;
-  public static final int dosPuntos = 40;
+  public static final int opNot = 42;
+  public static final int opAnd = 40;
+  public static final int ffinally = 32;
+  public static final int dosPuntos = 43;
   public static final int opComparadores = 9;
-  public static final int opDivision = 33;
-  public static final int coma = 44;
+  public static final int opDivision = 36;
+  public static final int coma = 47;
   public static final int range = 26;
   public static final int INT = 4;
-  public static final int cuadradoAbierto = 46;
+  public static final int cuadradoAbierto = 49;
   public static final int identificador = 2;
   public static final int iinput = 29;
-  public static final int parenAbierto = 42;
+  public static final int parenAbierto = 45;
   public static final int opAsignaciones = 10;
   public static final int clas = 17;
   public static final int def = 18;
-  public static final int opModulo = 35;
+  public static final int opModulo = 38;
   public static final int ttrue = 20;
   public static final int ffalse = 19;
   public static final int var = 16;
@@ -37,25 +38,27 @@ public class sym {
   public static final int iif = 21;
   public static final int error = 1;
   public static final int opLogicos = 13;
-  public static final int opSuma = 30;
-  public static final int opDivisionE = 34;
+  public static final int opSuma = 33;
+  public static final int opDivisionE = 37;
   public static final int in = 25;
-  public static final int punto = 47;
-  public static final int opOr = 38;
+  public static final int punto = 50;
+  public static final int opOr = 41;
   public static final int elif = 23;
   public static final int ffor = 24;
   public static final int ERROR = 14;
   public static final int pprint = 28;
-  public static final int puntoComa = 41;
+  public static final int puntoComa = 44;
+  public static final int ttry = 30;
+  public static final int eexcept = 31;
   public static final int eelse = 22;
   public static final int FLOAT = 5;
-  public static final int cuadradoCerrado = 45;
+  public static final int cuadradoCerrado = 48;
   public static final int END = 15;
   public static final int opAritmeticos = 8;
   public static final int STRING = 7;
-  public static final int parenCerrado = 43;
-  public static final int opResta = 31;
-  public static final int opPotencia = 36;
+  public static final int parenCerrado = 46;
+  public static final int opResta = 34;
+  public static final int opPotencia = 39;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -87,6 +90,9 @@ public class sym {
   "wwhile",
   "pprint",
   "iinput",
+  "ttry",
+  "eexcept",
+  "ffinally",
   "opSuma",
   "opResta",
   "opMultiplicacion",
