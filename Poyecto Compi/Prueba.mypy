@@ -1,14 +1,16 @@
-def funcion(int a,int a):
+class caca:
 
-	try:
-		
-		
+
+	int caca
 	
-	except caca:
+	def funcion():;
 	
-	;
-	finally:
-	
-	;
 ;
 
+	int caca
+	
+	2+2
+	input
+	input()
+	input(X)
+	input("digite un error",a)

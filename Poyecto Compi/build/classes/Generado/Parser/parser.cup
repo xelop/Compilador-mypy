@@ -106,8 +106,9 @@ Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo rea
 | error               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Error por final de archivo. (Simbolos extra?)");:}
 ;
 
+Funcional ::= DefFunciones CodigoPrincipal;
 
-Funcional ::= DefFunciones;
+
 
 DefFunciones ::= DefFuncion DefFunciones | ;
 DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloquePuntoComa 
@@ -220,7 +221,7 @@ Expresion ::= ExpresionB;
 
 ExpresionB ::= ffalse | ttrue| opNot Expresion| Expresion OpBinarioB Expresion | parenAbierto ExpresionB parenCerrado ;
 
-Asignacion ::= identificador opAsignaciones Expresion | errAsignacion;
+Expresion ::= identificador opAsignaciones Expresion;
 
 
 Expresiones ::= Expresiones Expresion | ;
@@ -232,9 +233,9 @@ FuncionPredefinida::= Input | Print;
 Input ::= iinput parenAbierto Expresion parenCerrado | iinput parenAbierto parenCerrado| errInput;
 Print ::= pprint parenAbierto ElementosLista parenCerrado | errPrint;
 
-CodigoPrincipal::=  Variables CualquierCosas;
+CodigoPrincipal::= Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
-CualquierCosa::= FuncionPredefinida| Asignacion | Expresion; /* hace falta while for if try ... y listo*/
+CualquierCosa::= FuncionPredefinida|  Expresion; /* hace falta while for if try ... y listo*/
 /*----------------------------------------------------------------------------------------*/
 /*VariableOOP  ::= var identificador | var errDecVariables | errDecVariables identificador; 
 VariablesOOP ::= VariablesOOP VariableOOP | VariableOOP;*/
@@ -273,7 +274,7 @@ errPuntoYComa::= error:e      {: parser.addError("Falto cerrar un bloque con ';'
 errClase::= error:e           {: parser.addError("Hay un error en la clase. Línea: "  + eleft+ ". Columna: " + eright); :};
 errExpresion::= error:e       {: parser.addError("Hay un error en la expresión. Línea: "  + eleft+ ". Columna: " + eright); :};
 errExpresionB::= error:e      {: parser.addError("Hay un error en la expresión. Debe ser booleana. Línea: "  + eleft+ ". Columna: " + eright); :};
-errAsignacion::= error:e      {: parser.addError("Hay un error en la asignación. Línea: "  + eleft+ ". Columna: " + eright); :};
+
 errIf::= error:e              {: parser.addError("Hay un error en la definicion del if. Línea: "  + eleft+ ". Columna: " + eright); :};
 errInput::= error:e           {: parser.addError("Hay un error en input(). Línea: "  + eleft+ ". Columna: " + eright); :};
 errPrint::= error:e           {: parser.addError("Hay un error en print() Línea: "  + eleft+ ". Columna: " + eright); :};
