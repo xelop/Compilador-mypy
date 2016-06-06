@@ -67,7 +67,7 @@ non terminal PuntoComa,DosPuntos;
 
 /**Errores**/
 non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion, errIf, errAsignacion,errExpresionB;
-non terminal errInput, errPrint,errDecFuncion,errParametro1,errBloque;
+non terminal errInput, errPrint,errDecFuncion,errParametro1,errBloque,errIn,errRange,errFor,errElse,errDosPuntos;
 
 /* Común para todos */
 non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionesB ;
@@ -95,29 +95,26 @@ precedence left pprint, iinput;
 /*--------------------- Configuraciones --------------------------------------- */
 
 /* inicio de gramatica */
-start with Programa;
+start with Programa ;
 
 
 /*----------------- Producciones ----------------------------------------------------- */
 Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo Funcional."); :}
 | OOP                 {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo realizado exitosamente. De tipo OOP."); :}
-| error               {: ProyectoCompi.PoyectoCompi.consola.impirmir("Error por final de archivo.");:}
+| error             {: ProyectoCompi.PoyectoCompi.consola.impirmir("Error por final de archivo. (Simbolos extra?)");:}
 ;
 
 
 Funcional ::= DefFunciones;
 
-DefFunciones ::= DefFuncion DefFunciones | DefFuncion ;
-DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloqueNuevo puntoComa 
-| def errDecFuncion dosPuntos BloqueNuevo puntoComa
+DefFunciones ::= DefFuncion DefFunciones | ;
+DefFuncion ::= def identificador parenAbierto DefParametrosFact parenCerrado dosPuntos BloquePuntoComa 
+| def errDecFuncion dosPuntos BloquePuntoComa
 | def errDecFuncion puntoComa  /* si no ponen los dos puntos no lee todo el bloque siguiente */
-| def errPuntoYComa DefFuncion
-| def errPuntoYComa /* usado para EOF por falta de punto y coma */
-| errDecFuncion DefFuncion
-| errDecFuncion puntoComa
+
 ;
 
-BloqueNuevo ::= If BloqueNuevo | ; 
+BloqueNuevo ::= If BloqueNuevo | ForFact BloqueNuevo | While BloqueNuevo |  ; 
 
 
 DefParametrosFact ::= var identificador DefParametros | var errParametro1 DefParametros| ; 
@@ -127,48 +124,54 @@ DefParametros::= coma var identificador  DefParametros |  ;
 /*-----------------------------------------------------------------------------------------*/
 
 Variable::= var DefVariablesFact | var errDecVariables | errDecVariables identificador;
-
 Variables ::= Variables Variable| ;
 
 DefVariablesFact ::= identificador DefVariables | errDecVariables DefVariables; 
 DefVariables::= coma identificador  DefVariables 
 |  errDecVariables identificador DefVariables | errDecVariables DefVariables |; 
 
-DosPuntos ::= dosPuntos | errDecVariables;
+
 /*---------------------------------------------------------------------------------------*/
 Funcion::= identificador parenAbierto Parametros parenCerrado;
 Parametros ::= Expresion Parametro | ;
 Parametro ::= coma Expresion Parametro | ;
 
-DecIf ::= DecIf Elif Else ;
-
-If ::= iif ExpresionB dosPuntos BloqueNuevo puntoComa Elif
-| iif errExpresionB dosPuntos BloqueNuevo puntoComa Elif
-| iif errIf puntoComa Elif
-| iif errPuntoYComa Elif
+If ::= iif ExpresionB dosPuntos BloquePuntoComa Elif
+| iif error:e {: parser.addError("Hay un error en la expresion del If" + 
+" (revisar dos puntos). Línea: "  + eleft+ ". Columna: " + eright); :}
+ dosPuntos BloquePuntoComa Elif
 ;
-
-Elif ::= elif ExpresionB dosPuntos BloqueNuevo puntoComa Elif 
-| elif errExpresionB dosPuntos BloqueNuevo puntoComa Elif
-| elif errIf puntoComa Elif
-| elif errPuntoYComa Elif
+Elif ::= elif ExpresionB dosPuntos BloquePuntoComa Elif 
+| elif error:e {: parser.addError("Hay un error en la expresion del If" + 
+" (revisar dos puntos). Línea: "  + eleft+ ". Columna: " + eright); :}
+dosPuntos BloquePuntoComa Elif
 | Else; 
 
-Else::= eelse dosPuntos BloqueNuevo puntoComa
-| eelse errIf puntoComa
-| eelse errPuntoYComa BloqueNuevo
+Else::= eelse dosPuntos BloquePuntoComa
+| eelse errElse dosPuntos BloquePuntoComa
 |
 ;
 
+ForFact ::= ffor identificador in For dosPuntos BloquePuntoComa
+| ffor errFor in For dosPuntos BloquePuntoComa
+| ffor identificador in For errFor dosPuntos BloquePuntoComa
+| ffor identificador errIn For dosPuntos BloquePuntoComa ;
 
-ForFact ::= ffor identificador in For DosPuntos BloquePuntoComa;
+For ::= STRING | identificador | Range | errFor ;
+Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado | range errRange parenCerrado | range errFor;
 
-For ::= STRING | identificador | Range ;
-Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado;
+While ::= wwhile ExpresionB DosPuntos BloquePuntoComa Else
+| wwhile parenAbierto parenCerrado DosPuntos BloquePuntoComa Else
+| wwhile error:e {: parser.addError("Falta abrir parentesis" + 
+" (revisar dos puntos). Línea: "  + eleft+ ". Columna: " + eright); :} dosPuntos BloquePuntoComa Else
+| wwhile error:e {: parser.addError("Falta cerrar parentesis" + 
+". Línea: "  + eleft+ ". Columna: " + eright); :} parenCerrado dosPuntos BloquePuntoComa Else
+| wwhile parenAbierto error:e {: parser.addError("Hay un error en la expresion del While" + 
+". Línea: "  + eleft+ ". Columna: " + eright); :} dosPuntos BloquePuntoComa Else  
+; 
 
-While ::= wwhile ExpresionB DosPuntos BloquePuntoComa Else; /* Ojo que puede ser un while() dodne no hay expresion*/
-
-BloquePuntoComa ::= Bloque puntoComa | Bloque errPuntoYComa;
+BloquePuntoComa ::= BloqueNuevo puntoComa | errPuntoYComa puntoComa ;
+DosPuntos ::= dosPuntos | errDosPuntos dosPuntos;
 
 Bloques::= Bloque Bloques | Bloque;
 Bloque ::= ForFact Bloque | While Bloque | If Bloque | ;
@@ -191,7 +194,7 @@ Expresion ::= identificador punto Funcion;
 Expresion ::= ExpresionB;
 /*Expresion ::= FuncionPredefinida; esta causa mucho reduce reduce */
 
-ExpresionB ::= ffalse | ttrue| opNot Expresion| Expresion OpBinarioB Expresion | parenAbierto ExpresionB parenCerrado;
+ExpresionB ::= ffalse | ttrue| opNot Expresion| Expresion OpBinarioB Expresion | parenAbierto ExpresionB parenCerrado ;
 
 Asignacion ::= identificador opAsignaciones Expresion | errAsignacion;
 
@@ -253,3 +256,8 @@ errPrint::= error:e           {: parser.addError("Hay un error en print() Línea
 errDecFuncion::= error:e      {: parser.addError("Hay un error en la declaracion de la funcion. Linea: "+eleft+ ". Columna: " + eright); :};
 errParametro1::= error:e      {: parser.addError("Hay un error en la declaracion de los parametros de la funcion. Linea: "+eleft+ ". Columna: " + eright); :};
 errBloque::= error:e          {: parser.addError("Hay un error Bloque. Linea: "+eleft+ ". Columna: " + eright); :};
+errRange::= error:e           {: parser.addError("Hay un error en el range. Linea: "+eleft+ ". Columna: " + eright); :};
+errIn::= error:e              {: parser.addError("Hay un error, falta 'in'. Linea: "+eleft+ ". Columna: " + eright); :};
+errFor::= error:e             {: parser.addError("Hay un error en el for. Linea: "+eleft+ ". Columna: " + eright); :};
+errElse::= error:e            {: parser.addError("Hay un error, faltan dos puntos en else. Línea: "  + eleft+ ". Columna: " + eright); :};
+errDosPuntos ::= error:e      {: parser.addError("Hay un error, faltan los dos puntos. Línea: "  + eleft+ ". Columna: " + eright); :};

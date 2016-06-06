@@ -39,6 +39,7 @@ public class ParserController {
         catch(Exception e){
             System.out.println(e.getMessage());
             System.out.println("Hubo excepcion");
+            console.impirmir("Error: Se llego al final del archivo. Falto un ; o : ");
             for(String error : parser.retornarLista()){
                 console.impirmir(error);
             }
