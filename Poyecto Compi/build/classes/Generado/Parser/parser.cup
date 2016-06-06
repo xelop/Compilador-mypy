@@ -55,7 +55,7 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuad
 
 /* Declaracion de no terminales */
 non terminal Programa, Variable, CodigoPrincipal;
-non terminal Funcional,DefFuncion,DefFunciones,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros;
+non terminal Funcional,DefFuncion,DefFunciones,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros,DefVariables,DefVariablesFact;
 non terminal Variables,VariableRec;
 non terminal Bloque,Bloques,BloqueNuevo, DecIf,If, Else, Elif, ForFact, For, Range, While;
 
@@ -126,8 +126,13 @@ DefParametros::= coma var identificador  DefParametros |  ;
 
 /*-----------------------------------------------------------------------------------------*/
 
-Variable::= var identificador | var errDecVariables | errDecVariables identificador; 
+Variable::= var DefVariablesFact | var errDecVariables | errDecVariables identificador;
+
 Variables ::= Variables Variable| ;
+
+DefVariablesFact ::= identificador DefVariables | errDecVariables DefVariables; 
+DefVariables::= coma identificador  DefVariables 
+|  errDecVariables identificador DefVariables | errDecVariables DefVariables |; 
 
 DosPuntos ::= dosPuntos | errDecVariables;
 /*---------------------------------------------------------------------------------------*/
@@ -197,15 +202,17 @@ Asignaciones ::= Asignaciones Asignacion | ;
 FuncionesPredefinidas::= FuncionesPredefinidas FuncionPredefinida | ;
 
 FuncionPredefinida::= Input | Print;
-Input ::= iinput parenAbierto Expresion parenCerrado | errInput;
-Print ::= pprint parenAbierto Expresion parenCerrado | errPrint;
+Input ::= iinput parenAbierto Expresion parenCerrado | iinput parenAbierto parenCerrado| errInput;
+Print ::= pprint parenAbierto ElementosLista parenCerrado | errPrint;
 
 CodigoPrincipal::=  Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
 CualquierCosa::= FuncionPredefinida| Asignacion | Expresion; /* hace falta while for if try ... y listo*/
 /*----------------------------------------------------------------------------------------*/
-VariableOOP  ::= var identificador | var errDecVariables | errDecVariables identificador; 
-VariablesOOP ::= VariablesOOP VariableOOP | VariableOOP;
+/*VariableOOP  ::= var identificador | var errDecVariables | errDecVariables identificador; 
+VariablesOOP ::= VariablesOOP VariableOOP | VariableOOP;*/
+
+VariablesOOP ::= Variables;
 /*PuntoComaOOP ::= puntoComa CodigoPrincipal | errPuntoYComa CodigoPrincipal;*/
 
 FuncionesOOP ::= DefFunciones puntoComa CodigoPrincipal 
@@ -221,7 +228,7 @@ BloqueOOP::= VariablesOOP FuncionesOOP;
 HeaderOOP ::= clas identificador dosPuntos BloqueOOP| clas errHeaderOOP BloqueOOP;
 
 
-OpAritmeticos ::= opSuma | opResta | opMultiplicacion | opDivision | opDivisionE | opModulo ;
+OpAritmeticos ::= opSuma | opResta | opMultiplicacion | opDivision | opDivisionE | opModulo | opPotencia ;
 
 OpUnario ::= opSuma | opResta;
 OpBinario ::= OpAritmeticos;

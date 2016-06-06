@@ -1,17 +1,11 @@
 class caca:
 
-	string caca
+	int x
+	float 2
+	boolean g k  # error por la coma
+	char z, t, y, y 
+	     
 	
 	
 	def funcion() : ;
-
-	
 	;
-	
-	string c
-	char caca
-	
-	print ("hola")
-	2+
-	x = caca
-	
