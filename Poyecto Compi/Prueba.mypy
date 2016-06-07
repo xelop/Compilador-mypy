@@ -1,31 +1,31 @@
-def esNumero(int x):
-    try:
-        print(x)
+class clase:
+	int x,z,c
+	
+	
+	def funcion():
+		print("hola mundo")
 	;
-    except : # No trae el error
-        print(0)
-	;
-;
-def division(int x,int y):
-    try:
-        a= x/y
-        print("EL resultado es", a)
-		# No trae el ; del try
-	;
-    except ZeroDivisionError:
-        print("INVALIDO!!! Division entre 0")
-	;
-;
-#programa
 
-string entrada
-
-entrada = input("Digite una entrada")
-if esNumero(entrada):  #La llamada a una funcion es una exp
-    print(entrada, "es un numero")
 ;
-else:
-    print(entrada, "No es un numero")
-;
-division(8,0)
 
+#codigo principal
+int x
+x = + 2
+
+	a = []
+	a = [["hola"],[identificador]]
+	not []
+	2 + 3 * 4
+	True + False
+	funcion1(3+x , x=2, 3=z)  #error por el 3=z
+	'a'
+	a + * b   #error
+	(a==b)or (b<=2)
+	
+	
+	
+	
+	
+	
+2+2
+	

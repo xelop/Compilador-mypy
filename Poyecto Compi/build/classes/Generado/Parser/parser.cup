@@ -81,6 +81,7 @@ non terminal errTry, errExcept, errExcept2, errFinally,errInt,errParen,errMalUbi
 
 /* Común para todos */
 non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionesB ;
+non terminal ElementosLista2, MasElementosLista2;
 non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario,OpBinarioB;
 non terminal Asignacion,Asignaciones;
 non terminal FuncionPredefinida,FuncionesPredefinidas, Input, Print,BloquePuntoComa;
@@ -245,7 +246,11 @@ FuncionesPredefinidas::= FuncionesPredefinidas FuncionPredefinida | ;
 FuncionPredefinida::= Input | Print | IntFuncion ;
 IntFuncion ::= intReservado parenAbierto FuncionPredefinida parenCerrado | intReservado parenAbierto Funcion parenCerrado|intReservado parenAbierto STRING parenCerrado | errInput;
 Input ::= iinput parenAbierto Expresion parenCerrado | iinput parenAbierto parenCerrado| iinput errInput | errInput;
-Print ::= pprint parenAbierto ElementosLista parenCerrado | errPrint;
+Print ::= pprint parenAbierto ElementosLista2 parenCerrado | errPrint
+| pprint parenAbierto errPrint parenCerrado;
+
+ElementosLista2::= Expresion MasElementosLista2;
+MasElementosLista2::= coma Expresion MasElementosLista2| ;
 
 CodigoPrincipal::= Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
