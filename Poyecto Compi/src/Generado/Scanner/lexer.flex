@@ -55,7 +55,7 @@ Comentario = {ComentarioDeLinea}
 ComentarioDeLinea = "#" {InputCharacter}* {LineTerminator}?
 ComentarioDeBloque = \"\"\"([\s\S]*)\"\"\"
 
-var = ("int"|"float"|"string"|"boolean"|"char"|"list")
+var = ("float"|"string"|"boolean"|"char"|"list")
 palabraRerservada = ("assert"|"del"|"except"|"exec"|"from"|"global"|"import"|"is"|"lambda"|"pass"|"raise"|"return"|"None")
 
 opAritmeticos = "+"|"-"|"*"|"/"|"//"|"%"|"**"
@@ -137,7 +137,8 @@ opPuntoComa = ";"
    "except"            {lexeme = yytext(); return symbol(sym.eexcept, lexeme);}
    "finally"           {lexeme = yytext(); return symbol(sym.ffinally, lexeme);}
   "break"              {lexeme = yytext(); return symbol(sym.bbreak, lexeme);} 
-  "continue"           {lexeme = yytext(); return symbol(sym.ccontinue, lexeme);}      
+  "continue"           {lexeme = yytext(); return symbol(sym.ccontinue, lexeme);}
+  "int"                {lexeme = yytext(); return symbol(sym.intReservado, lexeme);}          
 
    {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 
