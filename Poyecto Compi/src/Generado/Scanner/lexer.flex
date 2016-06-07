@@ -56,7 +56,7 @@ ComentarioDeLinea = "#" {InputCharacter}* {LineTerminator}?
 ComentarioDeBloque = \"\"\"([\s\S]*)\"\"\"
 
 var = ("int"|"float"|"string"|"boolean"|"char"|"list")
-palabraRerservada = ("assert"|"break"|"continue"|"del"|"except"|"exec"|"finally"|"from"|"global"|"import"|"is"|"lambda"|"pass"|"print"|"raise"|"return"|"try"|"None")
+palabraRerservada = ("assert"|"del"|"except"|"exec"|"from"|"global"|"import"|"is"|"lambda"|"pass"|"raise"|"return"|"None")
 
 opAritmeticos = "+"|"-"|"*"|"/"|"//"|"%"|"**"
 opComparadores = "=="|"!="|"<>"|">"|"<"|">="|"<="
@@ -99,8 +99,8 @@ opPuntoComa = ";"
    "+"                {lexeme = yytext(); return symbol(sym.opSuma, lexeme);}
    "-"                {lexeme = yytext(); return symbol(sym.opResta, lexeme);}
    "*"                {lexeme = yytext(); return symbol(sym.opMultiplicacion, lexeme);}
-   "/"                {lexeme = yytext(); return symbol(sym.opDivision, lexeme);}
    "//"               {lexeme = yytext(); return symbol(sym.opDivisionE, lexeme);}
+   "/"                {lexeme = yytext(); return symbol(sym.opDivision, lexeme);}
    "%"                {lexeme = yytext(); return symbol(sym.opModulo, lexeme);}
    "**"               {lexeme = yytext(); return symbol(sym.opPotencia, lexeme);}
 
@@ -135,7 +135,9 @@ opPuntoComa = ";"
    "input"             {lexeme = yytext(); return symbol(sym.iinput, lexeme);}
    "try"               {lexeme = yytext(); return symbol(sym.ttry, lexeme);}
    "except"            {lexeme = yytext(); return symbol(sym.eexcept, lexeme);}
-   "finally"           {lexeme = yytext(); return symbol(sym.ffinally, lexeme);}     
+   "finally"           {lexeme = yytext(); return symbol(sym.ffinally, lexeme);}
+  "break"              {lexeme = yytext(); return symbol(sym.bbreak, lexeme);} 
+  "continue"           {lexeme = yytext(); return symbol(sym.ccontinue, lexeme);}      
 
    {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 
