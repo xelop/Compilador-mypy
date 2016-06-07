@@ -49,7 +49,7 @@ public class ScannerController {
         Collections.sort(tokens);
         
         printErrores();
-        printTokens();
+        //printTokens();
     }
     
     private void printTokens(){

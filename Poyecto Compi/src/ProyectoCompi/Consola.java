@@ -55,7 +55,7 @@ public class Consola extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(162, 162, 162)
                 .addComponent(jButton1)
-                .addContainerGap(185, Short.MAX_VALUE))
+                .addContainerGap(620, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

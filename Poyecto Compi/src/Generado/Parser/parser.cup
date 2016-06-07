@@ -29,7 +29,7 @@ parser code
     }else
         value = s.value.toString();
 
-    errores.add(". En el token: " + value + " En la linea: " + s.left + " En la columna: " + s.right);
+    errores.add(" En el token: " + value + " En la linea: " + s.left + " En la columna: " + s.right);
     System.out.println("Error en la linea : (" + s.left + ") " + s.value);
    
   }
@@ -205,7 +205,7 @@ Try::= ttry dosPuntos CualquierCosas puntoComa Except
 
 Except::= eexcept identificador dosPuntos BloquePuntoComa Finally
 | eexcept error:e {: parser.addError("Hay un error con la definición del except" + 
-" (revisar dos puntos o identificador). Línea: "  + eleft+ ". Columna: " + eright); :}
+" (revisar dos puntos o identificador)." ); :}
 dosPuntos BloquePuntoComa Finally
 | errExcept2
 ;
@@ -249,9 +249,11 @@ Print ::= pprint parenAbierto ElementosLista parenCerrado | errPrint;
 
 CodigoPrincipal::= Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
+
 CualquierCosa::= Expresion |If | ForFact | While | Try | bbreak|ccontinue 
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
-| Variables errMalUbicacion | clas errMalUbicacion puntoComa ; /* hace falta while for if try ... y listo*/
+| var errMalUbicacion | clas errMalUbicacion puntoComa 
+| ffinally errMalUbicacion dosPuntos; 
 
 /*----------------------------------------------------------------------------------------*/
 /*VariableOOP  ::= Var identificador | Var errDecVariables | errDecVariables identificador; 
@@ -303,7 +305,7 @@ errInput::= error:e           {: parser.addError("Hay un error en input()."); :}
 errPrint::= error:e           {: parser.addError("Hay un error en print()"); :};
 errDecFuncion::= error:e      {: parser.addError("Hay un error en la declaracion de la funcion. "); :};
 errParametro1::= error:e      {: parser.addError("Hay un error en la declaracion de los parametros de la funcion. "); :};
-errParametro::= error:e      {: parser.addError("Hay un error,falta la coma. "); :};
+errParametro::= error:e       {: parser.addError("Hay un error,falta la coma. "); :};
 errBloque::= error:e          {: parser.addError("Hay un error Bloque. "); :};
 errRange::= error:e           {: parser.addError("Hay un error en el range. "); :};
 errIn::= error:e              {: parser.addError("Hay un error, falta 'in'. "); :};
