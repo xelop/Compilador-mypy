@@ -23,8 +23,8 @@ parser code
     return errores;
   }
   public void syntax_error(Symbol s){
-    errores.add(" En el token: " + s.value);
-    System.out.println("Error en la linea : " + s.value);
+    errores.add(". En el token: " + s.value + " En la linea: " + s.left + " En la columna: " + s.right);
+    System.out.println("Error en la linea : (" + s.left + ") " + s.value);
    
   }
 /*public void unrecovered_syntax_error(Symbol s){
@@ -58,12 +58,12 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuad
 
 /* Declaracion de no terminales */
 non terminal Programa, Variable, CodigoPrincipal;
-non terminal Funcional,DefFuncion,DefFunciones,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros,DefVariables,DefVariablesFact;
+non terminal Funcional,DefFuncion,DefFunciones,DefFunciones2,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros,DefVariables,DefVariablesFact;
 non terminal Variables,VariableRec;
 non terminal Bloque,Bloques,BloqueNuevo, DecIf,If, Else, Elif, ForFact, For, Range, While;
 
 /* Zona OOP */
-non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP,FuncionesOOP,PuntoComaOOP, VariableOOP;
+non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP,FuncionesOOP,PuntoComaOOP, VariableOOP, FuncionesOOP2;
 
 /* Operadores*/
 non terminal PuntoComa,DosPuntos;
@@ -205,14 +205,11 @@ Finally::= ffinally dosPuntos BloquePuntoComa
 ;
 
 
-/* Palabras reservadas que faltan:
-and break continue except finally for in input is not or print return try while list boolean */
-
 Literal ::= INT|FLOAT|CHAR|STRING;
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
 ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
-Expresion ::= Literal|Lista|identificador|bbreak|ccontinue
+Expresion ::= Literal|Lista|identificador
         | parenAbierto Expresion parenCerrado
         | errExpresion /*solo un error general para expresiones */
         | parenAbierto errParen
@@ -241,23 +238,29 @@ Print ::= pprint parenAbierto ElementosLista parenCerrado | errPrint;
 
 CodigoPrincipal::= Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
-CualquierCosa::= Expresion |If | ForFact | While | Try |  errBloque puntoComa  ; /* hace falta while for if try ... y listo*/
+CualquierCosa::= Expresion |If | ForFact | While | Try |  errBloque puntoComa | bbreak|ccontinue  ; /* hace falta while for if try ... y listo*/
 /*----------------------------------------------------------------------------------------*/
 /*VariableOOP  ::= var identificador | var errDecVariables | errDecVariables identificador; 
 VariablesOOP ::= VariablesOOP VariableOOP | VariableOOP;*/
 
-VariablesOOP ::= Variables;
+VariablesOOP ::= Variable Variables;
 /*PuntoComaOOP ::= puntoComa CodigoPrincipal | errPuntoYComa CodigoPrincipal;*/
 
-FuncionesOOP ::= DefFunciones puntoComa CodigoPrincipal 
-| DefFunciones:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); :} CodigoPrincipal 
-; 
+FuncionesOOP ::= DefFunciones2 puntoComa CodigoPrincipal 
+| DefFunciones2:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); :} CodigoPrincipal 
+| puntoComa:c {: errores.add("debe venir al menos un método al definir la clase, en la línea:  " + cleft); :} CodigoPrincipal;
 
+DefFunciones2 ::= DefFuncion DefFunciones2 | DefFuncion ;
 
+FuncionesOOP2 ::= DefFunciones puntoComa CodigoPrincipal 
+| DefFunciones:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); :} CodigoPrincipal; 
 
 OOP ::= HeaderOOP;
 /*Clase ::= BloqueOOP;*/
-BloqueOOP::= VariablesOOP FuncionesOOP;
+BloqueOOP::= VariablesOOP FuncionesOOP
+
+| DefFuncion:c {: errores.add("debe venir al menos una variable al definir la clase, en la línea:  " + cleft); :} FuncionesOOP2
+| puntoComa:c {: errores.add("debe venir al menos una variable y un método al definir la clase, en la línea:  " + cleft); :} CodigoPrincipal;
 
 HeaderOOP ::= clas identificador dosPuntos BloqueOOP| clas errHeaderOOP BloqueOOP;
 
