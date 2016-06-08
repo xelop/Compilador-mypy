@@ -1,7 +1,0 @@
-Entre cada elif debe haber un punto y coma
-for x in len? o solo string, lista y range
-
-Bloque principal (¿Cuáles se pueden hacer?):
- - x = 4
- - int x = 4
- - int x
