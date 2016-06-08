@@ -65,10 +65,10 @@ ComentarioDeLinea = "#" {InputCharacter}* {LineTerminator}?
 ComentarioDeBloque = \"\"\"([\s\S]*)\"\"\"
 
 var = ("float"|"string"|"boolean"|"char"|"list")
-palabraRerservada = ("assert"|"del"|"except"|"exec"|"from"|"global"|"import"|"is"|"lambda"|"pass"|"raise"|"return"|"None")
+palabraRerservada = ("assert"|"del"|"except"|"exec"|"from"|"global"|"import"|"lambda"|"pass"|"raise"|"None")
 
 opAritmeticos = "+"|"-"|"*"|"/"|"//"|"%"|"**"
-opComparadores = "=="|"!="|"<>"|">"|"<"|">="|"<="
+opComparadores = "=="|"!="|"<>"|">"|"<"|">="|"<="|"is"
 opLogicos = "and"|"or"|"not"
 opBits = ">>"|"<<"|"&"|"^"|"~"|\u007C
 opAsignaciones = "+="|"-="|"*="|"/="|"**="|"//="|"="
@@ -147,7 +147,8 @@ opPuntoComa = ";"
    "finally"           {lexeme = yytext(); return symbol(sym.ffinally, lexeme);}
   "break"              {lexeme = yytext(); return symbol(sym.bbreak, lexeme);} 
   "continue"           {lexeme = yytext(); return symbol(sym.ccontinue, lexeme);}
-  "int"                {lexeme = yytext(); return symbol(sym.intReservado, lexeme);}          
+  "int"                {lexeme = yytext(); return symbol(sym.intReservado, lexeme);}
+"return"                {lexeme = yytext(); return symbol(sym.rreturn, lexeme);}            
 
    {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
    {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); setError();} 

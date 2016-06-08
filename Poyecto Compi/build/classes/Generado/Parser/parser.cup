@@ -51,7 +51,7 @@ terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opC
 
 terminal var,intReservado,clas,def,ffalse,ttrue,iif,eelse,elif;
 
-terminal ffor,in,range,wwhile,pprint,iinput,ttry,eexcept,ffinally,bbreak,ccontinue;
+terminal ffor,in,range,wwhile,pprint,iinput,ttry,eexcept,ffinally,bbreak,ccontinue,rreturn;
 
 /* operadores */
 terminal opSuma, opResta, opMultiplicacion, opDivision, opDivisionE,opModulo,opPotencia;
@@ -261,7 +261,7 @@ MasElementosLista2::= coma Expresion MasElementosLista2| ;
 CodigoPrincipal::= Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
 
-CualquierCosa::= Expresion |If | ForFact | While | Try | bbreak|ccontinue 
+CualquierCosa::= Expresion |If | ForFact | While | Try | bbreak|ccontinue | rreturn Expresion 
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
 | var errMalUbicacion | clas errMalUbicacion puntoComa 
 | ffinally errMalUbicacion dosPuntos
