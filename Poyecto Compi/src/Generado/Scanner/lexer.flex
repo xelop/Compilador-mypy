@@ -2,6 +2,7 @@ package Generado.Scanner;
 import static Generado.Scanner.Token.*;
 import Generado.Parser.sym;
 import java_cup.runtime.*;
+import java.util.ArrayList;
 %%
 
 %public
@@ -26,6 +27,14 @@ import java_cup.runtime.*;
 
     StringBuffer string = new StringBuffer();
     Boolean cambioLinea = false;
+    
+    public ArrayList<String> errores = new ArrayList<String>();
+
+    public void setError(){
+        String error = "Error Léxico: " + lexeme + ". En la línea: " + (getLine()+1);
+        errores.add(error);
+    }
+    
 
     public String lexeme;
     public int getLine(){
@@ -78,7 +87,7 @@ opPuntoComa = ";"
     0("b"|"B")                     {Binario}+ {lexeme=yytext(); return symbol(sym.INT, lexeme);}
     0("o"|"O")                     {Octal}+  {lexeme=yytext(); return symbol(sym.INT, lexeme);}
     0("x"|"X")                     {Hexadecimal}+  {lexeme=yytext(); return symbol(sym.INT, lexeme);}
-    {Numero}+({Letra}+{Numero}*)+ {lexeme = yytext(); return symbol(sym.INT, lexeme);}
+    {Numero}+({Letra}+{Numero}*)+ {lexeme = yytext(); setError();}
     {Numero}+ {lexeme=yytext(); return symbol(sym.INT, lexeme);}
     ({Numero}+"."{Numero}+) {lexeme=yytext(); return symbol(sym.FLOAT, lexeme);}
 
@@ -141,7 +150,7 @@ opPuntoComa = ";"
   "int"                {lexeme = yytext(); return symbol(sym.intReservado, lexeme);}          
 
    {palabraRerservada} {lexeme = yytext(); return symbol(sym.palabraReservada, lexeme);}
-   {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); return symbol(sym.ERROR, lexeme);} 
+   {Letra}(({Letra}|{Numero})*({identificadorInvalido})+({Letra}|{Numero})*)+ {lexeme=yytext(); setError();} 
    {Letra}({Letra}|{Numero})* {lexeme=yytext(); return symbol(sym.identificador, lexeme);}
 
 }
@@ -150,10 +159,10 @@ opPuntoComa = ";"
 
     \'                              {yybegin(YYINITIAL); lexeme = "'"+ string.toString()+"'"; 
                                      if(string.length()>1)
-                                        return symbol(sym.ERROR, lexeme);
+                                        setError();
                                      else
                                         return symbol(sym.CHAR, lexeme);   }
-    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Char sin terminar: " + string.toString(); return symbol(sym.ERROR);}
+    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Char sin terminar: " + string.toString(); setError();}
     \S                               { string.append( yytext() );}
     \s                               { string.append( yytext() );}
 
@@ -164,11 +173,11 @@ opPuntoComa = ";"
     \"                             { yybegin(YYINITIAL);
                                      lexeme = "\"" +string.toString()+"\"";
                                      if(cambioLinea){
-                                          return symbol(sym.ERROR, lexeme);
+                                          setError();
                                      }else{
                                           return symbol(sym.STRING, lexeme);
                                      }} /*Numero linea = adonde terminO*/
-   <<EOF>>                         { yybegin(YYINITIAL); lexeme = "String sin terminar: " + string.toString(); return symbol(sym.ERROR);}
+   <<EOF>>                         { yybegin(YYINITIAL); lexeme = "String sin terminar: " + string.toString(); setError();}
     \t                             { string.append('\t'); } 
     \u0020                         {string.append(' ');}
     \\t                            { string.append('\t'); }
@@ -182,7 +191,7 @@ opPuntoComa = ";"
 <COMENTARIOBLOQUE> {
     \"\"\"                           { yybegin(YYINITIAL);}
     \S                               { string.append( yytext() ); }
-    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Comentario de bloque sin terminar: " + "\"\"\"" + string.toString(); return symbol(sym.ERROR, lexeme);}
+    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Comentario de bloque sin terminar: " + "\"\"\"" + string.toString(); setError();}
     \\t                              { string.append('\t'); }
     \\n                              { string.append('\n'); }
     \\r                              { string.append('\r'); }
@@ -194,7 +203,7 @@ opPuntoComa = ";"
 <COMENTARIOBLOQUE2> {
     \'\'\'                           { yybegin(YYINITIAL);}
     \S                               { string.append( yytext() ); }
-    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Comentario de bloque sin terminar: " + "\'\'\'" + string.toString(); return symbol(sym.ERROR, lexeme);}
+    <<EOF>>                          { yybegin(YYINITIAL); lexeme = "Comentario de bloque sin terminar: " + "\'\'\'" + string.toString(); setError();}
     \\t                              { string.append('\t'); }
     \\n                              { string.append('\n'); }
     \\r                              { string.append('\r'); }
@@ -206,4 +215,4 @@ opPuntoComa = ";"
 
 
 /* Error */
-. {lexeme = yytext();return symbol(sym.ERROR, lexeme);}
+. {lexeme = yytext();setError();}

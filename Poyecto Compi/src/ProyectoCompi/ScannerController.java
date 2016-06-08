@@ -35,7 +35,7 @@ public class ScannerController {
             }
             else{
                 switch(currentToken.sym){
-                    case 14:
+                    case 1:
                         String error = "Error Léxico: " + lexer.lexeme + ". En la línea: " + (lexer.getLine()+1);
                         errores.add(error);
                         break;
@@ -48,7 +48,7 @@ public class ScannerController {
         }
         Collections.sort(tokens);
         
-        printErrores();
+        printErrores(lexer);
         //printTokens();
     }
     
@@ -61,8 +61,8 @@ public class ScannerController {
         
     }
     
-    private void printErrores(){
-        for (String error: errores) {
+    private void printErrores(Lexer lexer){
+        for (String error: lexer.errores) {
             ProyectoCompi.PoyectoCompi.consola.impirmir(error);
         }
     }

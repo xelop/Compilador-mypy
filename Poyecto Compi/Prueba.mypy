@@ -1,31 +1,26 @@
-class clase:
-	int x,z,c
-	
-	
-	def funcion():
-		print("hola mundo")
-	;
-
+if True:
 ;
+if True:
+	if True:
+	;
+	else:
+	;
+;
+if x>4:
+;
+elif True:
+;
+if identificador:
+;
+if True
+;
+elif Truet: # se recupera aca
+;
+else:
+;
+else:
+;
+if True:
 
-#codigo principal
-int x
-x = + 2
-
-	a = []
-	a = [["hola"],[identificador]]
-	not []
-	2 + 3 * 4
-	True + False
-	funcion1(3+x , x=2, 3=z)  #error por el 3=z
-	'a'
-	a + * b   #error
-	(a==b)or (b<=2)
-	
-	
-	
-	
-	
-	
-2+2
-	
+elif Triue:
+; 

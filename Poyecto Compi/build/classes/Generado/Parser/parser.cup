@@ -125,9 +125,10 @@ DefFunciones ::= DefFuncion DefFunciones | ;
 DefFuncion ::= def identificador parenAbierto DefParametrosFact dosPuntos Variables CualquierCosas puntoComa 
 | def identificador parenAbierto DefParametrosFact dosPuntos Variables CualquierCosas errPuntoYComa
 | def errDecFuncion dosPuntos Variables CualquierCosas puntoComa
+| def identificador parenAbierto DefParametrosFact errDecFuncion dosPuntos
 | def errDecFuncion puntoComa  /* si no ponen los dos puntos no lee todo el bloque siguiente */
+| def parenAbierto errDecFuncion puntoComa
 | def errPuntoYComa DefFuncion
-| def errPuntoYComa /* usado para EOF por falta de punto y coma */
 | errDecFuncion DefFuncion
 | errDecFuncion puntoComa
 ;
@@ -157,8 +158,10 @@ Parametros ::= Expresion Parametro | parenCerrado |errParen;
 Parametro ::= coma Expresion Parametro | parenCerrado | errParametro parenCerrado ;
 
 If ::= iif ExpresionB dosPuntos BloquePuntoComa Elif
-| iif error:e {: parser.addError("Hay un error en la expresion del If" + 
+| iif ExpresionB error:e {: parser.addError("Hay un error en la declaracion del If" + 
 " (revisar dos puntos)."); :}
+ dosPuntos BloquePuntoComa Elif
+| iif errExpresionB 
  dosPuntos BloquePuntoComa Elif
 ;
 
@@ -179,13 +182,16 @@ ForFact ::= ffor identificador in For dosPuntos BloquePuntoComa
 | ffor identificador errIn For dosPuntos BloquePuntoComa ;
 
 For ::= STRING | identificador | Range | errFor ;
-Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado | range errRange parenCerrado| range parenAbierto INT errRange | range parenAbierto INT coma INT errRange| range errFor;
+Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado | range errRange parenCerrado
+| range parenAbierto INT error:e  {: parser.addError("Erro falta parentesis range o puntoComa."); :} 
+| range parenAbierto INT coma INT error:e {: parser.addError("Erro falta parentesis range o dos puntos."); :}
+| range errFor;
 
 While ::= wwhile ExpresionB dosPuntos BloquePuntoComa Else
 | wwhile parenAbierto parenCerrado dosPuntos BloquePuntoComa Else
-| wwhile error:e dosPuntos {: parser.addError("Hay un error en la expresion del While" + 
+| wwhile error:e dosPuntos {: parser.addError("Hay un error en la expresionn del While" + 
 "."); :}  BloquePuntoComa Else
-| wwhile ExpresionB error:e dosPuntos {: parser.addError("Hay un error en la expresion del While" + 
+| wwhile ExpresionB error:e dosPuntos {: parser.addError("Hay un error en la declaracion del While" + 
 "."); :}  BloquePuntoComa Else    
 ; 
 
@@ -258,7 +264,9 @@ CualquierCosas::= CualquierCosas CualquierCosa | ;
 CualquierCosa::= Expresion |If | ForFact | While | Try | bbreak|ccontinue 
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
 | var errMalUbicacion | clas errMalUbicacion puntoComa 
-| ffinally errMalUbicacion dosPuntos; 
+| ffinally errMalUbicacion dosPuntos
+| eelse errMalUbicacion dosPuntos 
+| elif errMalUbicacion dosPuntos;  
 
 /*----------------------------------------------------------------------------------------*/
 /*VariableOOP  ::= Var identificador | Var errDecVariables | errDecVariables identificador; 
