@@ -88,6 +88,9 @@ non terminal FuncionPredefinida,FuncionesPredefinidas, Input, Print,BloquePuntoC
 non terminal CualquierCosas,CualquierCosa;
 non terminal TryExceptFinally, Try , Except , Finally,IntFuncion;
 
+/* Prueba break,continue */
+non terminal BloquePuntoComaEspecial,CualquierCosaEspecial,CualquierCosasEspecial,errEspecial,IfEspecial,ElseEspecial,ElifEspecial,TryEspecial,ExceptEspecial,FinallyEspecial;
+
 /*------------------------------Precendencias--------------------------------------*/
 
 
@@ -165,21 +168,40 @@ If ::= iif ExpresionB dosPuntos BloquePuntoComa Elif
  dosPuntos BloquePuntoComa Elif
 ;
 
+IfEspecial ::= iif ExpresionB dosPuntos BloquePuntoComaEspecial ElifEspecial
+| iif ExpresionB error:e {: parser.addError("Hay un error en la declaracion del If" + 
+" (revisar dos puntos)."); :}
+ dosPuntos BloquePuntoComaEspecial ElifEspecial
+| iif errExpresionB 
+ dosPuntos BloquePuntoComaEspecial ElifEspecial
+;
+
 Elif ::= elif ExpresionB dosPuntos BloquePuntoComa Elif 
 | elif error:e {: parser.addError("Hay un error en la expresion del If" + 
 " (revisar dos puntos)."); :}
 dosPuntos BloquePuntoComa Elif
 | Else; 
 
-Else::= eelse dosPuntos BloquePuntoComa
-| eelse errElse dosPuntos BloquePuntoComa
+ElifEspecial ::= elif ExpresionB dosPuntos BloquePuntoComaEspecial ElifEspecial 
+| elif error:e {: parser.addError("Hay un error en la expresion del If" + 
+" (revisar dos puntos)."); :}
+dosPuntos BloquePuntoComaEspecial ElifEspecial
+| ElseEspecial; 
+
+Else::= eelse dosPuntos BloquePuntoComaEspecial
+| eelse errElse dosPuntos BloquePuntoComaEspecial
 |
 ;
 
-ForFact ::= ffor identificador in For dosPuntos BloquePuntoComa
-| ffor errFor in For dosPuntos BloquePuntoComa
-| ffor identificador in For errFor dosPuntos BloquePuntoComa
-| ffor identificador errIn For dosPuntos BloquePuntoComa ;
+ElseEspecial::= eelse dosPuntos BloquePuntoComaEspecial
+| eelse errElse dosPuntos BloquePuntoComaEspecial
+|
+;
+
+ForFact ::= ffor identificador in For dosPuntos BloquePuntoComaEspecial
+| ffor errFor in For dosPuntos BloquePuntoComaEspecial
+| ffor identificador in For errFor dosPuntos BloquePuntoComaEspecial
+| ffor identificador errIn For dosPuntos BloquePuntoComaEspecial ;
 
 For ::= STRING | identificador | Range | errFor ;
 Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado | range errRange parenCerrado
@@ -187,15 +209,16 @@ Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT 
 | range parenAbierto INT coma INT error:e {: parser.addError("Erro falta parentesis range o dos puntos."); :}
 | range errFor;
 
-While ::= wwhile ExpresionB dosPuntos BloquePuntoComa Else
-| wwhile parenAbierto parenCerrado dosPuntos BloquePuntoComa Else
+While ::= wwhile ExpresionB dosPuntos BloquePuntoComaEspecial Else
+| wwhile parenAbierto parenCerrado dosPuntos BloquePuntoComaEspecial Else
 | wwhile error:e dosPuntos {: parser.addError("Hay un error en la expresionn del While" + 
-"."); :}  BloquePuntoComa Else
+"."); :}  BloquePuntoComaEspecial Else
 | wwhile ExpresionB error:e dosPuntos {: parser.addError("Hay un error en la declaracion del While" + 
-"."); :}  BloquePuntoComa Else    
+"."); :}  BloquePuntoComaEspecial Else    
 ; 
 
 BloquePuntoComa ::= CualquierCosas puntoComa | errPuntoYComa puntoComa ;
+BloquePuntoComaEspecial ::= CualquierCosasEspecial puntoComa | errPuntoYComa puntoComa ;
 
 BloqueNuevo ::= If BloqueNuevo | ForFact BloqueNuevo | While BloqueNuevo 
 | Try BloqueNuevo |  errBloque puntoComa ; 
@@ -209,6 +232,11 @@ Try::= ttry dosPuntos CualquierCosas puntoComa Except
 | ttry dosPuntos CualquierCosas errExcept puntoComa
 ;
 
+TryEspecial::= ttry dosPuntos CualquierCosasEspecial puntoComa ExceptEspecial
+| ttry errTry  BloquePuntoComaEspecial Except
+| ttry dosPuntos CualquierCosasEspecial errExcept puntoComa
+;
+
 
 Except::= eexcept identificador dosPuntos BloquePuntoComa Finally
 | eexcept error:e {: parser.addError("Hay un error con la definición del except" + 
@@ -217,8 +245,20 @@ dosPuntos BloquePuntoComa Finally
 | errExcept2
 ;
 
+ExceptEspecial::= eexcept identificador dosPuntos BloquePuntoComaEspecial FinallyEspecial
+| eexcept error:e {: parser.addError("Hay un error con la definición del except" + 
+" (revisar dos puntos o identificador)." ); :}
+dosPuntos BloquePuntoComaEspecial FinallyEspecial
+| errExcept2
+;
+
 Finally::= ffinally dosPuntos BloquePuntoComa
 | ffinally errFinally dosPuntos BloquePuntoComa
+|
+;
+
+FinallyEspecial::= ffinally dosPuntos BloquePuntoComaEspecial
+| ffinally errFinally dosPuntos BloquePuntoComaEspecial
 |
 ;
 
@@ -260,8 +300,16 @@ MasElementosLista2::= coma Expresion MasElementosLista2| ;
 
 CodigoPrincipal::= Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
+CualquierCosasEspecial::= CualquierCosasEspecial CualquierCosaEspecial | ;
 
-CualquierCosa::= Expresion |If | ForFact | While | Try | bbreak|ccontinue | rreturn Expresion 
+CualquierCosa::= Expresion |If | ForFact | While | Try | bbreak errEspecial |ccontinue errEspecial | rreturn Expresion 
+| def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
+| var errMalUbicacion | clas errMalUbicacion puntoComa 
+| ffinally errMalUbicacion dosPuntos
+| eelse errMalUbicacion dosPuntos 
+| elif errMalUbicacion dosPuntos;
+
+CualquierCosaEspecial::= Expresion |IfEspecial | ForFact | While | TryEspecial | bbreak|ccontinue | rreturn Expresion 
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
 | var errMalUbicacion | clas errMalUbicacion puntoComa 
 | ffinally errMalUbicacion dosPuntos
@@ -333,3 +381,4 @@ errFinally ::= error:e                  {: parser.addError("Hay un error, finall
 errInt ::= error:e                  {: parser.addError("Hay un error, en la funcion Int."); :};
 errParen ::= error:e                  {: parser.addError("Error parentesis."); :};
 errMalUbicacion ::= error:e            {: parser.addError("Estructura invalida (verifique puntoYcoma de estructura anterior)."); :};
+errEspecial ::= error:e            {: parser.addError("Break o Continue fuera de lugar."); :};
