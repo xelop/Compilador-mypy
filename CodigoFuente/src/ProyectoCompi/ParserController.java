@@ -34,6 +34,8 @@ public class ParserController {
             for(String error : parser.retornarLista()){
                 console.impirmir(error);
             }
+            System.out.println("Pila Semantica:");
+            System.out.println(parser.retornarPila().imprimir());
             
         }
         catch(Exception e){

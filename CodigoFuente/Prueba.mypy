@@ -1,26 +1,4 @@
-def funcion():
-	if True:
-	;
-	for x in t:
-	if True:
-	break
-	;
-	elif True:
-	continue
-	;
-	else:
-	break
-	;
-	;
-	while True:
-	try:
-	break
-	;
-	except ident:
-	break
-	;
-	finally:
-	continue
-	;
-	;
-;	
+	
+	int a,b,c
+	char hola
+	string holi

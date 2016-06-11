@@ -1,4 +1,6 @@
 package ProyectoCompi;
+import Generado.Parser.PilaSemantica;
+import Generado.Parser.RegistroSemantico;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,6 +8,7 @@ import java.util.ArrayList;
 public class PoyectoCompi {
 
         public static Consola consola;
+        
     public static void main(String[] args) throws IOException{
         consola = new Consola();
         consola.setVisible(true);
@@ -19,6 +22,7 @@ public class PoyectoCompi {
         consola.impirmir("\n");
         consola.impirmir("Ahora se procede a parsear:");
         controller.parsear();
+        
     }
     
     public static void generarCup(){

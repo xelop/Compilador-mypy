@@ -6,10 +6,12 @@ parser code
   public boolean syntaxErrors;
 
   ArrayList<String> errores;
+  PilaSemantica pila;
 
   public Analizador(java_cup.runtime.Scanner s, boolean type) {
     super(s);
     errores = new ArrayList<String>();
+    pila = new PilaSemantica();
   }
   
   public void addError(String error){
@@ -22,6 +24,10 @@ parser code
   public ArrayList<String> retornarLista(){
     return errores;
   }
+  
+    public PilaSemantica retornarPila(){
+    return pila;
+}
   public void syntax_error(Symbol s){
         String value = "";
     if(s.value == null){
@@ -49,7 +55,8 @@ action code
 /* Declaracion de terminales */
 terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
 
-terminal var,intReservado,clas,def,ffalse,ttrue,iif,eelse,elif;
+terminal intReservado,clas,def,ffalse,ttrue,iif,eelse,elif;
+terminal var;
 
 terminal ffor,in,range,wwhile,pprint,iinput,ttry,eexcept,ffinally,bbreak,ccontinue,rreturn;
 
@@ -63,7 +70,8 @@ terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuad
 /*--------------------------------------------------------------------------*/
 
 /* Declaracion de no terminales */
-non terminal Programa, Variable, CodigoPrincipal;
+non terminal Programa, CodigoPrincipal;
+non terminal Variable;
 non terminal Funcional,DefFuncion,DefFunciones,DefFunciones2,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros,DefVariables,DefVariablesFact;
 non terminal Variables,VariableRec;
 non terminal Bloque,Bloques,BloqueNuevo, DecIf,If, Else, Elif, ForFact, For, Range, While,Var;
@@ -122,7 +130,8 @@ Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo rea
 Funcional ::= DefFunciones CodigoPrincipal;
 
 
-Var ::= var | intReservado;
+Var ::= var:v {: pila.recuerdaTipo(v); :}  | intReservado:v {: pila.recuerdaTipo(v); :} ;
+/* creo que habra que separar las variables */
 
 DefFunciones ::= DefFuncion DefFunciones | ;
 DefFuncion ::= def identificador parenAbierto DefParametrosFact dosPuntos Variables CualquierCosas puntoComa 
@@ -147,9 +156,9 @@ DefParametros::= coma Var identificador  DefParametros | parenCerrado | errParam
 Variable::= Var DefVariablesFact | Var errDecVariables | errDecVariables identificador ;
 Variables ::= Variables Variable| ;
 
-DefVariablesFact ::= identificador DefVariables | errDecVariables DefVariables; 
-DefVariables::= coma identificador  DefVariables 
-|  errDecVariables identificador DefVariables | errDecVariables DefVariables |; 
+DefVariablesFact ::= identificador:v {: pila.recuerdaId(v); :} DefVariables | errDecVariables DefVariables; 
+DefVariables::= coma identificador:v {: pila.recuerdaId(v); :}  DefVariables 
+|  errDecVariables identificador:v {: pila.recuerdaId(v); :} DefVariables | errDecVariables DefVariables |; 
 
 
 /*---------------------------------------------------------------------------------------*/
@@ -298,7 +307,7 @@ Print ::= pprint parenAbierto ElementosLista2 parenCerrado | errPrint
 ElementosLista2::= Expresion MasElementosLista2;
 MasElementosLista2::= coma Expresion MasElementosLista2| ;
 
-CodigoPrincipal::= Variables CualquierCosas;
+CodigoPrincipal::= {: pila.ambitoActual = "global"; :} Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
 CualquierCosasEspecial::= CualquierCosasEspecial CualquierCosaEspecial | ;
 

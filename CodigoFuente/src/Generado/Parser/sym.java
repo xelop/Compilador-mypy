@@ -17,7 +17,7 @@ public class sym {
   public static final int opAnd = 44;
   public static final int ffinally = 33;
   public static final int dosPuntos = 47;
-  public static final int intReservado = 17;
+  public static final int intReservado = 16;
   public static final int opComparadores = 9;
   public static final int opDivision = 40;
   public static final int rreturn = 36;
@@ -29,17 +29,17 @@ public class sym {
   public static final int iinput = 30;
   public static final int parenAbierto = 49;
   public static final int opAsignaciones = 10;
-  public static final int clas = 18;
+  public static final int clas = 17;
   public static final int ccontinue = 35;
-  public static final int def = 19;
+  public static final int def = 18;
   public static final int opModulo = 42;
-  public static final int ttrue = 21;
-  public static final int ffalse = 20;
-  public static final int var = 16;
+  public static final int ttrue = 20;
+  public static final int ffalse = 19;
+  public static final int var = 24;
   public static final int opDelimitadores = 11;
   public static final int EOF = 0;
   public static final int opBits = 12;
-  public static final int iif = 22;
+  public static final int iif = 21;
   public static final int error = 1;
   public static final int opLogicos = 13;
   public static final int opSuma = 37;
@@ -47,14 +47,14 @@ public class sym {
   public static final int in = 26;
   public static final int punto = 54;
   public static final int opOr = 45;
-  public static final int elif = 24;
+  public static final int elif = 23;
   public static final int ffor = 25;
   public static final int ERROR = 14;
   public static final int pprint = 29;
   public static final int puntoComa = 48;
   public static final int ttry = 31;
   public static final int eexcept = 32;
-  public static final int eelse = 23;
+  public static final int eelse = 22;
   public static final int FLOAT = 5;
   public static final int cuadradoCerrado = 52;
   public static final int END = 15;
@@ -80,7 +80,6 @@ public class sym {
   "opLogicos",
   "ERROR",
   "END",
-  "var",
   "intReservado",
   "clas",
   "def",
@@ -89,6 +88,7 @@ public class sym {
   "iif",
   "eelse",
   "elif",
+  "var",
   "ffor",
   "in",
   "range",
