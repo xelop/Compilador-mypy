@@ -1,16 +1,13 @@
-	class caca:
-	
-	list atributo1
-	
-	def funcion1():
-	;
+def funcion1(int x, int y):
+
 ;
-int caca,caca1
+def funcion2(list x,char y):
 
-2+2
+;
+	
+int x,y
 
-	
-	
+funcion1()
 	
 
 	

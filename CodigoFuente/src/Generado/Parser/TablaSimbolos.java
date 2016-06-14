@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class TablaSimbolos {
     public ArrayList<Simbolo> simbolos;
     public ArrayList<String> errores;
+    public Integer numParametro;
     
     public TablaSimbolos(){
         simbolos = new ArrayList();
         errores = new ArrayList();
+        numParametro = 1;
     }
     
     
@@ -17,7 +19,15 @@ public class TablaSimbolos {
             errores.add("Identificador '" + pNombre +  "' repetido. Línea : " + pLinea);
         }
         else{
-            Simbolo nuevoSimbolo = new Simbolo(pTipo, pNombre, pAmbito, pTipoDato,pFuncion ,pLinea, pColumna);
+            Simbolo nuevoSimbolo = null;
+            if (pAmbito.equals("PARAMETRO")){
+                 nuevoSimbolo = new Simbolo(pTipo, pNombre, pAmbito, pTipoDato,pFuncion ,pLinea, pColumna,numParametro.toString());
+                 numParametro++;
+            }
+            else{
+                nuevoSimbolo = new Simbolo(pTipo, pNombre, pAmbito, pTipoDato,pFuncion ,pLinea, pColumna,"");
+            }
+            
             simbolos.add(nuevoSimbolo);
             if(nuevoSimbolo.ambito.equals("GLOBAL") && nuevoSimbolo.tipo.equals("VARIABLE")){
                 System.out.println("generar variable global ensamblador");
@@ -57,7 +67,18 @@ public class TablaSimbolos {
         }
         return false;
     }
-    
+    public void buscarFuncion(String pTipo,String pNombre, int pLinea){
+        Boolean encontrada = false;
+        for(int i = 0; i<=simbolos.size() - 1 ; i++){
+            if(simbolos.get(i).tipo.equals(pTipo) && simbolos.get(i).nombre.equals(pNombre)){
+                encontrada = true;
+            }
+        }
+        if (!encontrada){
+            errores.add("Funcion: '" + pNombre +  "' no definida en la linea : " + pLinea);
+        }
+        
+    }
     public String imprimir(){
         String resultado = "";
         for(int i = 0; i<=simbolos.size() - 1 ; i++){
@@ -102,5 +123,6 @@ public class TablaSimbolos {
         RegistroSemantico funcion = pila.pop();
         agregarSimbolo(funcion.tipo,funcion.valor.toString(),funcion.ambito,"","",
                         funcion.linea,funcion.columna);
+        numParametro = 1;
     }
 }

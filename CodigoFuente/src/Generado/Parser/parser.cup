@@ -179,8 +179,8 @@ DefVariables::= coma identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,vrigh
 
 
 /*---------------------------------------------------------------------------------------*/
-Funcion::= identificador parenAbierto Parametros
-| identificador errParen parenCerrado
+Funcion::= identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); :} parenAbierto Parametros
+| identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); :} errParen parenCerrado
 ;
 
 Parametros ::= Expresion Parametro | parenCerrado |errParen;
@@ -305,7 +305,8 @@ Expresion ::= identificador punto Funcion;
 Expresion ::= ExpresionB;
 Expresion ::= FuncionPredefinida;
 
-ExpresionB ::= ffalse | ttrue| Funcion |opNot Expresion| Expresion OpBinarioB Expresion | parenAbierto ExpresionB parenCerrado ;
+ExpresionB ::= ffalse | ttrue| Funcion 
+|opNot Expresion| Expresion OpBinarioB Expresion | parenAbierto ExpresionB parenCerrado ;
 
 Expresion ::= identificador opAsignaciones Expresion;
 
