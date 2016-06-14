@@ -59,10 +59,11 @@ action code
 
 /*----------------------------------------------------------------------*/
 /* Declaracion de terminales */
-terminal identificador,palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
+terminal palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
 
 terminal intReservado,clas,def,ffalse,ttrue,iif,eelse,elif;
 terminal var;
+terminal identificador;
 
 terminal ffor,in,range,wwhile,pprint,iinput,ttry,eexcept,ffinally,bbreak,ccontinue,rreturn;
 
@@ -92,6 +93,10 @@ non terminal PuntoComa,DosPuntos;
 non terminal errHeaderOOP, errDecVariables, errPuntoYComa, errClase,errExpresion, errIf, errAsignacion,errExpresionB;
 non terminal errInput, errPrint,errDecFuncion,errParametro1,errParametro,errBloque,errIn,errRange,errFor,errElse,errDosPuntos;
 non terminal errTry, errExcept, errExcept2, errFinally,errInt,errParen,errMalUbicacion;
+
+/* Semantico */
+non terminal NombreFuncion;
+
 
 /* Común para todos */
 non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionesB ;
@@ -136,13 +141,13 @@ Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo rea
 Funcional ::= DefFunciones CodigoPrincipal;
 
 
-
+NombreFuncion ::= identificador:v {: pila.recuerdaFuncion(v,vleft,vright); :} ;
 
 DefFunciones ::= DefFuncion DefFunciones | ;
-DefFuncion ::= def identificador parenAbierto DefParametrosFact dosPuntos  {: pila.ambitoActual = "LOCAL"; :} Variables CualquierCosas puntoComa 
-| def identificador parenAbierto DefParametrosFact dosPuntos Variables CualquierCosas errPuntoYComa
+DefFuncion ::= def NombreFuncion parenAbierto DefParametrosFact dosPuntos {: pila.ambitoActual = "LOCAL"; :} Variables CualquierCosas puntoComa {: tabla.insertarFuncion(pila); :} 
+| def NombreFuncion parenAbierto DefParametrosFact dosPuntos Variables CualquierCosas errPuntoYComa
 | def errDecFuncion dosPuntos Variables CualquierCosas puntoComa
-| def identificador parenAbierto DefParametrosFact errDecFuncion dosPuntos
+| def NombreFuncion parenAbierto DefParametrosFact errDecFuncion dosPuntos
 | def errDecFuncion puntoComa  /* si no ponen los dos puntos no lee todo el bloque siguiente */
 | def parenAbierto errDecFuncion puntoComa
 | def errPuntoYComa DefFuncion
@@ -152,11 +157,11 @@ DefFuncion ::= def identificador parenAbierto DefParametrosFact dosPuntos  {: pi
 
 
 
-DefParametrosFact ::= Var identificador:v {: pila.ambitoActual = "PARAMETRO"; pila.recuerdaId(v,"VARIABLE",vleft,vright);  tabla.insertarSimbolos(pila); :} DefParametros
+DefParametrosFact ::= Var identificador:v {: pila.ambitoActual = "PARAMETRO"; pila.recuerdaId(v,"VARIABLE",vleft,vright);  tabla.insertarVariables(pila); :} DefParametros
 | var errParametro1 DefParametros| identificador errParametro1 DefParametros 
 | parenCerrado; 
 
-DefParametros::= coma Var identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,vright);  tabla.insertarSimbolos(pila); :} DefParametros 
+DefParametros::= coma Var identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,vright);  tabla.insertarVariables(pila); :} DefParametros 
 | parenCerrado | errParametro1 ; 
 
 
@@ -165,7 +170,7 @@ DefParametros::= coma Var identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,
 Var ::= var:v {: pila.recuerdaTipo(v,vleft,vright); :}  | intReservado:v {: pila.recuerdaTipo(v,vleft,vright); :} ;
 /* creo que habra que separar las variables */
 
-Variable::= Var DefVariablesFact {: tabla.insertarSimbolos(pila); :}| Var errDecVariables | errDecVariables identificador ;
+Variable::= Var DefVariablesFact {: tabla.insertarVariables(pila); :}| Var errDecVariables | errDecVariables identificador ;
 Variables ::= Variables Variable| ;
 
 DefVariablesFact ::= identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,vright); :} DefVariables | errDecVariables DefVariables; 

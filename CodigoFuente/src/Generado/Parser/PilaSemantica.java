@@ -39,7 +39,14 @@ public class PilaSemantica {
         }
         return null;
     }
-    
+    public RegistroSemantico getPrimeraFuncion(){//devuelve la primera funcion en la pila
+        for(int i = lista.size() - 1; i>=0 ; i--){
+            if (lista.get(i).tipo.equals("FUNCION")){
+                return lista.get(i);
+            }
+        }
+        return null;
+    }
     
     /* Se me ocurre que podemos hacer aquí las funciones que hicimos en clase */
     
@@ -49,6 +56,10 @@ public class PilaSemantica {
     }
     public void recuerdaId(Object pValor, String pDato,int pLinea, int pColumna){
         RegistroSemantico registro = new RegistroSemantico("IDENTIFICADOR",pValor, ambitoActual,pDato,pLinea,pColumna);
+        push(registro);
+    }
+    public void recuerdaFuncion(Object pValor, int pLinea, int pColumna){
+        RegistroSemantico registro = new RegistroSemantico("FUNCION",pValor, "","",pLinea,pColumna);
         push(registro);
     }
 }

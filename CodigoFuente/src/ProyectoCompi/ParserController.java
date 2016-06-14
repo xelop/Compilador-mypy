@@ -41,7 +41,6 @@ public class ParserController {
             console.impirmir(parser.retornarTabla().imprimir());
             console.impirmir("Errores Semánticos:");
             console.impirmir(parser.retornarTabla().imprimirErrores());
-            
         }
         catch(Exception e){
             System.out.println(e.getMessage());

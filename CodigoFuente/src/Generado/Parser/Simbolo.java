@@ -6,20 +6,23 @@ public class Simbolo {
     String nombre;//x, y , caca
     String ambito;//local, global, parámetro
     String tipoDato;//string, char, list
+    String funcion;//si pertenece a una funcion
     int linea;
     int columna;
     
-    public Simbolo(String pTipo, String pNombre, String pAmbito, String pTipoDato, int pLinea, int pColumna){
+    public Simbolo(String pTipo, String pNombre, String pAmbito, String pTipoDato, String pFuncion, int pLinea, int pColumna){
         tipo = pTipo;
         nombre = pNombre;
         ambito = pAmbito;
         linea = pLinea;
         columna = pColumna;
         tipoDato = pTipoDato;
+        funcion = pFuncion;
+        
     }
     
     @Override
     public String toString(){
-        return nombre + " | " + tipo + " | " + tipoDato + " | " + ambito;
+        return tipo + " | " + nombre + " | " + tipoDato + " | " + ambito + " | " + funcion;
     }
 }
