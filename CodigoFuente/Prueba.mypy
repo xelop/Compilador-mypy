@@ -1,4 +1,16 @@
+	class caca:
 	
-	int a,b,c
-	char hola
-	string holi
+	list atributo1,atributo2,attribot3
+	int a
+	
+	def funcion(int param1, int param2):
+		string local
+		list local2
+		char local3,local4
+	;
+	def funcion(int mapram1):
+	;
+	
+;
+
+string global1,global2

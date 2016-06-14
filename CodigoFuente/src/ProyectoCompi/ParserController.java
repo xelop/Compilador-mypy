@@ -34,8 +34,13 @@ public class ParserController {
             for(String error : parser.retornarLista()){
                 console.impirmir(error);
             }
-            System.out.println("Pila Semantica:");
-            System.out.println(parser.retornarPila().imprimir());
+            console.impirmir("");
+            console.impirmir("Pila Semantica:");
+            console.impirmir(parser.retornarPila().imprimir());
+            console.impirmir("Tabla de Simbolos:");
+            console.impirmir(parser.retornarTabla().imprimir());
+            console.impirmir("Errores Semánticos:");
+            console.impirmir(parser.retornarTabla().imprimirErrores());
             
         }
         catch(Exception e){

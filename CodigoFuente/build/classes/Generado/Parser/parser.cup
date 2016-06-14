@@ -7,11 +7,13 @@ parser code
 
   ArrayList<String> errores;
   PilaSemantica pila;
+  TablaSimbolos tabla;
 
   public Analizador(java_cup.runtime.Scanner s, boolean type) {
     super(s);
     errores = new ArrayList<String>();
     pila = new PilaSemantica();
+    tabla = new TablaSimbolos();
   }
   
   public void addError(String error){
@@ -21,13 +23,17 @@ parser code
     /*ProyectoCompi.PoyectoCompi.consola.impirmir(error);*/
   }
 
-  public ArrayList<String> retornarLista(){
-    return errores;
-  }
+   public ArrayList<String> retornarLista(){
+        return errores;
+   }
   
-    public PilaSemantica retornarPila(){
-    return pila;
-}
+   public PilaSemantica retornarPila(){
+       return pila;
+   }
+   public TablaSimbolos retornarTabla(){
+       return tabla;
+   }
+
   public void syntax_error(Symbol s){
         String value = "";
     if(s.value == null){
@@ -130,11 +136,10 @@ Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo rea
 Funcional ::= DefFunciones CodigoPrincipal;
 
 
-Var ::= var:v {: pila.recuerdaTipo(v); :}  | intReservado:v {: pila.recuerdaTipo(v); :} ;
-/* creo que habra que separar las variables */
+
 
 DefFunciones ::= DefFuncion DefFunciones | ;
-DefFuncion ::= def identificador parenAbierto DefParametrosFact dosPuntos Variables CualquierCosas puntoComa 
+DefFuncion ::= def identificador parenAbierto DefParametrosFact dosPuntos  {: pila.ambitoActual = "LOCAL"; :} Variables CualquierCosas puntoComa 
 | def identificador parenAbierto DefParametrosFact dosPuntos Variables CualquierCosas errPuntoYComa
 | def errDecFuncion dosPuntos Variables CualquierCosas puntoComa
 | def identificador parenAbierto DefParametrosFact errDecFuncion dosPuntos
@@ -147,18 +152,25 @@ DefFuncion ::= def identificador parenAbierto DefParametrosFact dosPuntos Variab
 
 
 
-DefParametrosFact ::= Var identificador DefParametros | var errParametro1 DefParametros| identificador errParametro1 DefParametros | parenCerrado; 
-DefParametros::= coma Var identificador  DefParametros | parenCerrado | errParametro1 ; 
+DefParametrosFact ::= Var identificador:v {: pila.ambitoActual = "PARAMETRO"; pila.recuerdaId(v,"VARIABLE",vleft,vright);  tabla.insertarSimbolos(pila); :} DefParametros
+| var errParametro1 DefParametros| identificador errParametro1 DefParametros 
+| parenCerrado; 
+
+DefParametros::= coma Var identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,vright);  tabla.insertarSimbolos(pila); :} DefParametros 
+| parenCerrado | errParametro1 ; 
 
 
 /*-----------------------------------------------------------------------------------------*/
 
-Variable::= Var DefVariablesFact | Var errDecVariables | errDecVariables identificador ;
+Var ::= var:v {: pila.recuerdaTipo(v,vleft,vright); :}  | intReservado:v {: pila.recuerdaTipo(v,vleft,vright); :} ;
+/* creo que habra que separar las variables */
+
+Variable::= Var DefVariablesFact {: tabla.insertarSimbolos(pila); :}| Var errDecVariables | errDecVariables identificador ;
 Variables ::= Variables Variable| ;
 
-DefVariablesFact ::= identificador:v {: pila.recuerdaId(v); :} DefVariables | errDecVariables DefVariables; 
-DefVariables::= coma identificador:v {: pila.recuerdaId(v); :}  DefVariables 
-|  errDecVariables identificador:v {: pila.recuerdaId(v); :} DefVariables | errDecVariables DefVariables |; 
+DefVariablesFact ::= identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,vright); :} DefVariables | errDecVariables DefVariables; 
+DefVariables::= coma identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,vright); :}  DefVariables 
+|  errDecVariables identificador:v DefVariables | errDecVariables DefVariables |; 
 
 
 /*---------------------------------------------------------------------------------------*/
@@ -307,7 +319,7 @@ Print ::= pprint parenAbierto ElementosLista2 parenCerrado | errPrint
 ElementosLista2::= Expresion MasElementosLista2;
 MasElementosLista2::= coma Expresion MasElementosLista2| ;
 
-CodigoPrincipal::= {: pila.ambitoActual = "global"; :} Variables CualquierCosas;
+CodigoPrincipal::= {: pila.ambitoActual = "GLOBAL"; :} Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
 CualquierCosasEspecial::= CualquierCosasEspecial CualquierCosaEspecial | ;
 
@@ -326,23 +338,20 @@ CualquierCosaEspecial::= Expresion |IfEspecial | ForFact | While | TryEspecial |
 | elif errMalUbicacion dosPuntos;  
 
 /*----------------------------------------------------------------------------------------*/
-/*VariableOOP  ::= Var identificador | Var errDecVariables | errDecVariables identificador; 
-VariablesOOP ::= VariablesOOP VariableOOP | VariableOOP;*/
 
-VariablesOOP ::= Variable Variables;
-/*PuntoComaOOP ::= puntoComa CodigoPrincipal | errPuntoYComa CodigoPrincipal;*/
+VariablesOOP ::=  {: pila.ambitoActual = "ATRIBUTO"; :} Variable Variables;
 
-FuncionesOOP ::= DefFunciones2 puntoComa CodigoPrincipal 
+FuncionesOOP ::=  DefFunciones2 puntoComa CodigoPrincipal 
 | DefFunciones2:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); :} CodigoPrincipal 
 | puntoComa:c {: errores.add("debe venir al menos un método al definir la clase, en la línea:  " + cleft); :} CodigoPrincipal;
 
-DefFunciones2 ::= DefFuncion DefFunciones2 | DefFuncion ;
+DefFunciones2 ::= DefFuncion DefFunciones2 
+|  DefFuncion ;
 
 FuncionesOOP2 ::= DefFunciones puntoComa CodigoPrincipal 
 | DefFunciones:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); :} CodigoPrincipal; 
 
 OOP ::= HeaderOOP;
-/*Clase ::= BloqueOOP;*/
 BloqueOOP::= VariablesOOP FuncionesOOP
 
 | DefFuncion:c {: errores.add("debe venir al menos una variable al definir la clase, en la línea:  " + cleft); :} FuncionesOOP2

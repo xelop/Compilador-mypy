@@ -37,7 +37,7 @@ public class PoyectoCompi {
         opciones[3] = "Analizador";
         opciones[4] = "-expect";
         //Le damos el nombre que queremos que tenga
-        opciones[5] = "100";
+        opciones[5] = "150";
         //Le decimos donde se encuentra el archivo .cup
         opciones[6] = "src\\Generado\\Parser\\parser.cup";
         try {
