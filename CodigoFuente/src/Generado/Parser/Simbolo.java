@@ -18,7 +18,6 @@ public class Simbolo {
         columna = pColumna;
         tipoDato = pTipoDato;
         funcion = pFuncion;
-        
     }
     
     @Override

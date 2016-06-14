@@ -15,12 +15,16 @@ public class TablaSimbolos {
     public void agregarSimbolo(String pTipo, String pNombre, String pAmbito,String pTipoDato,String pFuncion, int pLinea, int pColumna){
         if(verificaRepetido(pTipo,pNombre,pAmbito,pFuncion)){
             errores.add("Identificador '" + pNombre +  "' repetido. Línea : " + pLinea);
-            //crear variable ensamblador
-            //crear rutina
         }
         else{
             Simbolo nuevoSimbolo = new Simbolo(pTipo, pNombre, pAmbito, pTipoDato,pFuncion ,pLinea, pColumna);
             simbolos.add(nuevoSimbolo);
+            if(nuevoSimbolo.ambito.equals("GLOBAL") && nuevoSimbolo.tipo.equals("VARIABLE")){
+                System.out.println("generar variable global ensamblador");
+            }
+            if(nuevoSimbolo.tipo.equals("FUNCION")){
+                System.out.println("generar funcion ensamblador");
+            }
         }
     }
     private Boolean verificaRepetido(String pTipo, String pNombre, String pAmbito,String pFuncion){
@@ -38,7 +42,7 @@ public class TablaSimbolos {
                         return true;//ya existe
                     } 
                 }
-                if(pAmbito.equals("ATRIBUTO")){//caso atributos
+                else if(pAmbito.equals("ATRIBUTO")){//caso atributos
                     if(simboloActual.nombre.equals(pNombre) && simboloActual.tipo.equals(pTipo) && simboloActual.ambito.equals("ATRIBUTO")){
                         return true;//ya existe
                     } 
@@ -80,6 +84,10 @@ public class TablaSimbolos {
             tipo = pila.getPrimerTipo();
             if(rActual.ambito.equals("GLOBAL")){
                 agregarSimbolo(rActual.dato,rActual.valor.toString(),rActual.ambito,tipo.valor.toString(),"PROGRAMA",
+                        rActual.linea,rActual.columna);
+            }
+            else if(rActual.ambito.equals("ATRIBUTO")){
+                agregarSimbolo(rActual.dato,rActual.valor.toString(),rActual.ambito,tipo.valor.toString(),"CLASE",
                         rActual.linea,rActual.columna);
             }
             else{

@@ -1,9 +1,14 @@
-
-	def hola(string hola,int param2):
-		string local1,local2
-		list local3,local4
-		string hola
+	class caca:
+	
+	list atributo1
+	
+	def funcion1():
 	;
+;
+int caca,caca1
+
+2+2
+
 	
 	
 	
