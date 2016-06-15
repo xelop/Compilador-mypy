@@ -125,6 +125,7 @@ public class TablaSimbolos {
                         funcion.linea,funcion.columna);
         numParametro = 1;
     }
+    
     public void buscarVariable(int pLinea,String pNombre,String pAmbito,String pFuncion){
         Simbolo simboloActual;
         for(int i = simbolos.size() - 1; i>=0 ; i--){
@@ -137,7 +138,7 @@ public class TablaSimbolos {
                                 || simboloActual.ambito.equals("ATRIBUTO"))
                                 ){
 
-                        System.out.println("Identificador encontrado");
+                        //System.out.println("Identificador encontrado");
                         return;
                     }
                 }

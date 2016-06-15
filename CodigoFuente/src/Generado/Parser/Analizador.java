@@ -3432,7 +3432,10 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           case 129: // Literal ::= INT 
             {
               Object RESULT =null;
-
+		int vleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
+		Object v = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
+		pila.registrarLiteral(v, "int" ,vleft, vright); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Literal",70, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -3441,7 +3444,10 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           case 130: // Literal ::= FLOAT 
             {
               Object RESULT =null;
-
+		int vleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
+		Object v = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
+		pila.registrarLiteral(v, "float" ,vleft, vright); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Literal",70, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -3450,7 +3456,10 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           case 131: // Literal ::= CHAR 
             {
               Object RESULT =null;
-
+		int vleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
+		Object v = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
+		pila.registrarLiteral(v, "char" ,vleft, vright); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Literal",70, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -3459,7 +3468,10 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           case 132: // Literal ::= STRING 
             {
               Object RESULT =null;
-
+		int vleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
+		Object v = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
+		pila.registrarLiteral(v, "string" ,vleft, vright); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Literal",70, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -3624,7 +3636,10 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           case 150: // ExpresionB ::= ffalse 
             {
               Object RESULT =null;
-
+		int vleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
+		Object v = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
+		pila.registrarLiteral(v, "boolean" ,vleft, vright); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("ExpresionB",69, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -3633,7 +3648,10 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           case 151: // ExpresionB ::= ttrue 
             {
               Object RESULT =null;
-
+		int vleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
+		Object v = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
+		pila.registrarLiteral(v, "boolean" ,vleft, vright); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("ExpresionB",69, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;

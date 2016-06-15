@@ -289,7 +289,13 @@ FinallyEspecial::= ffinally dosPuntos BloquePuntoComaEspecial
 ;
 
 
-Literal ::= INT|FLOAT|CHAR|STRING;
+Literal ::= INT:v {:pila.registrarLiteral(v, "int" ,vleft, vright); :}
+|FLOAT:v          {:pila.registrarLiteral(v, "float" ,vleft, vright); :}
+|CHAR:v           {:pila.registrarLiteral(v, "char" ,vleft, vright); :}
+|STRING:v         {:pila.registrarLiteral(v, "string" ,vleft, vright); :}
+;
+
+
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
 ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
@@ -305,7 +311,9 @@ Expresion ::= identificador punto Funcion;
 Expresion ::= ExpresionB;
 Expresion ::= FuncionPredefinida;
 
-ExpresionB ::= ffalse | ttrue| Funcion 
+ExpresionB ::= ffalse:v {:pila.registrarLiteral(v, "boolean" ,vleft, vright); :}
+| ttrue:v               {:pila.registrarLiteral(v, "boolean" ,vleft, vright); :}
+| Funcion 
 |opNot Expresion| Expresion OpBinarioB Expresion | parenAbierto ExpresionB parenCerrado ;
 
 Expresion ::= identificador opAsignaciones Expresion;

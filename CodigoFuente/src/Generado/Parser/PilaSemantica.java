@@ -77,4 +77,10 @@ public class PilaSemantica {
             tabla.buscarVariable(pLinea,pValor.toString(),ambitoActual,"PROGRAMA");
         push(registro);
     }
+    public void registrarLiteral(Object pValor, String tipo ,int pLinea, int pColumna){
+        //tipo : int, float, list, string, boolean y char
+        //voy a meter el tipo en dato
+        RegistroSemantico registro = new RegistroSemantico("LITERAL",pValor,"",tipo,pLinea,pColumna);
+        push(registro);
+    }
 }

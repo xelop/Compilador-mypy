@@ -4,12 +4,14 @@ def funcion1(int x, int y):
 def funcion2(list x,char y):
 	int variable
 	int variable3
-	no_deberia_estar_en_tabla
+	
 ;
 	
-int y,x,var
-
-funcion1()
+2+1
+'a'
+True
+"string"
+2.2
 	
-vara
+
 	
