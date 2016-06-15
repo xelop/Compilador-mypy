@@ -293,7 +293,7 @@ Literal ::= INT|FLOAT|CHAR|STRING;
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
 ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
-Expresion ::= Literal|Lista|identificador
+Expresion ::= Literal|Lista|identificador:v {:pila.registrarId(v, vleft, vright, tabla); :}
         | parenAbierto Expresion parenCerrado
         | errExpresion /*solo un error general para expresiones */
         | parenAbierto errParen

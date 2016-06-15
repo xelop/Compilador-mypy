@@ -125,4 +125,35 @@ public class TablaSimbolos {
                         funcion.linea,funcion.columna);
         numParametro = 1;
     }
+    public void buscarVariable(int pLinea,String pNombre,String pAmbito,String pFuncion){
+        Simbolo simboloActual;
+        for(int i = simbolos.size() - 1; i>=0 ; i--){
+            simboloActual = simbolos.get(i);
+            if(simboloActual.nombre.equals(pNombre)){
+                if(pAmbito.equals("LOCAL")){
+                    if(!(simboloActual.tipo.equals("FUNCION"))
+                                && (simboloActual.funcion.equals(pFuncion) 
+                                || simboloActual.ambito.equals("GLOBAL") 
+                                || simboloActual.ambito.equals("ATRIBUTO"))
+                                ){
+
+                        System.out.println("Identificador encontrado");
+                        return;
+                    }
+                }
+                if(pAmbito.equals("GLOBAL")){
+                     if((simboloActual.ambito.equals("GLOBAL") 
+                                || simboloActual.ambito.equals(""))){
+
+                        System.out.println("Identificador encontrado");
+                        return;
+                    }
+                }
+                else
+                    errores.add("Identificador: '" + pNombre +  "' no definida en la linea : " + pLinea);
+                return;
+            }
+        }
+        errores.add("Identificador: '" + pNombre +  "' no definida en la linea : " + pLinea);
+    }
 }

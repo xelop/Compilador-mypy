@@ -1,6 +1,7 @@
 package Generado.Parser;
 
 import java.util.ArrayList;
+import sun.net.www.content.text.plain;
 
 
 public class PilaSemantica {
@@ -65,6 +66,15 @@ public class PilaSemantica {
     public void registrarFuncion(Object pValor, int pLinea, int pColumna, TablaSimbolos tabla){
         RegistroSemantico registro = new RegistroSemantico("FUNCIONE",pValor, "","",pLinea,pColumna);
         tabla.buscarFuncion("FUNCION",pValor.toString(),pLinea);
+        push(registro);
+    }
+    public void registrarId(Object pValor, int pLinea, int pColumna, TablaSimbolos tabla){
+        RegistroSemantico registro = new RegistroSemantico("IDENTIFICADORE",pValor,ambitoActual,"",pLinea,pColumna);
+        RegistroSemantico funcion = getPrimeraFuncion();
+        if (funcion != null)
+            tabla.buscarVariable(pLinea,pValor.toString(),ambitoActual,getPrimeraFuncion().valor.toString());
+        else
+            tabla.buscarVariable(pLinea,pValor.toString(),ambitoActual,"PROGRAMA");
         push(registro);
     }
 }

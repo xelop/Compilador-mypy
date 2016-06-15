@@ -1,13 +1,15 @@
 def funcion1(int x, int y):
-
+	int variablex
 ;
 def funcion2(list x,char y):
-
+	int variable
+	int variable3
+	no_deberia_estar_en_tabla
 ;
 	
-int x,y
+int y,x,var
 
 funcion1()
 	
-
+vara
 	
