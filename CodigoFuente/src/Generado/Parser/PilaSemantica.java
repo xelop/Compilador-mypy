@@ -1,6 +1,7 @@
 package Generado.Parser;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import sun.net.www.content.text.plain;
 
 
@@ -48,6 +49,14 @@ public class PilaSemantica {
         }
         return null;
     }
+    public RegistroSemantico getPrimeraFuncionE(){//devuelve la primera funcionE en la pila
+        for(int i = lista.size() - 1; i>=0 ; i--){
+            if (lista.get(i).tipo.equals("FUNCIONE")){
+                return lista.get(i);
+            }
+        }
+        return null;
+    }
     
     /* Se me ocurre que podemos hacer aquí las funciones que hicimos en clase */
     
@@ -82,5 +91,19 @@ public class PilaSemantica {
         //voy a meter el tipo en dato
         RegistroSemantico registro = new RegistroSemantico("LITERAL",pValor,"",tipo,pLinea,pColumna);
         push(registro);
+    }
+    public void evalFuncion(TablaSimbolos tabla){
+        //evalua si una funcion cumple con numero de parmaetros y tipo adecuado
+        RegistroSemantico funcionE = getPrimeraFuncionE();
+        Integer canParametrosActual = InfoFuncion.getNumParametros(funcionE.valor.toString(), this);
+        Integer canParametrosReal = InfoFuncion.getNumParametros(funcionE.valor.toString(), tabla);
+        if(!Objects.equals(canParametrosReal, canParametrosActual)){
+            tabla.errores.add("Llamada a funcion: '" + funcionE.valor.toString() + "' con cantidad incorrecta de parametros"
+            + ". Línea: " + funcionE.linea);
+        }
+        else{
+            
+        }
+        System.out.println(canParametrosReal);
     }
 }

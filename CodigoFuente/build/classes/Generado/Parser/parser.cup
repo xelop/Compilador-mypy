@@ -183,7 +183,9 @@ Funcion::= identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); :} 
 | identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); :} errParen parenCerrado
 ;
 
-Parametros ::= Expresion Parametro | parenCerrado |errParen;
+Parametros ::= Expresion Parametro {:pila.evalFuncion(tabla); :} | parenCerrado {:pila.evalFuncion(tabla); :} 
+|errParen
+;
 Parametro ::= coma Expresion Parametro | parenCerrado | errParametro parenCerrado ;
 
 If ::= iif ExpresionB dosPuntos BloquePuntoComa Elif

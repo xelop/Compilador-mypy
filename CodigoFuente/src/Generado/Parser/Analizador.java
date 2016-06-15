@@ -2607,7 +2607,7 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           case 46: // Parametros ::= Expresion Parametro 
             {
               Object RESULT =null;
-
+		pila.evalFuncion(tabla); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Parametros",12, ((java_cup.runtime.Symbol)CUP$Analizador$stack.elementAt(CUP$Analizador$top-1)), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -2616,7 +2616,7 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           case 47: // Parametros ::= parenCerrado 
             {
               Object RESULT =null;
-
+		pila.evalFuncion(tabla); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("Parametros",12, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;

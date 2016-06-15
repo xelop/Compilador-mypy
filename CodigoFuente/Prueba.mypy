@@ -1,14 +1,15 @@
-def funcion(int x, string y):
+def funcion1(int x, int y):
 	int variablex
+	
 ;
-def funcion2(list x,char y):
-	int variable
-	int variable3
+def funcion2(int x, string y):
+	int variablex
+	
 ;
 
 string s
+funcion1(2,s)
 
-funcion(1,s)
 	
 
 	
