@@ -99,11 +99,20 @@ public class PilaSemantica {
         Integer canParametrosReal = InfoFuncion.getNumParametros(funcionE.valor.toString(), tabla);
         if(!Objects.equals(canParametrosReal, canParametrosActual)){
             tabla.errores.add("Llamada a funcion: '" + funcionE.valor.toString() + "' con cantidad incorrecta de parametros"
-            + ". Línea: " + funcionE.linea);
+                + ". Línea: " + funcionE.linea);
         }
         else{
-            
+            //ahora vamos a chequear tipos
+            String tipo1 = "";//tipo de la llamada
+            String tipo2 = "";//tipo real
+            for(int i = canParametrosActual; i>0; i--){
+                tipo2 = InfoFuncion.getParametroN(funcionE.valor.toString(), i, tabla);
+                tipo1 = InfoFuncion.getParametroN(funcionE.valor.toString(), i, this, tabla);
+                if(!tipo2.equals(tipo1)){
+                    tabla.errores.add("Llamada a funcion: '" + funcionE.valor.toString() + "' con tipo incorrecto de parametro"
+                        + ". Línea: " + funcionE.linea);
+                }
+            }
         }
-        System.out.println(canParametrosReal);
     }
 }

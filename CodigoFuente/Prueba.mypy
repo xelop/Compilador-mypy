@@ -1,14 +1,14 @@
-def funcion1(int x, int y):
+def funcion1(boolean x, string y):
 	int variablex
 	
 ;
 def funcion2(int x, string y):
-	int variablex
+	string z
 	
 ;
 
-string s
-funcion1(2,s)
+funcion1(False,"hola")
+
 
 	
 

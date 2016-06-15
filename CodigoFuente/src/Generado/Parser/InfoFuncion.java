@@ -24,7 +24,7 @@ public class InfoFuncion {
         ArrayList<Simbolo> simbolos = tabla.simbolos;
         for (Simbolo s: simbolos){
             if(s.ambito.equals("PARAMETRO") && s.funcion.equals(nombreFuncion)
-                    ||s.numParametro.equals(pos)){
+                    && s.numParametro.equals(pos.toString())){
                 resultado = s.tipoDato;
             }
         }
@@ -38,17 +38,17 @@ public class InfoFuncion {
         for (Simbolo s: simbolos){
             if(ambito.equals("GLOBAL")){
                 if(s.nombre.equals(nombre) && s.ambito.equals("GLOBAL")){
-                    resultado = s.tipo;
+                    resultado = s.tipoDato;
                 }
             }
             else if(ambito.equals("ATRIBUTO")){
                 if(s.nombre.equals(nombre) && s.ambito.equals("ATRIBUTO")){
-                    resultado = s.tipo;
+                    resultado = s.tipoDato;
                 }
             }
             else{//caso locales y parámetros
                 if(s.nombre.equals(nombre) && s.funcion.equals(funcion)){
-                    resultado = s.tipo;
+                    resultado = s.tipoDato;
                 }
             }
         }
@@ -68,5 +68,25 @@ public class InfoFuncion {
             cantidadParametros++;
         }
         return cantidadParametros;
+    }
+    public static String getParametroN(String nombreFuncion, Integer pos, PilaSemantica pila,TablaSimbolos tabla){
+        //devuelve el tipo de un parámetro en posicion n
+        String resultado = "";
+        ArrayList<RegistroSemantico> lista = pila.lista;
+        Integer posFuncion = 0;
+        for(int i = lista.size() - 1; i>=0 ; i--){
+            if (lista.get(i).tipo.equals("FUNCIONE")){
+                posFuncion = i;
+            }
+        }
+        RegistroSemantico r =  lista.get(posFuncion+pos);
+        if(r.tipo.equals("LITERAL")){
+            resultado = r.dato;
+        }
+        else{//es una variable
+            resultado = getTipoVariable(r.valor.toString(), r.ambito
+                    , pila.getPrimeraFuncion().valor.toString(), tabla);
+        }
+        return resultado;
     }
 }
