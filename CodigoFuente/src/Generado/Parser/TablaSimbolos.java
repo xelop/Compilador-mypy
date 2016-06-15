@@ -128,6 +128,7 @@ public class TablaSimbolos {
     
     public void buscarVariable(int pLinea,String pNombre,String pAmbito,String pFuncion){
         Simbolo simboloActual;
+        Boolean encontrado = false;
         for(int i = simbolos.size() - 1; i>=0 ; i--){
             simboloActual = simbolos.get(i);
             if(simboloActual.nombre.equals(pNombre)){
@@ -138,23 +139,20 @@ public class TablaSimbolos {
                                 || simboloActual.ambito.equals("ATRIBUTO"))
                                 ){
 
-                        //System.out.println("Identificador encontrado");
-                        return;
+                        encontrado = true;
                     }
                 }
-                if(pAmbito.equals("GLOBAL")){
+                else if(pAmbito.equals("GLOBAL")){
                      if((simboloActual.ambito.equals("GLOBAL") 
                                 || simboloActual.ambito.equals(""))){
 
-                        System.out.println("Identificador encontrado");
-                        return;
+                        encontrado = true; 
                     }
                 }
-                else
-                    errores.add("Identificador: '" + pNombre +  "' no definida en la linea : " + pLinea);
-                return;
             }
         }
-        errores.add("Identificador: '" + pNombre +  "' no definida en la linea : " + pLinea);
+        if (!encontrado){
+            errores.add("Identificador: '" + pNombre +  "' no definida en la linea : " + pLinea);
+        }
     }
 }

@@ -1,17 +1,14 @@
-def funcion1(int x, int y):
+def funcion(int x, string y):
 	int variablex
 ;
 def funcion2(list x,char y):
 	int variable
 	int variable3
-	
 ;
-	
-2+1
-'a'
-True
-"string"
-2.2
+
+string s
+
+funcion(1,s)
 	
 
 	
