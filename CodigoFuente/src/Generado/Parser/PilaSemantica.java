@@ -8,6 +8,7 @@ import sun.net.www.content.text.plain;
 public class PilaSemantica {
     ArrayList<RegistroSemantico> lista;
     public String ambitoActual;//global, local, de clase, etc.
+    public int contadorExp = 0;
     
     public PilaSemantica(){
         lista = new ArrayList();
@@ -31,7 +32,10 @@ public class PilaSemantica {
         return resultado;
     }
     public String getTope(){//devuelve el tipo del registro semantico del tope de la pila
-        return lista.get(lista.size()-1).tipo;
+        if(lista.isEmpty())
+            return "";
+        else
+            return lista.get(lista.size()-1).tipo;
     }
     public RegistroSemantico getPrimerTipo(){//devuelve el primer tipo en la lista
         for(int i = lista.size() - 1; i>=0 ; i--){
@@ -92,9 +96,16 @@ public class PilaSemantica {
         RegistroSemantico registro = new RegistroSemantico("LITERAL",pValor,"",tipo,pLinea,pColumna);
         push(registro);
     }
+    public void registrarOperador(Object pValor, String tipo ,int pLinea, int pColumna){
+        //tipo : int, float, list, string, boolean y char
+        //voy a meter el tipo en dato
+        RegistroSemantico registro = new RegistroSemantico(tipo,pValor,"","OPERADOR",pLinea,pColumna);
+        push(registro);
+    }
     public void evalFuncion(TablaSimbolos tabla){
         //evalua si una funcion cumple con numero de parmaetros y tipo adecuado
         RegistroSemantico funcionE = getPrimeraFuncionE();
+        
         Integer canParametrosActual = InfoFuncion.getNumParametros(funcionE.valor.toString(), this);
         Integer canParametrosReal = InfoFuncion.getNumParametros(funcionE.valor.toString(), tabla);
         if(!Objects.equals(canParametrosReal, canParametrosActual)){
@@ -114,5 +125,99 @@ public class PilaSemantica {
                 }
             }
         }
+        //lineas para sacar parametros y funcion de pila
+        vaciarPilaN(canParametrosActual); 
+        contadorExp-= canParametrosActual;
+        pop();
+    }
+    public void evalExpresion(TablaSimbolos tabla){
+        
+        while(contadorExp!=0){
+            RegistroSemantico Exp1 = transformarIdent(pop(),tabla);
+            contadorExp-=1;
+
+            if(getTope().equals("OPERADOR") 
+                    || getTope().equals("SUMA")
+                    || getTope().equals("COMPGENERAL")
+                    || getTope().equals("COMPESPECIFICO")){
+                RegistroSemantico op = pop();
+                RegistroSemantico Exp2 = transformarIdent(pop(),tabla);
+                contadorExp -=1;
+                if(op.tipo.equals("SUMA")|| op.tipo.equals("COMPESPECIFICO")){
+                    
+                    if(Exp1.dato.equals("string") && Exp2.dato.equals("char")){
+                            push(Exp2);
+                            contadorExp++;
+                    }
+                    else if(Exp1.dato.equals("char") && (Exp2.dato.equals("string"))){
+                            push(Exp2);
+                            contadorExp++;
+                    }
+                    else if(!validarTipos(Exp2, Exp1, tabla)){
+                        tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
+    
+                        vaciarPilaN(contadorExp+contadorExp);
+                        contadorExp = 0;
+                    }
+                }else if(op.tipo.equals("COMPGENERAL")){
+                    push(Exp2);
+                    contadorExp++;
+                }else if(!validarTipos(Exp2, Exp1, tabla)){
+                     tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
+                     vaciarPilaN(contadorExp+contadorExp);
+                     contadorExp = 0;
+                }
+            }
+        }
+    }
+    private boolean validarTipos(RegistroSemantico Exp2, RegistroSemantico Exp1, TablaSimbolos tabla){
+        if(Exp1.dato.equals(Exp2.dato)){
+                push(Exp2);
+                contadorExp++;
+
+                return true;
+        }
+        else if(Exp1.dato.equals("int") && (Exp2.dato.equals("float") || Exp2.dato.equals("boolean"))){
+                push(Exp2);
+                contadorExp++;
+                return true;
+        }
+        else if(Exp1.dato.equals("float") && (Exp2.dato.equals("int") || Exp2.dato.equals("boolean"))){
+                push(Exp2);
+                contadorExp++;
+                return true;
+        }
+        else if(Exp1.dato.equals("boolean") && (Exp2.dato.equals("int") || Exp2.dato.equals("float"))){
+                push(Exp2);
+                contadorExp++;
+                return true;
+        }
+        else{
+            return false;
+        }
+    }
+    private void vaciarPilaN(int n){
+        while(n>0){
+            pop();
+            n--;
+        }
+    }
+    private RegistroSemantico transformarIdent(RegistroSemantico registro,TablaSimbolos tabla){
+        if(registro.tipo.equals("IDENTIFICADORE")){
+            String dato = registro.dato;
+            RegistroSemantico funcion = getPrimeraFuncion();
+            if(funcion == null)
+                registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
+                    "PROGRAMA", tabla);
+            else
+                registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
+                    funcion.valor.toString(), tabla);
+            registro.tipo = dato;
+            return registro;
+        }
+        else
+            return registro;
     }
 }
+
+

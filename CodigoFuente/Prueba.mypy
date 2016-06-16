@@ -7,9 +7,9 @@ def funcion2(int x, string y):
 	
 ;
 
-funcion1(False,"hola")
+int a
 
+funcion1(True,"string")
 
-	
+a not 9
 
-	

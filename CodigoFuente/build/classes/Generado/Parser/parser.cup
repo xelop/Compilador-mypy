@@ -59,7 +59,7 @@ action code
 
 /*----------------------------------------------------------------------*/
 /* Declaracion de terminales */
-terminal palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComparadores,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
+terminal palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComGeneral,opComEspecifico,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
 
 terminal intReservado,clas,def,ffalse,ttrue,iif,eelse,elif;
 terminal var;
@@ -99,7 +99,7 @@ non terminal NombreFuncion;
 
 
 /* Común para todos */
-non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionesB ;
+non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionesB,ExpresionOP,ExpresionBol ;
 non terminal ElementosLista2, MasElementosLista2;
 non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario,OpBinarioB;
 non terminal Asignacion,Asignaciones;
@@ -115,7 +115,7 @@ non terminal BloquePuntoComaEspecial,CualquierCosaEspecial,CualquierCosasEspecia
 
 precedence left opNot,opOr,opAnd;
 precedence left opAsignaciones;
-precedence left opComparadores;
+precedence left opComGeneral,opComEspecifico;
 precedence left opSuma, opResta;
 precedence left opMultiplicacion, opDivisionE, opModulo, opDivision;
 precedence left opPotencia;
@@ -301,22 +301,27 @@ Literal ::= INT:v {:pila.registrarLiteral(v, "int" ,vleft, vright); :}
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
 ElementosLista::= Expresion MasElementosLista| ;
 MasElementosLista::= coma Expresion MasElementosLista | ;
-Expresion ::= Literal|Lista|identificador:v {:pila.registrarId(v, vleft, vright, tabla); :}
+Expresion ::= Literal {: pila.contadorExp+=1; :}|Lista|identificador:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :}
         | parenAbierto Expresion parenCerrado
         | errExpresion /*solo un error general para expresiones */
         | parenAbierto errParen
         | errParen parenCerrado;
-Expresion ::= Expresion OpBinario Expresion;
+ExpresionOP ::= Expresion OpBinario Expresion;
+Expresion ::= ExpresionOP {:pila.evalExpresion(tabla); :}
+| ExpresionB ;
 
+ExpresionBol::= Expresion OpBinarioB Expresion;
 Expresion ::= OpUnario Expresion;
 Expresion ::= identificador punto Funcion;
 Expresion ::= ExpresionB;
 Expresion ::= FuncionPredefinida;
 
-ExpresionB ::= ffalse:v {:pila.registrarLiteral(v, "boolean" ,vleft, vright); :}
-| ttrue:v               {:pila.registrarLiteral(v, "boolean" ,vleft, vright); :}
+ExpresionB ::= ffalse:v {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1; :}
+| ttrue:v               {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1;:}
 | Funcion 
-|opNot Expresion| Expresion OpBinarioB Expresion | parenAbierto ExpresionB parenCerrado ;
+|opNot Expresion 
+| ExpresionBol {:pila.evalExpresion(tabla); :}
+| parenAbierto ExpresionB parenCerrado ;
 
 Expresion ::= identificador opAsignaciones Expresion;
 
@@ -376,13 +381,23 @@ BloqueOOP::= VariablesOOP FuncionesOOP
 HeaderOOP ::= clas identificador dosPuntos BloqueOOP| clas errHeaderOOP BloqueOOP;
 
 
-OpAritmeticos ::= opSuma | opResta | opMultiplicacion | opDivisionE | opDivision | opModulo | opPotencia ;
+OpAritmeticos ::= opSuma:v {:pila.registrarOperador(v, "SUMA" ,vleft, vright); :} 
+| opResta:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :} 
+| opMultiplicacion:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
+| opDivisionE:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
+| opDivision:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
+| opModulo:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
+| opPotencia:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  ;
 
 OpUnario ::= opSuma | opResta;
 OpBinario ::= OpAritmeticos;
-OpBinarioB ::= opComparadores | OpLogicos;
+OpBinarioB ::= opComGeneral:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :}  
+| opComEspecifico:v {:pila.registrarOperador(v, "COMPESPECIFICO" ,vleft, vright); :}    
+| OpLogicos;
 
-OpLogicos ::= opAnd | opOr | opNot;
+OpLogicos ::= opAnd:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :}
+| opOr:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :}
+| opNot:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :};
 
 /*-----------------------------------------------------------------------------------------*/
 

@@ -113,6 +113,16 @@ opPuntoComa = ";"
    "%"                {lexeme = yytext(); return symbol(sym.opModulo, lexeme);}
    "**"               {lexeme = yytext(); return symbol(sym.opPotencia, lexeme);}
 
+   /* Operadores comparadores */ 
+   "=="                {lexeme = yytext(); return symbol(sym.opComGeneral, lexeme);}
+   "!="                {lexeme = yytext(); return symbol(sym.opComGeneral, lexeme);}
+   "<>"                {lexeme = yytext(); return symbol(sym.opComGeneral, lexeme);}
+   "is"                {lexeme = yytext(); return symbol(sym.opComGeneral, lexeme);}
+   ">"                {lexeme = yytext(); return symbol(sym.opComEspecifico, lexeme);}
+   "<"                {lexeme = yytext(); return symbol(sym.opComEspecifico, lexeme);}
+   ">="                {lexeme = yytext(); return symbol(sym.opComEspecifico, lexeme);}
+   "<="                {lexeme = yytext(); return symbol(sym.opComEspecifico, lexeme);}   
+
    /* Operadores Logicos */ 
    "and"              {lexeme = yytext(); return symbol(sym.opAnd, lexeme);}
    "or"               {lexeme = yytext(); return symbol(sym.opOr, lexeme);}
