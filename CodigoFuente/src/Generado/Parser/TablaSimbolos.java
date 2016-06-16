@@ -6,11 +6,18 @@ public class TablaSimbolos {
     public ArrayList<Simbolo> simbolos;
     public ArrayList<String> errores;
     public Integer numParametro;
+    public GeneradorCodigo generador;
     
     public TablaSimbolos(){
         simbolos = new ArrayList();
         errores = new ArrayList();
         numParametro = 1;
+        try{
+           generador = new GeneradorCodigo(); 
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
     
     
@@ -29,8 +36,8 @@ public class TablaSimbolos {
             }
             
             simbolos.add(nuevoSimbolo);
-            if(nuevoSimbolo.ambito.equals("GLOBAL") && nuevoSimbolo.tipo.equals("VARIABLE")){
-                System.out.println("generar variable global ensamblador");
+            if(nuevoSimbolo.ambito.equals("GLOBAL") && nuevoSimbolo.tipo.equals("VARIABLE") && errores.size() == 0){
+                generador.insertarVariableGlobal(nuevoSimbolo.nombre, nuevoSimbolo.tipoDato);
             }
             if(nuevoSimbolo.tipo.equals("FUNCION")){
                 System.out.println("generar funcion ensamblador");
@@ -121,8 +128,8 @@ public class TablaSimbolos {
     }
     public void insertarFuncion(PilaSemantica pila){
         RegistroSemantico funcion = pila.pop();
-        agregarSimbolo(funcion.tipo,funcion.valor.toString(),funcion.ambito,"","",
-                        funcion.linea,funcion.columna);
+        /*agregarSimbolo(funcion.tipo,funcion.valor.toString(),funcion.ambito,"","",
+                        funcion.linea,funcion.columna);*/
         numParametro = 1;
     }
     

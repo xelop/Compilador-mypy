@@ -72,8 +72,10 @@ public class PilaSemantica {
         RegistroSemantico registro = new RegistroSemantico("IDENTIFICADOR",pValor, ambitoActual,pDato,pLinea,pColumna);
         push(registro);
     }
-    public void recuerdaFuncion(Object pValor, int pLinea, int pColumna){
+    public void recuerdaFuncion(Object pValor, int pLinea, int pColumna,TablaSimbolos tabla){
         RegistroSemantico registro = new RegistroSemantico("FUNCION",pValor, "","",pLinea,pColumna);
+        tabla.agregarSimbolo(registro.tipo,registro.valor.toString(),registro.ambito,"","",
+                        registro.linea,registro.columna);
         push(registro);
     }
     public void registrarFuncion(Object pValor, int pLinea, int pColumna, TablaSimbolos tabla){

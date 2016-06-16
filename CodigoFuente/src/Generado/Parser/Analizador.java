@@ -2352,7 +2352,7 @@ class CUP$Analizador$actions {
 		int vleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
 		int vright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object v = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
-		 pila.recuerdaFuncion(v,vleft,vright); 
+		 pila.recuerdaFuncion(v,vleft,vright,tabla); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("NombreFuncion",68, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;

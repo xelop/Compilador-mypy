@@ -141,7 +141,7 @@ Programa::= Funcional {: ProyectoCompi.PoyectoCompi.consola.impirmir("Parseo rea
 Funcional ::= DefFunciones CodigoPrincipal;
 
 
-NombreFuncion ::= identificador:v {: pila.recuerdaFuncion(v,vleft,vright); :} ;
+NombreFuncion ::= identificador:v {: pila.recuerdaFuncion(v,vleft,vright,tabla); :} ;
 
 DefFunciones ::= DefFuncion DefFunciones | ;
 DefFuncion ::= def NombreFuncion parenAbierto DefParametrosFact dosPuntos {: pila.ambitoActual = "LOCAL"; :} Variables CualquierCosas puntoComa {: tabla.insertarFuncion(pila); :} 

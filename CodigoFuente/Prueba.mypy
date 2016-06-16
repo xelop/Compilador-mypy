@@ -4,14 +4,15 @@ def funcion1(boolean x, string y):
 ;
 def funcion2(int x, string y):
 	string z
-	
+	funcion2(2,"hola")
 ;
 
-string a
+string stringa
+int enterox, enteroy
+char charv
+float flotante
+boolean bool1,bool2
 
-funcion1(9>7,"string")
-6+8
-[]
 
 
 
