@@ -99,7 +99,14 @@ public class PilaSemantica {
     public void registrarOperador(Object pValor, String tipo ,int pLinea, int pColumna){
         //tipo : int, float, list, string, boolean y char
         //voy a meter el tipo en dato
+       
         RegistroSemantico registro = new RegistroSemantico(tipo,pValor,"","OPERADOR",pLinea,pColumna);
+        push(registro);
+    }
+    public void registrarOperadorBinario(Object pValor, String tipo ,int pLinea, int pColumna){
+        //tipo : int, float, list, string, boolean y char
+        //voy a meter el tipo en dato
+        RegistroSemantico registro = new RegistroSemantico("BINARIO",pValor,"",tipo,pLinea,pColumna);
         push(registro);
     }
     public void evalFuncion(TablaSimbolos tabla){
@@ -125,17 +132,16 @@ public class PilaSemantica {
                 }
             }
         }
+        
         //lineas para sacar parametros y funcion de pila
         vaciarPilaN(canParametrosActual); 
-        contadorExp-= canParametrosActual;
-        pop();
+        
     }
     public void evalExpresion(TablaSimbolos tabla){
-        
+        RegistroSemantico Exp1 = transformarIdent(pop(),tabla);
+        boolean comparacion = false;
+        contadorExp-=1;
         while(contadorExp!=0){
-            RegistroSemantico Exp1 = transformarIdent(pop(),tabla);
-            contadorExp-=1;
-
             if(getTope().equals("OPERADOR") 
                     || getTope().equals("SUMA")
                     || getTope().equals("COMPGENERAL")
@@ -146,48 +152,97 @@ public class PilaSemantica {
                 if(op.tipo.equals("SUMA")|| op.tipo.equals("COMPESPECIFICO")){
                     
                     if(Exp1.dato.equals("string") && Exp2.dato.equals("char")){
+                            Exp2.dato="string";
                             push(Exp2);
                             contadorExp++;
                     }
                     else if(Exp1.dato.equals("char") && (Exp2.dato.equals("string"))){
+                            Exp2.dato="string";
                             push(Exp2);
                             contadorExp++;
                     }
                     else if(!validarTipos(Exp2, Exp1, tabla)){
                         tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
-    
                         vaciarPilaN(contadorExp+contadorExp);
-                        contadorExp = 0;
+                        push(Exp2);
+                        contadorExp = 1;
                     }
+                    if(op.tipo.equals("COMPESPECIFICO"))
+                        comparacion = true; //para que cambie el resultado a bool al final
+                    
                 }else if(op.tipo.equals("COMPGENERAL")){
                     push(Exp2);
                     contadorExp++;
+                    comparacion = true;
                 }else if(!validarTipos(Exp2, Exp1, tabla)){
                      tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
                      vaciarPilaN(contadorExp+contadorExp);
-                     contadorExp = 0;
+                     push(Exp2);
+                     contadorExp = 1;
                 }
             }
+            else if(getTope().equals("BINARIO")){
+                RegistroSemantico op = pop();
+                RegistroSemantico Exp2 = transformarIdent(pop(),tabla);
+                contadorExp -=1;
+                
+                if(Exp1.dato.equals("int") && Exp2.dato.equals("int")){
+                    push(Exp2);
+                    
+                    contadorExp++;
+                }else{
+                    tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
+                    vaciarPilaN(contadorExp+contadorExp);
+                    push(Exp2);
+                    contadorExp = 1;
+                }
+                    
+            }
+            Exp1 = transformarIdent(pop(),tabla);
+            contadorExp-=1;
+            
+      
         }
+        if (getTope().equals("UNARIO")){
+                if(Exp1.dato.equals("string")||Exp1.dato.equals("char")){
+                    tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
+                }
+                pop();
+                
+        }else if(getTope().equals("NOT")){
+            pop();
+            comparacion = true;
+        }
+        if(comparacion){
+            Exp1.dato="boolean";
+        }
+        push(Exp1);
+    }
+    //Metodo para limpiar pila cuando se ejecuta desde CualquierCosa
+    public void finExpresion(){
+        pop();
     }
     private boolean validarTipos(RegistroSemantico Exp2, RegistroSemantico Exp1, TablaSimbolos tabla){
         if(Exp1.dato.equals(Exp2.dato)){
+                Exp2 = floatorBool(Exp1, Exp2);
                 push(Exp2);
                 contadorExp++;
-
                 return true;
         }
         else if(Exp1.dato.equals("int") && (Exp2.dato.equals("float") || Exp2.dato.equals("boolean"))){
+                Exp2 = floatorBool(Exp1, Exp2);
                 push(Exp2);
                 contadorExp++;
                 return true;
         }
         else if(Exp1.dato.equals("float") && (Exp2.dato.equals("int") || Exp2.dato.equals("boolean"))){
+                Exp2 = floatorBool(Exp1, Exp2);
                 push(Exp2);
                 contadorExp++;
                 return true;
         }
         else if(Exp1.dato.equals("boolean") && (Exp2.dato.equals("int") || Exp2.dato.equals("float"))){
+                Exp2 = floatorBool(Exp1, Exp2);
                 push(Exp2);
                 contadorExp++;
                 return true;
@@ -217,6 +272,15 @@ public class PilaSemantica {
         }
         else
             return registro;
+    }
+    private RegistroSemantico floatorBool(RegistroSemantico r1,RegistroSemantico r2){
+        if(r1.dato.equals("float")||r2.dato.equals("float"))
+            r2.dato = "float";
+        else if(r1.dato.equals("boolean") && r2.dato.equals("boolean"))
+            r2.dato = "int";
+        else if(r1.dato.equals("int")||r2.dato.equals("int"))
+            r2.dato = "int";
+        return r2;
     }
 }
 

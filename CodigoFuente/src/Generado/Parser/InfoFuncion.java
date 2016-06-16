@@ -9,6 +9,7 @@ public class InfoFuncion {
     
     public static Integer getNumParametros(String nombreFuncion, TablaSimbolos tabla){
         //consigue el numero de parametros de una funcion dada
+        
         ArrayList<Simbolo> simbolos = tabla.simbolos;
         Integer cantidadParametros = 0;
         for (Simbolo s: simbolos){

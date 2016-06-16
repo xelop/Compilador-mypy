@@ -59,7 +59,7 @@ action code
 
 /*----------------------------------------------------------------------*/
 /* Declaracion de terminales */
-terminal palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComGeneral,opComEspecifico,opAsignaciones,opDelimitadores,opBits,opLogicos,ERROR,END;
+terminal palabraReservada, INT,FLOAT,CHAR,STRING,opAritmeticos,opComGeneral,opComEspecifico,opAsignaciones,opDelimitadores,opLogicos,ERROR,END;
 
 terminal intReservado,clas,def,ffalse,ttrue,iif,eelse,elif;
 terminal var;
@@ -69,7 +69,7 @@ terminal ffor,in,range,wwhile,pprint,iinput,ttry,eexcept,ffinally,bbreak,ccontin
 
 /* operadores */
 terminal opSuma, opResta, opMultiplicacion, opDivision, opDivisionE,opModulo,opPotencia;
-terminal opAnd, opOr, opNot;
+terminal opAnd, opOr, opNot,opShiftR,opShiftL,opAndBits,opExclusiveOr,opComp,opOrBits;
 
 /*Delimitadores*/
 terminal dosPuntos,puntoComa,parenAbierto,parenCerrado,coma,cuadradoCerrado,cuadradoAbierto,punto;
@@ -81,7 +81,7 @@ non terminal Programa, CodigoPrincipal;
 non terminal Variable;
 non terminal Funcional,DefFuncion,DefFunciones,DefFunciones2,DefFuncionesFact,DefParametrosFact,DefParametros,Funcion,Parametro,Parametros,DefVariables,DefVariablesFact;
 non terminal Variables,VariableRec;
-non terminal Bloque,Bloques,BloqueNuevo, DecIf,If, Else, Elif, ForFact, For, Range, While,Var;
+non terminal Bloque,Bloques,BloqueNuevo, DecIf,If, Else, Elif, ForFact, For, Range, While,Var,OpBits;
 
 /* Zona OOP */
 non terminal OOP, HeaderOOP, VariablesOOP, Clase,BloqueOOP, cuerpoOOP,FuncionesOOP,PuntoComaOOP, VariableOOP, FuncionesOOP2;
@@ -99,7 +99,7 @@ non terminal NombreFuncion;
 
 
 /* Común para todos */
-non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionesB,ExpresionOP,ExpresionBol ;
+non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionGeneral,ExpresionesB,ExpresionOP,ExpresionBol,ExpresionUnario,ExpresionBinaria ;
 non terminal ElementosLista2, MasElementosLista2;
 non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario,OpBinarioB;
 non terminal Asignacion,Asignaciones;
@@ -183,10 +183,10 @@ Funcion::= identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); :} 
 | identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); :} errParen parenCerrado
 ;
 
-Parametros ::= Expresion Parametro {:pila.evalFuncion(tabla); :} | parenCerrado {:pila.evalFuncion(tabla); :} 
+Parametros ::= ExpresionGeneral Parametro {:pila.evalFuncion(tabla); :} | parenCerrado {:pila.evalFuncion(tabla); :} 
 |errParen
 ;
-Parametro ::= coma Expresion Parametro | parenCerrado | errParametro parenCerrado ;
+Parametro ::= coma ExpresionGeneral Parametro | parenCerrado | errParametro parenCerrado ;
 
 If ::= iif ExpresionB dosPuntos BloquePuntoComa Elif
 | iif ExpresionB error:e {: parser.addError("Hay un error en la declaracion del If" + 
@@ -298,29 +298,33 @@ Literal ::= INT:v {:pila.registrarLiteral(v, "int" ,vleft, vright); :}
 ;
 
 
-Lista::= cuadradoAbierto ElementosLista cuadradoCerrado;
-ElementosLista::= Expresion MasElementosLista| ;
-MasElementosLista::= coma Expresion MasElementosLista | ;
+Lista::= cuadradoAbierto ElementosLista cuadradoCerrado:v {:pila.registrarLiteral("lista", "LIST" ,vleft, vright); pila.contadorExp++; :};
+ElementosLista::= ExpresionGeneral {: pila.finExpresion(); :} MasElementosLista| ;
+MasElementosLista::= coma ExpresionGeneral {: pila.finExpresion(); :} MasElementosLista | ;
 Expresion ::= Literal {: pila.contadorExp+=1; :}|Lista|identificador:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :}
         | parenAbierto Expresion parenCerrado
         | errExpresion /*solo un error general para expresiones */
         | parenAbierto errParen
         | errParen parenCerrado;
 ExpresionOP ::= Expresion OpBinario Expresion;
-Expresion ::= ExpresionOP {:pila.evalExpresion(tabla); :}
-| ExpresionB ;
+ExpresionGeneral ::= Expresion {: pila.evalExpresion(tabla);  :};
+Expresion ::= ExpresionOP 
+| ExpresionB
+| ExpresionUnario 
+| ExpresionBinaria ;  
 
 ExpresionBol::= Expresion OpBinarioB Expresion;
-Expresion ::= OpUnario Expresion;
+ExpresionUnario ::= OpUnario Expresion;
 Expresion ::= identificador punto Funcion;
 Expresion ::= ExpresionB;
 Expresion ::= FuncionPredefinida;
+ExpresionBinaria ::= Expresion OpBits Expresion;  
 
 ExpresionB ::= ffalse:v {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1; :}
 | ttrue:v               {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1;:}
-| Funcion 
-|opNot Expresion 
-| ExpresionBol {:pila.evalExpresion(tabla); :}
+| Funcion {: pila.contadorExp++; :}
+| opNot:v {:pila.registrarOperador(v, "NOT" ,vleft, vright); :} Expresion  
+| ExpresionBol 
 | parenAbierto ExpresionB parenCerrado ;
 
 Expresion ::= identificador opAsignaciones Expresion;
@@ -332,9 +336,17 @@ Asignaciones ::= Asignaciones Asignacion | ;
 FuncionesPredefinidas::= FuncionesPredefinidas FuncionPredefinida | ;
 
 FuncionPredefinida::= Input | Print | IntFuncion ;
-IntFuncion ::= intReservado parenAbierto FuncionPredefinida parenCerrado | intReservado parenAbierto Funcion parenCerrado|intReservado parenAbierto STRING parenCerrado | errInput;
-Input ::= iinput parenAbierto Expresion parenCerrado | iinput parenAbierto parenCerrado| iinput errInput | errInput;
-Print ::= pprint parenAbierto ElementosLista2 parenCerrado | errPrint
+IntFuncion ::= intReservado:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto FuncionPredefinida parenCerrado 
+| intReservado:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto Funcion parenCerrado
+|intReservado:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto STRING parenCerrado 
+| errInput;
+
+Input ::= iinput:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto Expresion parenCerrado 
+| iinput:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto parenCerrado
+| iinput errInput 
+| errInput;
+Print ::= pprint:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto ElementosLista2 parenCerrado 
+| errPrint
 | pprint parenAbierto errPrint parenCerrado;
 
 ElementosLista2::= Expresion MasElementosLista2;
@@ -344,14 +356,14 @@ CodigoPrincipal::= {: pila.ambitoActual = "GLOBAL"; :} Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
 CualquierCosasEspecial::= CualquierCosasEspecial CualquierCosaEspecial | ;
 
-CualquierCosa::= Expresion |If | ForFact | While | Try | bbreak errEspecial |ccontinue errEspecial | rreturn Expresion 
+CualquierCosa::= ExpresionGeneral {: pila.finExpresion(); :} |If | ForFact | While | Try | bbreak errEspecial |ccontinue errEspecial | rreturn Expresion 
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
 | var errMalUbicacion | clas errMalUbicacion puntoComa 
 | ffinally errMalUbicacion dosPuntos
 | eelse errMalUbicacion dosPuntos 
 | elif errMalUbicacion dosPuntos;
 
-CualquierCosaEspecial::= Expresion |IfEspecial | ForFact | While | TryEspecial | bbreak|ccontinue | rreturn Expresion 
+CualquierCosaEspecial::= ExpresionGeneral |IfEspecial | ForFact | While | TryEspecial | bbreak|ccontinue | rreturn Expresion 
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
 | var errMalUbicacion | clas errMalUbicacion puntoComa 
 | ffinally errMalUbicacion dosPuntos
@@ -389,15 +401,23 @@ OpAritmeticos ::= opSuma:v {:pila.registrarOperador(v, "SUMA" ,vleft, vright); :
 | opModulo:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
 | opPotencia:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  ;
 
-OpUnario ::= opSuma | opResta;
+OpUnario ::= opSuma:v {:pila.registrarOperador(v, "UNARIO" ,vleft, vright); :}   
+| opResta:v {:pila.registrarOperador(v, "UNARIO" ,vleft, vright); :}  ;
+
 OpBinario ::= OpAritmeticos;
 OpBinarioB ::= opComGeneral:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :}  
 | opComEspecifico:v {:pila.registrarOperador(v, "COMPESPECIFICO" ,vleft, vright); :}    
 | OpLogicos;
 
 OpLogicos ::= opAnd:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :}
-| opOr:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :}
-| opNot:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :};
+| opOr:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :};
+
+OpBits ::= opShiftR:v {:pila.registrarOperadorBinario(v, "SHIFTR" ,vleft, vright); :}
+| opShiftL:v {:pila.registrarOperadorBinario(v, "SHIFTL" ,vleft, vright); :}
+| opAndBits:v {:pila.registrarOperadorBinario(v, "AND" ,vleft, vright); :}
+| opExclusiveOr:v {:pila.registrarOperadorBinario(v, "OREXC" ,vleft, vright); :}
+| opComp:v {:pila.registrarOperadorBinario(v, "COMP" ,vleft, vright); :}
+| opOrBits:v {:pila.registrarOperadorBinario(v, "OR" ,vleft, vright); :};
 
 /*-----------------------------------------------------------------------------------------*/
 

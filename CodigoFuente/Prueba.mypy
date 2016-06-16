@@ -7,9 +7,14 @@ def funcion2(int x, string y):
 	
 ;
 
-int a
+string a
 
-funcion1(True,"string")
+funcion1(9>7,"string")
+6+8
+[]
 
-a not 9
+
+
+
+
 

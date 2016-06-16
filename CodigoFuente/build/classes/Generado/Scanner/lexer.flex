@@ -128,6 +128,14 @@ opPuntoComa = ";"
    "or"               {lexeme = yytext(); return symbol(sym.opOr, lexeme);}
    "not"              {lexeme = yytext(); return symbol(sym.opNot, lexeme);}
 
+   /* Operadores de bits */ 
+   ">>"              {lexeme = yytext(); return symbol(sym.opShiftR, lexeme);}
+   "<<"               {lexeme = yytext(); return symbol(sym.opShiftL, lexeme);}
+   "&"              {lexeme = yytext(); return symbol(sym.opAndBits, lexeme);}
+   "^"              {lexeme = yytext(); return symbol(sym.opExclusiveOr, lexeme);}
+   "~"              {lexeme = yytext(); return symbol(sym.opComp, lexeme);}
+   \u007C              {lexeme = yytext(); return symbol(sym.opOrBits, lexeme);}
+
    /* Operadores */
    {opAritmeticos}     {lexeme = yytext(); return symbol(sym.opAritmeticos, lexeme);}
    {opComparadores}    {lexeme = yytext(); return symbol(sym.opComparadores, lexeme);}

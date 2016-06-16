@@ -9,61 +9,66 @@ package Generado.Parser;
 public class sym {
   /* terminals */
   public static final int palabraReservada = 2;
-  public static final int wwhile = 29;
-  public static final int opMultiplicacion = 40;
-  public static final int bbreak = 35;
+  public static final int wwhile = 28;
+  public static final int opMultiplicacion = 39;
+  public static final int bbreak = 34;
   public static final int CHAR = 5;
   public static final int opComGeneral = 8;
-  public static final int opNot = 47;
-  public static final int opAnd = 45;
-  public static final int ffinally = 34;
-  public static final int dosPuntos = 48;
-  public static final int intReservado = 16;
-  public static final int opDivision = 41;
-  public static final int rreturn = 37;
-  public static final int coma = 52;
-  public static final int range = 28;
+  public static final int opNot = 46;
+  public static final int opAnd = 44;
+  public static final int ffinally = 33;
+  public static final int dosPuntos = 53;
+  public static final int intReservado = 15;
+  public static final int opDivision = 40;
+  public static final int rreturn = 36;
+  public static final int coma = 57;
+  public static final int range = 27;
   public static final int INT = 3;
-  public static final int cuadradoAbierto = 54;
-  public static final int identificador = 25;
-  public static final int iinput = 31;
-  public static final int parenAbierto = 50;
+  public static final int cuadradoAbierto = 59;
+  public static final int identificador = 24;
+  public static final int iinput = 30;
+  public static final int parenAbierto = 55;
   public static final int opAsignaciones = 10;
-  public static final int clas = 17;
-  public static final int ccontinue = 36;
-  public static final int def = 18;
-  public static final int opModulo = 43;
-  public static final int ttrue = 20;
-  public static final int ffalse = 19;
-  public static final int var = 24;
+  public static final int clas = 16;
+  public static final int ccontinue = 35;
+  public static final int def = 17;
+  public static final int opOrBits = 52;
+  public static final int opModulo = 42;
+  public static final int ttrue = 19;
+  public static final int ffalse = 18;
+  public static final int opAndBits = 49;
+  public static final int var = 23;
   public static final int opDelimitadores = 11;
   public static final int EOF = 0;
-  public static final int opBits = 12;
-  public static final int iif = 21;
+  public static final int iif = 20;
+  public static final int opExclusiveOr = 50;
+  public static final int opComp = 51;
   public static final int error = 1;
-  public static final int opLogicos = 13;
-  public static final int opSuma = 38;
-  public static final int opDivisionE = 42;
-  public static final int in = 27;
-  public static final int punto = 55;
-  public static final int opOr = 46;
-  public static final int elif = 23;
-  public static final int ffor = 26;
-  public static final int ERROR = 14;
-  public static final int pprint = 30;
-  public static final int puntoComa = 49;
-  public static final int ttry = 32;
-  public static final int eexcept = 33;
-  public static final int eelse = 22;
+  public static final int opLogicos = 12;
+  public static final int opSuma = 37;
+  public static final int opDivisionE = 41;
+  public static final int in = 26;
+  public static final int punto = 60;
+  public static final int opOr = 45;
+  public static final int elif = 22;
+  public static final int ffor = 25;
+  public static final int ERROR = 13;
+  public static final int pprint = 29;
+  public static final int puntoComa = 54;
+  public static final int ttry = 31;
+  public static final int eexcept = 32;
+  public static final int eelse = 21;
   public static final int FLOAT = 4;
-  public static final int cuadradoCerrado = 53;
-  public static final int END = 15;
+  public static final int cuadradoCerrado = 58;
+  public static final int END = 14;
   public static final int opAritmeticos = 7;
   public static final int STRING = 6;
-  public static final int parenCerrado = 51;
+  public static final int parenCerrado = 56;
   public static final int opComEspecifico = 9;
-  public static final int opResta = 39;
-  public static final int opPotencia = 44;
+  public static final int opShiftR = 47;
+  public static final int opResta = 38;
+  public static final int opPotencia = 43;
+  public static final int opShiftL = 48;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -77,7 +82,6 @@ public class sym {
   "opComEspecifico",
   "opAsignaciones",
   "opDelimitadores",
-  "opBits",
   "opLogicos",
   "ERROR",
   "END",
@@ -113,6 +117,12 @@ public class sym {
   "opAnd",
   "opOr",
   "opNot",
+  "opShiftR",
+  "opShiftL",
+  "opAndBits",
+  "opExclusiveOr",
+  "opComp",
+  "opOrBits",
   "dosPuntos",
   "puntoComa",
   "parenAbierto",
