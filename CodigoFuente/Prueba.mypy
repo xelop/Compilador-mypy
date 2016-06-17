@@ -13,6 +13,8 @@ char charv
 float flotante
 boolean bool1,bool2
 
+stringa = 4
+
 
 
 

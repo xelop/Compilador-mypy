@@ -327,7 +327,8 @@ ExpresionB ::= ffalse:v {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pi
 | ExpresionBol 
 | parenAbierto ExpresionB parenCerrado ;
 
-Expresion ::= identificador opAsignaciones Expresion;
+Expresion ::= identificador:c {:pila.registrarId(c, cleft, cright, tabla); pila.contadorExp+=1; :} 
+opAsignaciones:v {:pila.registrarOperador(v, "ASIGNACION" ,vleft, vright); :} Expresion;
 
 
 Expresiones ::= Expresiones Expresion | ;

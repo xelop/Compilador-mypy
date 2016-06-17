@@ -199,6 +199,19 @@ public class PilaSemantica {
                     contadorExp = 1;
                 }
                     
+            }else if(getTope().equals("ASIGNACION")){
+                RegistroSemantico op = pop();
+                RegistroSemantico Exp2 = transformarIdent(pop(),tabla);
+                contadorExp -=1;
+                if(Exp1.dato.equals(Exp2.dato)){
+                    push(Exp2);
+                    contadorExp++;
+                }else{
+                    tabla.errores.add("Error en los tipos de la asignacion. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
+                    vaciarPilaN(contadorExp+contadorExp);
+                    push(Exp2);
+                    contadorExp = 1;
+                }
             }
             Exp1 = transformarIdent(pop(),tabla);
             contadorExp-=1;
