@@ -36,6 +36,7 @@ public class GeneradorCodigo {
         writer.println("");
         writer.println("    mov ax, 4c00h");
         writer.println("    int 21h");
+        writer.println();
         writer.println("codigo ends");
         writer.println("end inicio");
         writer.close();
@@ -58,7 +59,20 @@ public class GeneradorCodigo {
             if (tipo.equals("char")){
                 insertaN("    " + nombre + " db ''     ; es un char", 6);
             }
-            
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void insertarFuncion(String nombre){
+        String funcion = "" + nombre + " proc near\n";
+        funcion += "    pusha\n";
+        funcion += "    ;cuerpo de la función\n";
+        funcion += "    popa\n";
+        funcion += "" + nombre + " endp\n";
+        try{
+            insertaN(funcion,17);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -69,8 +83,8 @@ public class GeneradorCodigo {
     private void insertaN(String texto, int numLinea) throws IOException{
         File archivo = new File("Prueba.asm"); 
         File temporal = File.createTempFile("temp", ".tmp");
-        BufferedReader lector = new BufferedReader(new FileReader( archivo ));
-        PrintWriter escritor =  new PrintWriter(new FileWriter( temporal ));
+        BufferedReader lector = new BufferedReader(new FileReader(archivo));
+        PrintWriter escritor =  new PrintWriter(new FileWriter(temporal));
         String linea;
         int lineaActual = 0;
         while ((linea = lector.readLine()) != null) {

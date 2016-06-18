@@ -36,11 +36,11 @@ public class TablaSimbolos {
             }
             
             simbolos.add(nuevoSimbolo);
-            if(nuevoSimbolo.ambito.equals("GLOBAL") && nuevoSimbolo.tipo.equals("VARIABLE") && errores.size() == 0){
+            if(nuevoSimbolo.ambito.equals("GLOBAL") && nuevoSimbolo.tipo.equals("VARIABLE") && errores.isEmpty()){
                 generador.insertarVariableGlobal(nuevoSimbolo.nombre, nuevoSimbolo.tipoDato);
             }
-            if(nuevoSimbolo.tipo.equals("FUNCION")){
-                System.out.println("generar funcion ensamblador");
+            if(nuevoSimbolo.tipo.equals("FUNCION") && errores.isEmpty()){
+                generador.insertarFuncion(nuevoSimbolo.nombre);
             }
         }
     }

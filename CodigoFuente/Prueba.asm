@@ -22,5 +22,18 @@ inicio
 
     mov ax, 4c00h
     int 21h
+
+funcion2 proc near
+    pusha
+    ;cuerpo de la función
+    popa
+funcion2 endp
+
+funcion1 proc near
+    pusha
+    ;cuerpo de la función
+    popa
+funcion1 endp
+
 codigo ends
 end inicio
