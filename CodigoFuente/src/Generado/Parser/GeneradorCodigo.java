@@ -10,8 +10,10 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 public class GeneradorCodigo {
-    
+    Integer lineaA;//es para el codigo principal
     public PrintWriter writer;
+    Integer cantidadVariables=0;
+    
     public GeneradorCodigo() throws FileNotFoundException, UnsupportedEncodingException{
         writer = new PrintWriter("Prueba.asm", "UTF-8");
         writer.println("pila segment stack 'stack'");
@@ -28,6 +30,8 @@ public class GeneradorCodigo {
         writer.println("inicio");
         writer.println("    mov ax, datos");
         writer.println("    mov ds, ax");
+        writer.println();
+        lineaA = 14;
         finalizarCodigo();
         
     }
@@ -59,6 +63,7 @@ public class GeneradorCodigo {
             if (tipo.equals("char")){
                 insertaN("    " + nombre + " db ''     ; es un char", 6);
             }
+            cantidadVariables++;
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -68,11 +73,27 @@ public class GeneradorCodigo {
     public void insertarFuncion(String nombre){
         String funcion = "" + nombre + " proc near\n";
         funcion += "    pusha\n";
-        funcion += "    ;cuerpo de la función\n";
+        funcion += "    ;cuerpo de la función\n\n";
         funcion += "    popa\n";
         funcion += "" + nombre + " endp\n";
         try{
-            insertaN(funcion,17);
+            insertaN(funcion,18);
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void insertarCodigo(String codigo, String ambito, Integer aumentoLineas){
+        try{
+            if(ambito.equals("PROGRAMA")){
+                insertaN(codigo,lineaA+cantidadVariables);
+                lineaA += aumentoLineas;   
+            }//es una funcion
+            else{
+                insertaN(codigo,22);
+            }
+                
         }
         catch(Exception e){
             System.out.println(e.getMessage());

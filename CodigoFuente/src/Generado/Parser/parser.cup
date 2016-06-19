@@ -188,19 +188,18 @@ Parametros ::= ExpresionGeneral Parametro {:pila.evalFuncion(tabla); :} | parenC
 ;
 Parametro ::= coma ExpresionGeneral Parametro | parenCerrado | errParametro parenCerrado ;
 
-If ::= iif ExpresionB dosPuntos BloquePuntoComa Elif
-| iif ExpresionB error:e {: parser.addError("Hay un error en la declaracion del If" + 
-" (revisar dos puntos)."); :}
- dosPuntos BloquePuntoComa Elif
-| iif errExpresionB 
- dosPuntos BloquePuntoComa Elif
+If ::= iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla); pila.finExpresion(); pila.testIf(); :} dosPuntos BloquePuntoComa Elif {: pila.endIf(tabla); :}
+| iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla); pila.finExpresion(); pila.testIf(); :} error:e {: parser.addError("Hay un error en la declaracion del If" + 
+" (revisar dos puntos)."); :} dosPuntos BloquePuntoComa Elif {: pila.endIf(tabla); :}
+| iif:v {: pila.startIf(v,vleft,vright); :} errExpresionB 
+ dosPuntos BloquePuntoComa Elif {: pila.endIf(tabla); :}
 ;
 
-IfEspecial ::= iif ExpresionB dosPuntos BloquePuntoComaEspecial ElifEspecial
-| iif ExpresionB error:e {: parser.addError("Hay un error en la declaracion del If" + 
+IfEspecial ::= iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla); pila.finExpresion(); pila.testIf(); :} dosPuntos BloquePuntoComaEspecial ElifEspecial
+| iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB{: pila.evalExpresion(tabla); pila.finExpresion(); pila.testIf(); :} error:e {: parser.addError("Hay un error en la declaracion del If" + 
 " (revisar dos puntos)."); :}
  dosPuntos BloquePuntoComaEspecial ElifEspecial
-| iif errExpresionB 
+| iif:v {: pila.startIf(v,vleft,vright); :} errExpresionB 
  dosPuntos BloquePuntoComaEspecial ElifEspecial
 ;
 
@@ -216,12 +215,12 @@ ElifEspecial ::= elif ExpresionB dosPuntos BloquePuntoComaEspecial ElifEspecial
 dosPuntos BloquePuntoComaEspecial ElifEspecial
 | ElseEspecial; 
 
-Else::= eelse dosPuntos BloquePuntoComaEspecial
+Else::= eelse:v {: pila.startElse(); :} dosPuntos BloquePuntoComaEspecial
 | eelse errElse dosPuntos BloquePuntoComaEspecial
 |
 ;
 
-ElseEspecial::= eelse dosPuntos BloquePuntoComaEspecial
+ElseEspecial::= eelse {: pila.startElse(); :} dosPuntos BloquePuntoComaEspecial
 | eelse errElse dosPuntos BloquePuntoComaEspecial
 |
 ;

@@ -9,10 +9,16 @@ public class PilaSemantica {
     ArrayList<RegistroSemantico> lista;
     public String ambitoActual;//global, local, de clase, etc.
     public int contadorExp = 0;
+    public int contador;//para generar etiquetas
+    public String codigoActual;
+    public Integer numeroLineas;//numero de lineas a aumentar
     
     public PilaSemantica(){
         lista = new ArrayList();
         ambitoActual = "";
+        contador = 0;
+        codigoActual = "";
+        numeroLineas = 0;
     }
     
     public void push(RegistroSemantico pRegistro){
@@ -56,6 +62,14 @@ public class PilaSemantica {
     public RegistroSemantico getPrimeraFuncionE(){//devuelve la primera funcionE en la pila
         for(int i = lista.size() - 1; i>=0 ; i--){
             if (lista.get(i).tipo.equals("FUNCIONE")){
+                return lista.get(i);
+            }
+        }
+        return null;
+    }
+    public RegistroSemantico getPrimerIF(){//devuelve la primera funcionE en la pila
+        for(int i = lista.size() - 1; i>=0 ; i--){
+            if (lista.get(i).tipo.equals("IF")){
                 return lista.get(i);
             }
         }
@@ -296,6 +310,54 @@ public class PilaSemantica {
         else if(r1.dato.equals("int")||r2.dato.equals("int"))
             r2.dato = "int";
         return r2;
+    }
+    /*--------IF ELSE--------*/
+    public void startIf(Object pValor, int pLinea, int pColumna){
+        RegistroSemantico funcion = getPrimeraFuncion();
+        String ambito = "PROGRAMA"; 
+        if (funcion !=  null){
+            ambito = funcion.dato.toString();
+        } 
+        RegistroSemantico registro = new RegistroSemantico("IF",pValor.toString(),ambito,"",pLinea,pColumna);
+        registro.elseLabel = "elseLabel" + contador;
+        contador++;
+        registro.exitLabel = "exitLabel" + contador;
+        contador++;
+        push(registro);
+    }
+    
+    public void testIf(){
+        RegistroSemantico r;
+        while(!this.getTope().equals("IF")){
+            r = pop();//sacamos toda la expresion. Da igual. No hay que generar este código.
+        }
+        RegistroSemantico iff =  this.getPrimerIF();
+        codigoActual += "    CMP 0,0\n";
+        numeroLineas++;
+        codigoActual += "    JNZ " + iff.elseLabel + " ; ahora viene codigo de if\n";
+        numeroLineas++;
+    }
+    
+    public void startElse(){
+        RegistroSemantico iff =  this.getPrimerIF();
+        codigoActual += "    JMP " + iff.exitLabel + "\n";
+        numeroLineas++;
+        codigoActual += "    " + iff.elseLabel + ": ; ahora viene codigo de else\n";
+        numeroLineas++;
+        
+    }
+    
+    public void endIf(TablaSimbolos tabla){
+        RegistroSemantico iff =  this.getPrimerIF();
+        codigoActual += "    " + iff.exitLabel + ": ;termina bloque if-else\n";
+        numeroLineas++;
+        numeroLineas++;
+        if (iff.ambito.equals("PROGRAMA")){
+            tabla.generador.insertarCodigo(codigoActual, iff.ambito, numeroLineas);
+            codigoActual = "";
+            numeroLineas = 0;//reseteamos
+        }
+        pop();
     }
 }
 

@@ -5,6 +5,8 @@ public class RegistroSemantico {
     public Object valor;//es el nommbre
     public String dato; //variable o funcion
     public String ambito;//local, global
+    public String elseLabel;//para el if
+    public String exitLabel;// para el if
     public int linea;
     public int columna;
     
@@ -15,6 +17,8 @@ public class RegistroSemantico {
         linea = pLinea;
         columna = pColumna;
         dato = pDato;
+        elseLabel = "";
+        exitLabel = "";
     }
     
     @Override

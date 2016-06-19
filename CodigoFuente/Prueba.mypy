@@ -1,10 +1,28 @@
 def funcion1(boolean x, string y):
-	int variablex
+	boolean caca
+	if caca < 3:
 	
+	;
+	else:
+	
+	;
+	if True:
+	
+	;
+	else:
+	
+	;
 ;
+
 def funcion2(int x, string y):
 	string z
-	funcion2(2,"hola")
+	if True:
+	
+	;
+	else:
+	
+	;
+	funcion2(3,"hola")	
 ;
 
 string stringa
@@ -12,8 +30,25 @@ int enterox, enteroy
 char charv
 float flotante
 boolean bool1,bool2
+boolean caca
 
-stringa = 4
+	if caca < 3:
+	
+	;
+	else:
+	
+	;
+	
+	if caca < 3:
+	
+	;
+	else:
+	
+	;
+	
+
+
+
 
 
 

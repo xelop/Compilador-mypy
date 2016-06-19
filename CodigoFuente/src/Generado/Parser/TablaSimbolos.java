@@ -130,6 +130,9 @@ public class TablaSimbolos {
         RegistroSemantico funcion = pila.pop();
         /*agregarSimbolo(funcion.tipo,funcion.valor.toString(),funcion.ambito,"","",
                         funcion.linea,funcion.columna);*/
+        generador.insertarCodigo(pila.codigoActual, "da igual", pila.numeroLineas);
+        pila.codigoActual = "";
+        pila.numeroLineas = 0;//reseteamos
         numParametro = 1;
     }
     
