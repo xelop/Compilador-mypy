@@ -5,14 +5,9 @@
         <group>
             <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/PilaSemantica.java</file>
             <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/TablaSimbolos.java</file>
-            <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/InfoFuncion.java</file>
             <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/parser.cup</file>
             <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/Analizador.java</file>
-            <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/Simbolo.java</file>
-            <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/ProyectoCompi/ParserController.java</file>
-            <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/ProyectoCompi/PoyectoCompi.java</file>
-            <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/sym.java</file>
-            <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/ProyectoCompi/Linea.java</file>
+            <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/GeneradorCodigo.java</file>
             <file>file:/C:/Users/Josue/Documents/GitHub/Compilador-mypy/CodigoFuente/src/Generado/Parser/RegistroSemantico.java</file>
         </group>
     </open-files>
