@@ -332,7 +332,9 @@ public class PilaSemantica {
             r = pop();//sacamos toda la expresion. Da igual. No hay que generar este código.
         }
         RegistroSemantico iff =  this.getPrimerIF();
-        codigoActual += "    CMP 0,0\n";
+        codigoActual += "    MOV ax,0\n";
+        numeroLineas++;
+        codigoActual += "    CMP ax,0\n";
         numeroLineas++;
         codigoActual += "    JNZ " + iff.elseLabel + " ; ahora viene codigo de if\n";
         numeroLineas++;

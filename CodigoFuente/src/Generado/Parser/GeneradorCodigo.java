@@ -27,9 +27,9 @@ public class GeneradorCodigo {
         writer.println("codigo segment");
         writer.println("    assume cs:codigo, ds:datos, ss:pila");
         writer.println("");
-        writer.println("inicio");
-        writer.println("    mov ax, datos");
-        writer.println("    mov ds, ax");
+        writer.println("inicio:");
+        writer.println("    MOV ax, datos");
+        writer.println("    MOV ds, ax");
         writer.println();
         lineaA = 14;
         finalizarCodigo();
@@ -38,8 +38,8 @@ public class GeneradorCodigo {
     
     public void finalizarCodigo(){
         writer.println("");
-        writer.println("    mov ax, 4c00h");
-        writer.println("    int 21h");
+        writer.println("    MOV ax, 4c00h");
+        writer.println("    INT 21h");
         writer.println();
         writer.println("codigo ends");
         writer.println("end inicio");
@@ -48,20 +48,21 @@ public class GeneradorCodigo {
     
     public void insertarVariableGlobal(String nombre, String tipo){
         try{
+            Integer lineaVariable = 5;
             if (tipo.equals("int")){
-                insertaN("    " + nombre + " dw 0    ; es un entero", 6);
+                insertaN("    " + nombre + " dw 0    ; es un entero", lineaVariable);
             }
             if (tipo.equals("float")){
-                insertaN("    " + nombre + " dq 0.0 ; es un float", 6);
+                insertaN("    " + nombre + " dq 0.0 ; es un float", lineaVariable);
             }
             if (tipo.equals("boolean")){
-                insertaN("    " + nombre + " db 0    ; es un booleano", 6);
+                insertaN("    " + nombre + " db 0    ; es un booleano", lineaVariable);
             }
             if (tipo.equals("string")){
-                insertaN("    " + nombre + " db \"\"   ; es un string", 6);
+                insertaN("    " + nombre + " db \"\"   ; es un string", lineaVariable);
             }
             if (tipo.equals("char")){
-                insertaN("    " + nombre + " db ''     ; es un char", 6);
+                insertaN("    " + nombre + " db ''     ; es un char", lineaVariable);
             }
             cantidadVariables++;
         }
@@ -72,9 +73,9 @@ public class GeneradorCodigo {
     
     public void insertarFuncion(String nombre){
         String funcion = "" + nombre + " proc near\n";
-        funcion += "    pusha\n";
-        funcion += "    ;cuerpo de la función\n\n";
-        funcion += "    popa\n";
+        funcion += "    ;guarda registros\n";
+        funcion += "    ;cuerpo de la función:\n\n";
+        funcion += "    ;saca registros\n";
         funcion += "" + nombre + " endp\n";
         try{
             insertaN(funcion,18);

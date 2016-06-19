@@ -1,13 +1,12 @@
 def funcion1(boolean x, string y):
 	boolean caca
 	if caca < 3:
+		if True:
 	
-	;
-	else:
-	
-	;
-	if True:
-	
+		;
+		else:
+		
+		;
 	;
 	else:
 	
@@ -27,9 +26,6 @@ def funcion2(int x, string y):
 
 string stringa
 int enterox, enteroy
-char charv
-float flotante
-boolean bool1,bool2
 boolean caca
 
 	if caca < 3:

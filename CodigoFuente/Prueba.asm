@@ -4,68 +4,69 @@ pila ends
 
 datos segment
 
-datos ends
     caca db 0    ; es un booleano
-    bool1 db 0    ; es un booleano
-    bool2 db 0    ; es un booleano
-    flotante dq 0.0 ; es un float
-    charv db ''     ; es un char
     enterox dw 0    ; es un entero
     enteroy dw 0    ; es un entero
     stringa db ""   ; es un string
+datos ends
 
 codigo segment
     assume cs:codigo, ds:datos, ss:pila
 
-inicio
-    mov ax, datos
-    mov ds, ax
+inicio:
+    MOV ax, datos
+    MOV ds, ax
 
-    CMP 0,0
+    MOV ax,0
+    CMP ax,0
     JNZ elseLabel6 ; ahora viene codigo de if
     JMP exitLabel7
     elseLabel6: ; ahora viene codigo de else
     exitLabel7: ;termina bloque if-else
 
-    CMP 0,0
+    MOV ax,0
+    CMP ax,0
     JNZ elseLabel8 ; ahora viene codigo de if
     JMP exitLabel9
     elseLabel8: ; ahora viene codigo de else
     exitLabel9: ;termina bloque if-else
 
 
-    mov ax, 4c00h
-    int 21h
+    MOV ax, 4c00h
+    INT 21h
 
 funcion2 proc near
-    pusha
-    ;cuerpo de la función
+    ;guarda registros
+    ;cuerpo de la función:
 
-    CMP 0,0
+    MOV ax,0
+    CMP ax,0
     JNZ elseLabel4 ; ahora viene codigo de if
     JMP exitLabel5
     elseLabel4: ; ahora viene codigo de else
     exitLabel5: ;termina bloque if-else
 
-    popa
+    ;saca registros
 funcion2 endp
 
 funcion1 proc near
-    pusha
-    ;cuerpo de la función
+    ;guarda registros
+    ;cuerpo de la función:
 
-    CMP 0,0
-    JNZ elseLabel0 ; ahora viene codigo de if
-    JMP exitLabel1
-    elseLabel0: ; ahora viene codigo de else
-    exitLabel1: ;termina bloque if-else
-    CMP 0,0
-    JNZ elseLabel2 ; ahora viene codigo de if
+    MOV ax,0
+    CMP ax,0
+    JNZ elseLabel0 ; ahora viene codigo de if 1
+    MOV ax,0
+    CMP ax,0
+    JNZ elseLabel2 ; ahora viene codigo de if 2
     JMP exitLabel3
     elseLabel2: ; ahora viene codigo de else
     exitLabel3: ;termina bloque if-else
+    JMP exitLabel1
+    elseLabel0: ; ahora viene codigo de else
+    exitLabel1: ;termina bloque if-else
 
-    popa
+    ;saca registros
 funcion1 endp
 
 codigo ends
