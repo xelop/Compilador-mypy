@@ -114,11 +114,11 @@ non terminal BloquePuntoComaEspecial,CualquierCosaEspecial,CualquierCosasEspecia
 
 
 precedence left opNot,opOr,opAnd;
-precedence left opAsignaciones;
 precedence left opComGeneral,opComEspecifico;
+precedence left opAsignaciones;
 precedence left opSuma, opResta;
 precedence left opMultiplicacion, opDivisionE, opModulo, opDivision;
-precedence left opPotencia;
+precedence left opPotencia,INT;
 precedence left parenAbierto, parenCerrado;
 precedence left eelse,elif,iif,wwhile,ffor;
 precedence left dosPuntos,puntoComa,def;
@@ -188,15 +188,15 @@ Parametros ::= ExpresionGeneral Parametro {:pila.evalFuncion(tabla); :} | parenC
 ;
 Parametro ::= coma ExpresionGeneral Parametro | parenCerrado | errParametro parenCerrado ;
 
-If ::= iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla); pila.finExpresion(); pila.testIf(); :} dosPuntos BloquePuntoComa Elif {: pila.endIf(tabla); :}
-| iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla); pila.finExpresion(); pila.testIf(); :} error:e {: parser.addError("Hay un error en la declaracion del If" + 
+If ::= iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla,null); pila.finExpresion(); pila.testIf(); :} dosPuntos BloquePuntoComa Elif {: pila.endIf(tabla); :}
+| iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla,null); pila.finExpresion(); pila.testIf(); :} error:e {: parser.addError("Hay un error en la declaracion del If" + 
 " (revisar dos puntos)."); :} dosPuntos BloquePuntoComa Elif {: pila.endIf(tabla); :}
 | iif:v {: pila.startIf(v,vleft,vright); :} errExpresionB 
  dosPuntos BloquePuntoComa Elif {: pila.endIf(tabla); :}
 ;
 
-IfEspecial ::= iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla); pila.finExpresion(); pila.testIf(); :} dosPuntos BloquePuntoComaEspecial ElifEspecial
-| iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB{: pila.evalExpresion(tabla); pila.finExpresion(); pila.testIf(); :} error:e {: parser.addError("Hay un error en la declaracion del If" + 
+IfEspecial ::= iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.evalExpresion(tabla,null); pila.finExpresion(); pila.testIf(); :} dosPuntos BloquePuntoComaEspecial ElifEspecial
+| iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB{: pila.evalExpresion(tabla,null); pila.finExpresion(); pila.testIf(); :} error:e {: parser.addError("Hay un error en la declaracion del If" + 
 " (revisar dos puntos)."); :}
  dosPuntos BloquePuntoComaEspecial ElifEspecial
 | iif:v {: pila.startIf(v,vleft,vright); :} errExpresionB 
@@ -290,7 +290,7 @@ FinallyEspecial::= ffinally dosPuntos BloquePuntoComaEspecial
 ;
 
 
-Literal ::= INT:v {:pila.registrarLiteral(v, "int" ,vleft, vright); :}
+Literal ::= INT:v {:pila.registrarLiteral(v, "int" ,vleft, vright); System.out.println(v); RESULT = new Nodo(null,null, v); :}
 |FLOAT:v          {:pila.registrarLiteral(v, "float" ,vleft, vright); :}
 |CHAR:v           {:pila.registrarLiteral(v, "char" ,vleft, vright); :}
 |STRING:v         {:pila.registrarLiteral(v, "string" ,vleft, vright); :}
@@ -300,19 +300,19 @@ Literal ::= INT:v {:pila.registrarLiteral(v, "int" ,vleft, vright); :}
 Lista::= cuadradoAbierto ElementosLista cuadradoCerrado:v {:pila.registrarLiteral("lista", "LIST" ,vleft, vright); pila.contadorExp++; :};
 ElementosLista::= ExpresionGeneral {: pila.finExpresion(); :} MasElementosLista| ;
 MasElementosLista::= coma ExpresionGeneral {: pila.finExpresion(); :} MasElementosLista | ;
-Expresion ::= Literal {: pila.contadorExp+=1; :}|Lista|identificador:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :}
+Expresion ::= OpAritmeticos:v {: RESULT = v;  :}
+| ExpresionB
+| ExpresionUnario 
+| ExpresionBinaria ;  
+Expresion ::= Literal:v {: pila.contadorExp+=1; RESULT = v; :}|Lista|identificador:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :}
         | parenAbierto Expresion parenCerrado
         | errExpresion /*solo un error general para expresiones */
         | parenAbierto errParen
         | errParen parenCerrado;
-ExpresionOP ::= Expresion OpBinario Expresion;
-ExpresionGeneral ::= Expresion {: pila.evalExpresion(tabla);  :};
-Expresion ::= ExpresionOP 
-| ExpresionB
-| ExpresionUnario 
-| ExpresionBinaria ;  
+ExpresionOP ::= Expresion:e1 OpAritmeticos:v Expresion:e2 {: RESULT = new Nodo(e1,e2,v);:};
+ExpresionGeneral ::= Expresion:v {: pila.evalExpresion(tabla,v);   :};
 
-ExpresionBol::= Expresion OpBinarioB Expresion;
+ExpresionBol::= Expresion OpBinarioB Expresion ;
 ExpresionUnario ::= OpUnario Expresion;
 Expresion ::= identificador punto Funcion;
 Expresion ::= ExpresionB;
@@ -393,31 +393,31 @@ BloqueOOP::= VariablesOOP FuncionesOOP
 HeaderOOP ::= clas identificador dosPuntos BloqueOOP| clas errHeaderOOP BloqueOOP;
 
 
-OpAritmeticos ::= opSuma:v {:pila.registrarOperador(v, "SUMA" ,vleft, vright); :} 
-| opResta:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :} 
-| opMultiplicacion:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
-| opDivisionE:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
-| opDivision:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
-| opModulo:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  
-| opPotencia:v {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); :}  ;
+OpAritmeticos ::= Expresion:e1 opSuma:v Expresion:e2 {:pila.registrarOperador(v, "SUMA" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :} 
+| Expresion:e1 opResta:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :} 
+| Expresion:e1 opMultiplicacion:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
+| Expresion:e1 opDivisionE:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
+| Expresion:e1 opDivision:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
+| Expresion:e1 opModulo:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
+| Expresion:e1 opPotencia:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  ;
 
 OpUnario ::= opSuma:v {:pila.registrarOperador(v, "UNARIO" ,vleft, vright); :}   
 | opResta:v {:pila.registrarOperador(v, "UNARIO" ,vleft, vright); :}  ;
 
 OpBinario ::= OpAritmeticos;
-OpBinarioB ::= opComGeneral:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :}  
-| opComEspecifico:v {:pila.registrarOperador(v, "COMPESPECIFICO" ,vleft, vright); :}    
+OpBinarioB ::= opComGeneral:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); pila.contadorExp+=1; :}  
+| opComEspecifico:v {:pila.registrarOperador(v, "COMPESPECIFICO" ,vleft, vright);pila.contadorExp+=1; :}    
 | OpLogicos;
 
-OpLogicos ::= opAnd:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :}
-| opOr:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); :};
+OpLogicos ::= opAnd:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright);pila.contadorExp+=1; :}
+| opOr:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright);pila.contadorExp+=1; :};
 
-OpBits ::= opShiftR:v {:pila.registrarOperadorBinario(v, "SHIFTR" ,vleft, vright); :}
-| opShiftL:v {:pila.registrarOperadorBinario(v, "SHIFTL" ,vleft, vright); :}
-| opAndBits:v {:pila.registrarOperadorBinario(v, "AND" ,vleft, vright); :}
-| opExclusiveOr:v {:pila.registrarOperadorBinario(v, "OREXC" ,vleft, vright); :}
-| opComp:v {:pila.registrarOperadorBinario(v, "COMP" ,vleft, vright); :}
-| opOrBits:v {:pila.registrarOperadorBinario(v, "OR" ,vleft, vright); :};
+OpBits ::= opShiftR:v {:pila.registrarOperadorBinario(v, "BINARIO" ,vleft, vright);pila.contadorExp+=1; :}
+| opShiftL:v {:pila.registrarOperadorBinario(v, "BINARIO" ,vleft, vright);pila.contadorExp+=1; :}
+| opAndBits:v {:pila.registrarOperadorBinario(v, "BINARIO" ,vleft, vright);pila.contadorExp+=1; :}
+| opExclusiveOr:v {:pila.registrarOperadorBinario(v, "BINARIO" ,vleft, vright);pila.contadorExp+=1; :}
+| opComp:v {:pila.registrarOperadorBinario(v, "BINARIO" ,vleft, vright);pila.contadorExp+=1; :}
+| opOrBits:v {:pila.registrarOperadorBinario(v, "BINARIO" ,vleft, vright); pila.contadorExp+=1;:};
 
 /*-----------------------------------------------------------------------------------------*/
 

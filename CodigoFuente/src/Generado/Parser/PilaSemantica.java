@@ -122,7 +122,7 @@ public class PilaSemantica {
     public void registrarOperadorBinario(Object pValor, String tipo ,int pLinea, int pColumna){
         //tipo : int, float, list, string, boolean y char
         //voy a meter el tipo en dato
-        RegistroSemantico registro = new RegistroSemantico("BINARIO",pValor,"",tipo,pLinea,pColumna);
+        RegistroSemantico registro = new RegistroSemantico(tipo,pValor,"","OPERADOR",pLinea,pColumna);
         push(registro);
     }
     public void evalFuncion(TablaSimbolos tabla){
@@ -153,11 +153,99 @@ public class PilaSemantica {
         vaciarPilaN(canParametrosActual); 
         
     }
-    public void evalExpresion(TablaSimbolos tabla){
+    public void evalExpresion(TablaSimbolos tabla, Object arbol){
+        boolean primerLiteral = false;
+        boolean comparacion = false;
+        boolean floatFound = false;
+        boolean binary = false;
+        String error = "";
+        String literal = "";
+        RegistroSemantico primerRegistro = null;
+        //Cambiar idents por su tipo
+        for(int index = lista.size()-contadorExp; index < lista.size(); index++){
+            lista.set(index,transformarIdent(lista.get(index), tabla));
+        }
+        
+        System.out.println(lista);
+        
+        for(int index = lista.size()-contadorExp; index < lista.size(); index++){
+            RegistroSemantico reg = lista.get(index);
+            if(!primerLiteral && reg.tipo.equals("LITERAL")){
+                literal = reg.dato;
+                primerRegistro= reg;
+                primerLiteral = true;
+            }else{
+                if(reg.tipo.equals("LITERAL")){
+                    if((literal.equals("int") || literal.equals("boolean") || literal.equals("float")) && 
+                            (reg.dato.equals("float") || (reg.dato.equals("int")) || (reg.dato.equals("boolean")) )){
+                        error = "";
+                    }
+                    else if((literal.equals("char") || literal.equals("string") ) && 
+                            (reg.dato.equals("char") || (reg.dato.equals("string")))){
+                        error = "";
+                    } else if (!reg.dato.equals(literal)){
+                        error = "3Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                        break;
+                    }
+                    if(reg.dato.equals("float") || literal.equals("float") ){
+                        floatFound = true;
+                        if(binary){
+                           error = "4Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                           break;
+                        }
+                    }
+                        
+                }else if (reg.dato.equals("OPERADOR")){
+                    
+                    if(reg.tipo.equals("COMPESPECIFICO")){
+                        comparacion = true;
+                    }
+                    
+                    if(reg.tipo.equals("COMPGENERAL")){
+                        comparacion = true;
+                        error = "";
+                        primerLiteral = false;
+                    }
+                    else if((literal.equals("char") || literal.equals("string") ) && !(reg.tipo.equals("SUMA")|| reg.tipo.equals("COMPESPECIFICO"))){
+                        error = "5Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                    } else if(reg.tipo.equals("BINARIO")){
+                        
+                        if(floatFound){
+                            error = "6Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                            break;
+                        }else
+                            binary = true;
+                            
+                    }
+                }
+            }
+                    
+        }
+        if(comparacion){
+            primerRegistro.dato = "boolean";
+        }
+        if(!error.isEmpty()){
+            tabla.errores.add(error);
+        }
+        vaciarPilaN(contadorExp);
+        System.out.println(lista);
+        push(primerRegistro);
+        contadorExp = 1;
+        System.out.println(lista);
+        
+    }
+    public void evalExpresion2(TablaSimbolos tabla,Object arbol){
+        System.out.println(lista);
+         Nodo arb = (Nodo) arbol;
+                arb.print();
         RegistroSemantico Exp1 = transformarIdent(pop(),tabla);
         boolean comparacion = false;
+        boolean generar = true;
+        boolean unaExp = true;
+        ArrayList<RegistroSemantico> aritmetica = new ArrayList<>();
         contadorExp-=1;
         while(contadorExp!=0){
+            unaExp = false;
             if(getTope().equals("OPERADOR") 
                     || getTope().equals("SUMA")
                     || getTope().equals("COMPGENERAL")
@@ -170,32 +258,43 @@ public class PilaSemantica {
                     if(Exp1.dato.equals("string") && Exp2.dato.equals("char")){
                             Exp2.dato="string";
                             push(Exp2);
+                            generar = false;
                             contadorExp++;
                     }
                     else if(Exp1.dato.equals("char") && (Exp2.dato.equals("string"))){
                             Exp2.dato="string";
                             push(Exp2);
+                            generar = false;
                             contadorExp++;
                     }
-                    else if(!validarTipos(Exp2, Exp1, tabla)){
+                    else if(Exp1.dato.equals(Exp2.dato) && (Exp1.dato.equals("char")||Exp1.dato.equals("string"))){
+                        push(Exp2);
+                        generar = false;
+                        contadorExp++;
+                    } else if(!validarTipos(Exp2, Exp1, tabla,aritmetica,op)){
                         tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
                         vaciarPilaN(contadorExp+contadorExp);
                         push(Exp2);
+                        generar = false;
                         contadorExp = 1;
-                    }
+                    } else if(op.tipo.equals("SUMA"))
+                        generar = generarTrue(generar);
                     if(op.tipo.equals("COMPESPECIFICO"))
                         comparacion = true; //para que cambie el resultado a bool al final
                     
                 }else if(op.tipo.equals("COMPGENERAL")){
                     push(Exp2);
                     contadorExp++;
+                    generar = false;
                     comparacion = true;
-                }else if(!validarTipos(Exp2, Exp1, tabla)){
+                }else if(!validarTipos(Exp2, Exp1, tabla,aritmetica,op)){
                      tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
                      vaciarPilaN(contadorExp+contadorExp);
                      push(Exp2);
+                     generar = false;
                      contadorExp = 1;
-                }
+                }else
+                    generar = generarTrue(generar);
             }
             else if(getTope().equals("BINARIO")){
                 RegistroSemantico op = pop();
@@ -204,12 +303,14 @@ public class PilaSemantica {
                 
                 if(Exp1.dato.equals("int") && Exp2.dato.equals("int")){
                     push(Exp2);
+                    generar =false;
                     
                     contadorExp++;
                 }else{
                     tabla.errores.add("Error en los tipos de las expresiones. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
                     vaciarPilaN(contadorExp+contadorExp);
                     push(Exp2);
+                    generar =false;
                     contadorExp = 1;
                 }
                     
@@ -219,17 +320,18 @@ public class PilaSemantica {
                 contadorExp -=1;
                 if(Exp1.dato.equals(Exp2.dato)){
                     push(Exp2);
+                    generar = false;
                     contadorExp++;
                 }else{
                     tabla.errores.add("Error en los tipos de la asignacion. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
                     vaciarPilaN(contadorExp+contadorExp);
                     push(Exp2);
+                    generar =false;
                     contadorExp = 1;
                 }
             }
             Exp1 = transformarIdent(pop(),tabla);
-            contadorExp-=1;
-            
+            contadorExp-=1;    
       
         }
         if (getTope().equals("UNARIO")){
@@ -244,35 +346,58 @@ public class PilaSemantica {
         }
         if(comparacion){
             Exp1.dato="boolean";
+            generar = false;
         }
         push(Exp1);
+        
+        if(generar && !unaExp){
+                aritmetica.add(Exp1);
+                //System.out.println(aritmetica);
+                //Nodo arb = (Nodo) arbol;
+                arb.print();
+                //GeneradorAritmetico.generarExpresion(aritmetica);
+        }
     }
     //Metodo para limpiar pila cuando se ejecuta desde CualquierCosa
     public void finExpresion(){
+        contadorExp--;
         pop();
     }
-    private boolean validarTipos(RegistroSemantico Exp2, RegistroSemantico Exp1, TablaSimbolos tabla){
-        if(Exp1.dato.equals(Exp2.dato)){
+    private boolean generarTrue(boolean val){
+        if(val == false)
+            return false;
+        return true;
+    }
+    private boolean validarTipos(RegistroSemantico Exp2, RegistroSemantico Exp1, TablaSimbolos tabla,ArrayList<RegistroSemantico> lista,RegistroSemantico op){
+        if(Exp1.dato.equals(Exp2.dato) && !(Exp1.dato.equals("string") || Exp1.dato.equals("char"))){
                 Exp2 = floatorBool(Exp1, Exp2);
                 push(Exp2);
                 contadorExp++;
+                lista.add(Exp1);
+                lista.add(op);
                 return true;
         }
         else if(Exp1.dato.equals("int") && (Exp2.dato.equals("float") || Exp2.dato.equals("boolean"))){
                 Exp2 = floatorBool(Exp1, Exp2);
                 push(Exp2);
                 contadorExp++;
+                lista.add(Exp1);
+                lista.add(op);
                 return true;
         }
         else if(Exp1.dato.equals("float") && (Exp2.dato.equals("int") || Exp2.dato.equals("boolean"))){
                 Exp2 = floatorBool(Exp1, Exp2);
                 push(Exp2);
                 contadorExp++;
+                lista.add(Exp1);
+                lista.add(op);
                 return true;
         }
         else if(Exp1.dato.equals("boolean") && (Exp2.dato.equals("int") || Exp2.dato.equals("float"))){
                 Exp2 = floatorBool(Exp1, Exp2);
                 push(Exp2);
+                lista.add(Exp1);
+                lista.add(op);
                 contadorExp++;
                 return true;
         }
@@ -289,6 +414,7 @@ public class PilaSemantica {
     private RegistroSemantico transformarIdent(RegistroSemantico registro,TablaSimbolos tabla){
         if(registro.tipo.equals("IDENTIFICADORE")){
             String dato = registro.dato;
+            System.out.println(dato);
             RegistroSemantico funcion = getPrimeraFuncion();
             if(funcion == null)
                 registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
@@ -296,7 +422,7 @@ public class PilaSemantica {
             else
                 registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
                     funcion.valor.toString(), tabla);
-            registro.tipo = dato;
+            registro.tipo = "LITERAL";
             return registro;
         }
         else
