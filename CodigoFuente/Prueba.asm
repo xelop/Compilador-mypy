@@ -17,5 +17,12 @@ inicio:
     MOV ax, 4c00h
     INT 21h
 
+funcion1 proc near
+    ;guarda registros
+    ;cuerpo de la función:
+
+    ;saca registros
+funcion1 endp
+
 codigo ends
 end inicio

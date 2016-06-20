@@ -2332,6 +2332,8 @@ public class Analizador extends java_cup.runtime.lr_parser {
     String error2 = errores.get(errores.size()-1);
     error2 = error + error2;
     errores.set(errores.size()-1, error2);
+    pila.setError();
+    tabla.setError();
     /*ProyectoCompi.PoyectoCompi.consola.impirmir(error);*/
   }
 
@@ -2355,6 +2357,8 @@ public class Analizador extends java_cup.runtime.lr_parser {
 
     errores.add(" En el token: " + value + " En la linea: " + s.left + " En la columna: " + s.right);
     System.out.println("Error en la linea : (" + s.left + ") " + s.value);
+    pila.setError();
+    tabla.setError();
    
   }
 /*public void unrecovered_syntax_error(Symbol s){
@@ -4999,7 +5003,8 @@ pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1;
 		int cleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object c = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
- errores.add("Falto el ; de la clase principal en la línea: " + cleft); 
+ errores.add("Falto el ; de la clase principal en la línea: " + cleft); pila.setError();
+    tabla.setError();
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("NT$40",153, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -5025,7 +5030,8 @@ pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1;
 		int cleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object c = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
- errores.add("debe venir al menos un método al definir la clase, en la línea:  " + cleft); 
+ errores.add("debe venir al menos un método al definir la clase, en la línea:  " + cleft);pila.setError();
+    tabla.setError(); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("NT$41",154, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -5078,7 +5084,8 @@ pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1;
 		int cleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object c = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
- errores.add("Falto el ; de la clase principal en la línea: " + cleft); 
+ errores.add("Falto el ; de la clase principal en la línea: " + cleft); pila.setError();
+    tabla.setError();
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("NT$42",155, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -5122,7 +5129,8 @@ pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1;
 		int cleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object c = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
- errores.add("debe venir al menos una variable al definir la clase, en la línea:  " + cleft); 
+ errores.add("debe venir al menos una variable al definir la clase, en la línea:  " + cleft); pila.setError();
+    tabla.setError();
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("NT$43",156, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;
@@ -5148,7 +5156,8 @@ pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1;
 		int cleft = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()).right;
 		Object c = (Object)((java_cup.runtime.Symbol) CUP$Analizador$stack.peek()).value;
- errores.add("debe venir al menos una variable y un método al definir la clase, en la línea:  " + cleft); 
+ errores.add("debe venir al menos una variable y un método al definir la clase, en la línea:  " + cleft); pila.setError();
+    tabla.setError();
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("NT$44",157, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;

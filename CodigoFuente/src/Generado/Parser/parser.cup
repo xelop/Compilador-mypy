@@ -20,6 +20,8 @@ parser code
     String error2 = errores.get(errores.size()-1);
     error2 = error + error2;
     errores.set(errores.size()-1, error2);
+    pila.setError();
+    tabla.setError();
     /*ProyectoCompi.PoyectoCompi.consola.impirmir(error);*/
   }
 
@@ -43,6 +45,8 @@ parser code
 
     errores.add(" En el token: " + value + " En la linea: " + s.left + " En la columna: " + s.right);
     System.out.println("Error en la linea : (" + s.left + ") " + s.value);
+    pila.setError();
+    tabla.setError();
    
   }
 /*public void unrecovered_syntax_error(Symbol s){
@@ -375,20 +379,25 @@ CualquierCosaEspecial::= ExpresionGeneral |IfEspecial | ForFact | While | TryEsp
 VariablesOOP ::=  {: pila.ambitoActual = "ATRIBUTO"; :} Variable Variables;
 
 FuncionesOOP ::=  DefFunciones2 puntoComa CodigoPrincipal 
-| DefFunciones2:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); :} CodigoPrincipal 
-| puntoComa:c {: errores.add("debe venir al menos un método al definir la clase, en la línea:  " + cleft); :} CodigoPrincipal;
+| DefFunciones2:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); pila.setError();
+    tabla.setError();:} CodigoPrincipal 
+| puntoComa:c {: errores.add("debe venir al menos un método al definir la clase, en la línea:  " + cleft);pila.setError();
+    tabla.setError(); :} CodigoPrincipal;
 
 DefFunciones2 ::= DefFuncion DefFunciones2 
 |  DefFuncion ;
 
 FuncionesOOP2 ::= DefFunciones puntoComa CodigoPrincipal 
-| DefFunciones:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); :} CodigoPrincipal; 
+| DefFunciones:c {: errores.add("Falto el ; de la clase principal en la línea: " + cleft); pila.setError();
+    tabla.setError();:} CodigoPrincipal; 
 
 OOP ::= HeaderOOP;
 BloqueOOP::= VariablesOOP FuncionesOOP
 
-| DefFuncion:c {: errores.add("debe venir al menos una variable al definir la clase, en la línea:  " + cleft); :} FuncionesOOP2
-| puntoComa:c {: errores.add("debe venir al menos una variable y un método al definir la clase, en la línea:  " + cleft); :} CodigoPrincipal;
+| DefFuncion:c {: errores.add("debe venir al menos una variable al definir la clase, en la línea:  " + cleft); pila.setError();
+    tabla.setError();:} FuncionesOOP2
+| puntoComa:c {: errores.add("debe venir al menos una variable y un método al definir la clase, en la línea:  " + cleft); pila.setError();
+    tabla.setError();:} CodigoPrincipal;
 
 HeaderOOP ::= clas identificador dosPuntos BloqueOOP| clas errHeaderOOP BloqueOOP;
 

@@ -7,6 +7,7 @@ public class TablaSimbolos {
     public ArrayList<String> errores;
     public Integer numParametro;
     public GeneradorCodigo generador;
+    public Boolean errorSintactico;
     
     public TablaSimbolos(){
         simbolos = new ArrayList();
@@ -18,6 +19,11 @@ public class TablaSimbolos {
         catch(Exception e){
             System.out.println(e.getMessage());
         }
+        errorSintactico = false;
+    }
+    
+    public void setError(){
+        errorSintactico = true;
     }
     
     
@@ -36,10 +42,10 @@ public class TablaSimbolos {
             }
             
             simbolos.add(nuevoSimbolo);
-            if(nuevoSimbolo.ambito.equals("GLOBAL") && nuevoSimbolo.tipo.equals("VARIABLE") && errores.isEmpty()){
+            if(nuevoSimbolo.ambito.equals("GLOBAL") && nuevoSimbolo.tipo.equals("VARIABLE") && errores.isEmpty() && errorSintactico == false){
                 generador.insertarVariableGlobal(nuevoSimbolo.nombre, nuevoSimbolo.tipoDato);
             }
-            if(nuevoSimbolo.tipo.equals("FUNCION") && errores.isEmpty()){
+            if(nuevoSimbolo.tipo.equals("FUNCION") && errores.isEmpty() && errorSintactico == false){
                 generador.insertarFuncion(nuevoSimbolo.nombre);
             }
         }
@@ -104,36 +110,42 @@ public class TablaSimbolos {
     }
     
     public void insertarVariables(PilaSemantica pila){
-        RegistroSemantico rActual = null;
-        RegistroSemantico tipo = null;
-        RegistroSemantico funcion = null;
-        while(pila.getTope().equals("IDENTIFICADOR")){
-            rActual = pila.pop();
-            tipo = pila.getPrimerTipo();
-            if(rActual.ambito.equals("GLOBAL")){
-                agregarSimbolo(rActual.dato,rActual.valor.toString(),rActual.ambito,tipo.valor.toString(),"PROGRAMA",
-                        rActual.linea,rActual.columna);
+        if(!errorSintactico){
+            RegistroSemantico rActual = null;
+            RegistroSemantico tipo = null;
+            RegistroSemantico funcion = null;
+            while(pila.getTope().equals("IDENTIFICADOR")){
+                rActual = pila.pop();
+                tipo = pila.getPrimerTipo();
+                if(rActual.ambito.equals("GLOBAL")){
+                    agregarSimbolo(rActual.dato,rActual.valor.toString(),rActual.ambito,tipo.valor.toString(),"PROGRAMA",
+                            rActual.linea,rActual.columna);
+                }
+                else if(rActual.ambito.equals("ATRIBUTO")){
+                    agregarSimbolo(rActual.dato,rActual.valor.toString(),rActual.ambito,tipo.valor.toString(),"CLASE",
+                            rActual.linea,rActual.columna);
+                }
+                else{
+                    funcion = pila.getPrimeraFuncion();
+                    agregarSimbolo(rActual.dato,rActual.valor.toString(),rActual.ambito,tipo.valor.toString(),funcion.valor.toString(),
+                            rActual.linea,rActual.columna);
+                }
             }
-            else if(rActual.ambito.equals("ATRIBUTO")){
-                agregarSimbolo(rActual.dato,rActual.valor.toString(),rActual.ambito,tipo.valor.toString(),"CLASE",
-                        rActual.linea,rActual.columna);
-            }
-            else{
-                funcion = pila.getPrimeraFuncion();
-                agregarSimbolo(rActual.dato,rActual.valor.toString(),rActual.ambito,tipo.valor.toString(),funcion.valor.toString(),
-                        rActual.linea,rActual.columna);
-            }
+            pila.pop();
         }
-        pila.pop();
     }
     public void insertarFuncion(PilaSemantica pila){
-        RegistroSemantico funcion = pila.pop();
-        /*agregarSimbolo(funcion.tipo,funcion.valor.toString(),funcion.ambito,"","",
-                        funcion.linea,funcion.columna);*/
-        generador.insertarCodigo(pila.codigoActual, "da igual", pila.numeroLineas);
-        pila.codigoActual = "";
-        pila.numeroLineas = 0;//reseteamos
-        numParametro = 1;
+        if(!errorSintactico){
+            RegistroSemantico funcion = pila.pop();
+            /*agregarSimbolo(funcion.tipo,funcion.valor.toString(),funcion.ambito,"","",
+                            funcion.linea,funcion.columna);*/
+            if(errores.isEmpty() && errorSintactico == false){
+                generador.insertarCodigo(pila.codigoActual, "da igual", pila.numeroLineas);
+            }
+            pila.codigoActual = "";
+            pila.numeroLineas = 0;//reseteamos
+            numParametro = 1;
+        }
     }
     
     public void buscarVariable(int pLinea,String pNombre,String pAmbito,String pFuncion){
