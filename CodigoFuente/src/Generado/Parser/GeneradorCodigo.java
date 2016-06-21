@@ -17,22 +17,18 @@ public class GeneradorCodigo {
     
     public GeneradorCodigo() throws FileNotFoundException, UnsupportedEncodingException{
         writer = new PrintWriter("Prueba.asm", "UTF-8");
-        writer.println("pila segment stack 'stack'");
-        writer.println("    dw 256 dup (?)");
-        writer.println("pila ends");
+        writer.println(".MODEL small");
+        writer.println(".486");
+        writer.println(".STACK 1000h");
         writer.println("");
-        writer.println("datos segment");
+        writer.println(".DATA");
         writer.println("");
-        writer.println("datos ends");
-        writer.println("");
-        writer.println("codigo segment");
-        writer.println("    assume cs:codigo, ds:datos, ss:pila");
-        writer.println("");
-        writer.println("inicio:");
-        writer.println("    MOV ax, datos");
-        writer.println("    MOV ds, ax");
+        writer.println(".CODE");
+        writer.println("start PROC");
+        writer.println("mov ax, @data");
+        writer.println("mov ds, ax");
         writer.println();
-        lineaA = 14;
+        lineaA = 10;
         finalizarCodigo();
         
     }
@@ -42,8 +38,8 @@ public class GeneradorCodigo {
         writer.println("    MOV ax, 4c00h");
         writer.println("    INT 21h");
         writer.println();
-        writer.println("codigo ends");
-        writer.println("end inicio");
+        writer.println("start ENDP");
+        writer.println("end start");
         writer.close();
     }
     
@@ -79,7 +75,7 @@ public class GeneradorCodigo {
         funcion += "    ;saca registros\n";
         funcion += "" + nombre + " endp\n";
         try{
-            insertaN(funcion,18);
+            insertaN(funcion,14);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -93,7 +89,7 @@ public class GeneradorCodigo {
                 lineaA += aumentoLineas;   
             }//es una funcion
             else{
-                insertaN(codigo,22);
+                insertaN(codigo,18);
             }
                 
         }

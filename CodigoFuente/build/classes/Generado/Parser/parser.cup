@@ -305,26 +305,26 @@ Lista::= cuadradoAbierto ElementosLista cuadradoCerrado:v {:pila.registrarLitera
 ElementosLista::= ExpresionGeneral {: pila.finExpresion(); :} MasElementosLista| ;
 MasElementosLista::= coma ExpresionGeneral {: pila.finExpresion(); :} MasElementosLista | ;
 Expresion ::= OpAritmeticos:v {: RESULT = v;  :}
-| ExpresionB
-| ExpresionUnario 
+| ExpresionB 
 | ExpresionBinaria ;  
-Expresion ::= Literal:v {: pila.contadorExp+=1; RESULT = v; :}|Lista|identificador:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :}
-        | parenAbierto Expresion parenCerrado
+Expresion ::= Literal:v {: pila.contadorExp+=1; RESULT = v; :}|Lista|identificador:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; RESULT = new Nodo(null,null, v); :}
+        | parenAbierto Expresion:v parenCerrado {: RESULT = v; :}
         | errExpresion /*solo un error general para expresiones */
         | parenAbierto errParen
         | errParen parenCerrado;
 ExpresionOP ::= Expresion:e1 OpAritmeticos:v Expresion:e2 {: RESULT = new Nodo(e1,e2,v);:};
-ExpresionGeneral ::= Expresion:v {: pila.evalExpresion(tabla,v);   :};
+ExpresionGeneral ::= Expresion:v {: pila.evalExpresion(tabla,v);   :}
+|ExpresionUnario ;
 
 ExpresionBol::= Expresion OpBinarioB Expresion ;
-ExpresionUnario ::= OpUnario Expresion;
+ExpresionUnario ::= OpUnario Expresion:v {: pila.generarArit = false;pila.evalExpresion(tabla,null); pila.evalUnario(tabla);:};
 Expresion ::= identificador punto Funcion;
 Expresion ::= ExpresionB;
 Expresion ::= FuncionPredefinida;
 ExpresionBinaria ::= Expresion OpBits Expresion;  
 
-ExpresionB ::= ffalse:v {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1; :}
-| ttrue:v               {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1;:}
+ExpresionB ::= ffalse:v {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1;pila.generarArit = false; :}
+| ttrue:v               {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1;pila.generarArit = false;:}
 | Funcion {: pila.contadorExp++; :}
 | opNot:v {:pila.registrarOperador(v, "NOT" ,vleft, vright); :} Expresion  
 | ExpresionBol 
@@ -405,13 +405,13 @@ HeaderOOP ::= clas identificador dosPuntos BloqueOOP| clas errHeaderOOP BloqueOO
 OpAritmeticos ::= Expresion:e1 opSuma:v Expresion:e2 {:pila.registrarOperador(v, "SUMA" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :} 
 | Expresion:e1 opResta:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :} 
 | Expresion:e1 opMultiplicacion:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
-| Expresion:e1 opDivisionE:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
+| Expresion:e1 opDivisionE:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); pila.generarArit = false; :}  
 | Expresion:e1 opDivision:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
 | Expresion:e1 opModulo:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
 | Expresion:e1 opPotencia:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  ;
 
-OpUnario ::= opSuma:v {:pila.registrarOperador(v, "UNARIO" ,vleft, vright); :}   
-| opResta:v {:pila.registrarOperador(v, "UNARIO" ,vleft, vright); :}  ;
+OpUnario ::= opSuma   
+| opResta;
 
 OpBinario ::= OpAritmeticos;
 OpBinarioB ::= opComGeneral:v {:pila.registrarOperador(v, "COMPGENERAL" ,vleft, vright); pila.contadorExp+=1; :}  

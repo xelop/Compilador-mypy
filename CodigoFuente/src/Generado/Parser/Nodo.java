@@ -14,6 +14,8 @@ public class Nodo {
     Nodo nodoDer;
     Object valor;
     
+    static String result;
+    
     public Nodo(Object pNodoIzq, Object pNodoDer, Object pValor){
         nodoDer = (Nodo)pNodoDer;
         nodoIzq = (Nodo)pNodoIzq;
@@ -29,5 +31,16 @@ public class Nodo {
         }
         System.out.println(valor);
         
+    }
+    public Nodo generarCodigo(PilaSemantica pila){
+        if(nodoDer == null){
+            return this;
+        }else{
+            Nodo op1 = nodoDer.generarCodigo(pila);
+            Nodo op2 = nodoIzq.generarCodigo(pila);
+            GeneradorAritmetico.generarOperacion(valor.toString(),op2.valor.toString(), op1.valor.toString(),pila);
+            valor = "POP";
+            return this;
+        }
     }
 }

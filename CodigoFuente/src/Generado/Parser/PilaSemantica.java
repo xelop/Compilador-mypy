@@ -13,6 +13,7 @@ public class PilaSemantica {
     public String codigoActual;
     public Integer numeroLineas;//numero de lineas a aumentar
     public boolean errorSintactico;
+    public boolean generarArit = true;
     
     public PilaSemantica(){
         lista = new ArrayList();
@@ -177,6 +178,7 @@ public class PilaSemantica {
         
     }
     public void evalExpresion(TablaSimbolos tabla, Object arbol){
+        
         if(!errorSintactico){
             boolean primerLiteral = false;
             boolean comparacion = false;
@@ -207,12 +209,15 @@ public class PilaSemantica {
                         else if((literal.equals("char") || literal.equals("string") ) && 
                                 (reg.dato.equals("char") || (reg.dato.equals("string")))){
                             error = "";
+                            generarArit = false;
                         } else if (!reg.dato.equals(literal)){
                             error = "3Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                            generarArit = false;
                             break;
                         }
                         if(reg.dato.equals("float") || literal.equals("float") ){
                             floatFound = true;
+                            generarArit = false;
                             if(binary){
                                error = "4Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
                                break;
@@ -223,17 +228,20 @@ public class PilaSemantica {
 
                         if(reg.tipo.equals("COMPESPECIFICO")){
                             comparacion = true;
+                            generarArit = false;
                         }
 
                         if(reg.tipo.equals("COMPGENERAL")){
                             comparacion = true;
                             error = "";
                             primerLiteral = false;
+                            generarArit = false;
                         }
                         else if((literal.equals("char") || literal.equals("string") ) && !(reg.tipo.equals("SUMA")|| reg.tipo.equals("COMPESPECIFICO"))){
                             error = "5Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                            generarArit = false;
                         } else if(reg.tipo.equals("BINARIO")){
-
+                            generarArit = false;
                             if(floatFound){
                                 error = "6Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
                                 break;
@@ -247,6 +255,7 @@ public class PilaSemantica {
             }
             if(comparacion){
                 primerRegistro.dato = "boolean";
+                generarArit = false;
             }
             if(!error.isEmpty()){
                 tabla.errores.add(error);
@@ -254,9 +263,195 @@ public class PilaSemantica {
             vaciarPilaN(contadorExp);
             System.out.println(lista);
             push(primerRegistro);
-            contadorExp = 1;
+            contadorExp = 0;
             System.out.println(lista);
+            System.out.println(generarArit);
+            if(generarArit){
+                Nodo ar = (Nodo) arbol;
+                ar.print();
+                System.out.println("se genera expresion");
+                ar.generarCodigo(this);
+                codigoActual += "pop eax  ;FIN EXPRESION \n";
+                numeroLineas++;
+                if(ambitoActual.equals("GLOBAL")){
+                    System.out.println(numeroLineas);
+                    System.out.println(codigoActual);
+                    tabla.generador.insertarCodigo(codigoActual, "PROGRAMA", numeroLineas);
+                    codigoActual = "";
+                    numeroLineas = 0;
+                }
+            }
+            generarArit = true;
         }
+    }
+    public void evalUnario(TablaSimbolos tabla){
+        generarArit = false;
+        RegistroSemantico reg = lista.get(lista.size()-1);
+        if(reg.dato.equals("char")||reg.dato.equals("string"))
+            tabla.errores.add("Error en los tipos del operador unario. En el valor: "+ reg.valor+ " Linea: " + reg.linea);
+    }
+    
+    //Metodo para limpiar pila cuando se ejecuta desde CualquierCosa
+    public void finExpresion(){
+        if(!errorSintactico){
+            
+            pop();
+        }
+    }
+    private boolean generarTrue(boolean val){
+        if(!errorSintactico){
+            if(val == false)
+                return false;
+            return true;
+        }
+        return false;
+    }
+    private void codigoExpFinal(Nodo arbol){
+        
+    }
+    
+    private void vaciarPilaN(int n){
+        if(!errorSintactico){
+            while(n>0){
+                pop();
+                n--;
+            }
+        }
+    }
+    private RegistroSemantico transformarIdent(RegistroSemantico registro,TablaSimbolos tabla){
+        if(!errorSintactico){
+            if(registro.tipo.equals("IDENTIFICADORE")){
+                
+                String dato = registro.dato;
+                System.out.println(dato);
+                RegistroSemantico funcion = getPrimeraFuncion();
+                if(funcion == null)
+                    registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
+                        "PROGRAMA", tabla);
+                else{
+                    registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
+                        funcion.valor.toString(), tabla);
+                    generarArit = false;
+                }
+                registro.tipo = "LITERAL";
+                return registro;
+            }
+            else
+                return registro;
+        }
+        return null;
+    }
+    private RegistroSemantico floatorBool(RegistroSemantico r1,RegistroSemantico r2){
+        if(!errorSintactico){
+            if(r1.dato.equals("float")||r2.dato.equals("float"))
+                r2.dato = "float";
+            else if(r1.dato.equals("boolean") && r2.dato.equals("boolean"))
+                r2.dato = "int";
+            else if(r1.dato.equals("int")||r2.dato.equals("int"))
+                r2.dato = "int";
+            return r2;
+        }
+        return null;
+    }
+    /*--------IF ELSE--------*/
+    public void startIf(Object pValor, int pLinea, int pColumna){
+        if(!errorSintactico){
+            RegistroSemantico funcion = getPrimeraFuncion();
+            String ambito = "PROGRAMA"; 
+            if (funcion !=  null){
+                ambito = funcion.dato.toString();
+            } 
+            RegistroSemantico registro = new RegistroSemantico("IF",pValor.toString(),ambito,"",pLinea,pColumna);
+            registro.elseLabel = "elseLabel" + contador;
+            contador++;
+            registro.exitLabel = "exitLabel" + contador;
+            contador++;
+            push(registro);
+        }
+    }
+    
+    public void testIf(){
+        if(!errorSintactico){
+            RegistroSemantico r;
+            while(!this.getTope().equals("IF")){
+                r = pop();//sacamos toda la expresion. Da igual. No hay que generar este código.
+            }
+            RegistroSemantico iff =  this.getPrimerIF();
+            codigoActual += "    MOV ax,0\n";
+            numeroLineas++;
+            codigoActual += "    CMP ax,0\n";
+            numeroLineas++;
+            codigoActual += "    JNZ " + iff.elseLabel + " ; ahora viene codigo de if\n";
+            numeroLineas++;
+        }
+    }
+    
+    public void startElse(){
+        if(!errorSintactico){
+            RegistroSemantico iff =  this.getPrimerIF();
+            codigoActual += "    JMP " + iff.exitLabel + "\n";
+            numeroLineas++;
+            codigoActual += "    " + iff.elseLabel + ": ; ahora viene codigo de else\n";
+            numeroLineas++;
+        }
+        
+    }
+    
+    public void endIf(TablaSimbolos tabla){
+        if(!errorSintactico){
+            RegistroSemantico iff =  this.getPrimerIF();
+            codigoActual += "    " + iff.exitLabel + ": ;termina bloque if-else\n";
+            numeroLineas++;
+            numeroLineas++;
+            if (iff.ambito.equals("PROGRAMA")){
+                if(tabla.errores.isEmpty() && errorSintactico == false){
+                    tabla.generador.insertarCodigo(codigoActual, iff.ambito, numeroLineas);
+                }
+                codigoActual = "";
+                numeroLineas = 0;//reseteamos
+            }
+            pop();
+        }
+    }
+    /*private boolean validarTipos(RegistroSemantico Exp2, RegistroSemantico Exp1, TablaSimbolos tabla,ArrayList<RegistroSemantico> lista,RegistroSemantico op){
+        if(!errorSintactico){
+            if(Exp1.dato.equals(Exp2.dato) && !(Exp1.dato.equals("string") || Exp1.dato.equals("char"))){
+                    Exp2 = floatorBool(Exp1, Exp2);
+                    push(Exp2);
+                    contadorExp++;
+                    lista.add(Exp1);
+                    lista.add(op);
+                    return true;
+            }
+            else if(Exp1.dato.equals("int") && (Exp2.dato.equals("float") || Exp2.dato.equals("boolean"))){
+                    Exp2 = floatorBool(Exp1, Exp2);
+                    push(Exp2);
+                    contadorExp++;
+                    lista.add(Exp1);
+                    lista.add(op);
+                    return true;
+            }
+            else if(Exp1.dato.equals("float") && (Exp2.dato.equals("int") || Exp2.dato.equals("boolean"))){
+                    Exp2 = floatorBool(Exp1, Exp2);
+                    push(Exp2);
+                    contadorExp++;
+                    lista.add(Exp1);
+                    lista.add(op);
+                    return true;
+            }
+            else if(Exp1.dato.equals("boolean") && (Exp2.dato.equals("int") || Exp2.dato.equals("float"))){
+                    Exp2 = floatorBool(Exp1, Exp2);
+                    push(Exp2);
+                    lista.add(Exp1);
+                    lista.add(op);
+                    contadorExp++;
+                    return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
     public void evalExpresion2(TablaSimbolos tabla,Object arbol){
         if(!errorSintactico){
@@ -384,162 +579,7 @@ public class PilaSemantica {
 
             }
         }
-    }
-    //Metodo para limpiar pila cuando se ejecuta desde CualquierCosa
-    public void finExpresion(){
-        if(!errorSintactico){
-            contadorExp--;
-            pop();
-        }
-    }
-    private boolean generarTrue(boolean val){
-        if(!errorSintactico){
-            if(val == false)
-                return false;
-            return true;
-        }
-        return false;
-    }
-    private boolean validarTipos(RegistroSemantico Exp2, RegistroSemantico Exp1, TablaSimbolos tabla,ArrayList<RegistroSemantico> lista,RegistroSemantico op){
-        if(!errorSintactico){
-            if(Exp1.dato.equals(Exp2.dato) && !(Exp1.dato.equals("string") || Exp1.dato.equals("char"))){
-                    Exp2 = floatorBool(Exp1, Exp2);
-                    push(Exp2);
-                    contadorExp++;
-                    lista.add(Exp1);
-                    lista.add(op);
-                    return true;
-            }
-            else if(Exp1.dato.equals("int") && (Exp2.dato.equals("float") || Exp2.dato.equals("boolean"))){
-                    Exp2 = floatorBool(Exp1, Exp2);
-                    push(Exp2);
-                    contadorExp++;
-                    lista.add(Exp1);
-                    lista.add(op);
-                    return true;
-            }
-            else if(Exp1.dato.equals("float") && (Exp2.dato.equals("int") || Exp2.dato.equals("boolean"))){
-                    Exp2 = floatorBool(Exp1, Exp2);
-                    push(Exp2);
-                    contadorExp++;
-                    lista.add(Exp1);
-                    lista.add(op);
-                    return true;
-            }
-            else if(Exp1.dato.equals("boolean") && (Exp2.dato.equals("int") || Exp2.dato.equals("float"))){
-                    Exp2 = floatorBool(Exp1, Exp2);
-                    push(Exp2);
-                    lista.add(Exp1);
-                    lista.add(op);
-                    contadorExp++;
-                    return true;
-            }
-            else{
-                return false;
-            }
-        }
-        return false;
-    }
-    private void vaciarPilaN(int n){
-        if(!errorSintactico){
-            while(n>0){
-                pop();
-                n--;
-            }
-        }
-    }
-    private RegistroSemantico transformarIdent(RegistroSemantico registro,TablaSimbolos tabla){
-        if(!errorSintactico){
-            if(registro.tipo.equals("IDENTIFICADORE")){
-                String dato = registro.dato;
-                System.out.println(dato);
-                RegistroSemantico funcion = getPrimeraFuncion();
-                if(funcion == null)
-                    registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
-                        "PROGRAMA", tabla);
-                else
-                    registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
-                        funcion.valor.toString(), tabla);
-                registro.tipo = "LITERAL";
-                return registro;
-            }
-            else
-                return registro;
-        }
-        return null;
-    }
-    private RegistroSemantico floatorBool(RegistroSemantico r1,RegistroSemantico r2){
-        if(!errorSintactico){
-            if(r1.dato.equals("float")||r2.dato.equals("float"))
-                r2.dato = "float";
-            else if(r1.dato.equals("boolean") && r2.dato.equals("boolean"))
-                r2.dato = "int";
-            else if(r1.dato.equals("int")||r2.dato.equals("int"))
-                r2.dato = "int";
-            return r2;
-        }
-        return null;
-    }
-    /*--------IF ELSE--------*/
-    public void startIf(Object pValor, int pLinea, int pColumna){
-        if(!errorSintactico){
-            RegistroSemantico funcion = getPrimeraFuncion();
-            String ambito = "PROGRAMA"; 
-            if (funcion !=  null){
-                ambito = funcion.dato.toString();
-            } 
-            RegistroSemantico registro = new RegistroSemantico("IF",pValor.toString(),ambito,"",pLinea,pColumna);
-            registro.elseLabel = "elseLabel" + contador;
-            contador++;
-            registro.exitLabel = "exitLabel" + contador;
-            contador++;
-            push(registro);
-        }
-    }
-    
-    public void testIf(){
-        if(!errorSintactico){
-            RegistroSemantico r;
-            while(!this.getTope().equals("IF")){
-                r = pop();//sacamos toda la expresion. Da igual. No hay que generar este código.
-            }
-            RegistroSemantico iff =  this.getPrimerIF();
-            codigoActual += "    MOV ax,0\n";
-            numeroLineas++;
-            codigoActual += "    CMP ax,0\n";
-            numeroLineas++;
-            codigoActual += "    JNZ " + iff.elseLabel + " ; ahora viene codigo de if\n";
-            numeroLineas++;
-        }
-    }
-    
-    public void startElse(){
-        if(!errorSintactico){
-            RegistroSemantico iff =  this.getPrimerIF();
-            codigoActual += "    JMP " + iff.exitLabel + "\n";
-            numeroLineas++;
-            codigoActual += "    " + iff.elseLabel + ": ; ahora viene codigo de else\n";
-            numeroLineas++;
-        }
-        
-    }
-    
-    public void endIf(TablaSimbolos tabla){
-        if(!errorSintactico){
-            RegistroSemantico iff =  this.getPrimerIF();
-            codigoActual += "    " + iff.exitLabel + ": ;termina bloque if-else\n";
-            numeroLineas++;
-            numeroLineas++;
-            if (iff.ambito.equals("PROGRAMA")){
-                if(tabla.errores.isEmpty() && errorSintactico == false){
-                    tabla.generador.insertarCodigo(codigoActual, iff.ambito, numeroLineas);
-                }
-                codigoActual = "";
-                numeroLineas = 0;//reseteamos
-            }
-            pop();
-        }
-    }
+    }*/
 }
 
 

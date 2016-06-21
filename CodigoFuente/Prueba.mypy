@@ -1,13 +1,16 @@
-def funcion1():
-	if True:
-		
-	;
-	else:
-	;
-	string caca
+def funcion1(int x,int y):
+	6*7-8**9/9%8*(6+9)
+;
+def funcion2(int x,int y):
+	6*7-8**9/9%8*(6+9)
+;
+int a
+6+8
+
+if True:
+;
+else:
 ;
 
 
-int intx,inty
 
-2+2

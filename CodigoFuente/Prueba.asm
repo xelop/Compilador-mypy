@@ -1,28 +1,135 @@
-pila segment stack 'stack'
-    dw 256 dup (?)
-pila ends
+.MODEL small
+.486
+.STACK 1000h
 
-datos segment
+.DATA
 
-datos ends
+    a dw 0    ; es un entero
+.CODE
+start PROC
+mov ax, @data
+mov ds, ax
 
-codigo segment
-    assume cs:codigo, ds:datos, ss:pila
+mov ecx,8
+mov eax,6
+add eax,ecx ; resultado en eax
+ push eax
+pop eax  ;FIN EXPRESION 
+    MOV ax,0
+    CMP ax,0
+    JNZ elseLabel0 ; ahora viene codigo de if
+    JMP exitLabel1
+    elseLabel0: ; ahora viene codigo de else
+    exitLabel1: ;termina bloque if-else
 
-inicio:
-    MOV ax, datos
-    MOV ds, ax
 
 
     MOV ax, 4c00h
     INT 21h
 
+funcion2 proc near
+    ;guarda registros
+    ;cuerpo de la función:
+
+mov ecx,9
+mov eax,6
+add eax,ecx ; resultado en eax
+ push eax
+mov ecx,9
+mov eax,8
+mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+mov ecx,9
+pop eax
+ mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+mov ecx,8
+pop eax
+ mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+pop ecx
+ pop eax
+ mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+mov ecx,7
+mov eax,6
+mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+pop ecx
+ pop eax
+ sub eax,ecx ; resultado en eax
+ push eax
+pop eax  ;FIN EXPRESION 
+
+    ;saca registros
+funcion2 endp
+
 funcion1 proc near
     ;guarda registros
     ;cuerpo de la función:
 
+mov ecx,9
+mov eax,6
+add eax,ecx ; resultado en eax
+ push eax
+mov ecx,9
+mov eax,8
+mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+mov ecx,9
+pop eax
+ mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+mov ecx,8
+pop eax
+ mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+pop ecx
+ pop eax
+ mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+mov ecx,7
+mov eax,6
+mul cx ; resultado en dx:ax
+ mov cx, dx  ;move upper half(16 bits) of result in cx
+shl ecx, 16 ;shift the contents of ecx 16 bits to the left
+mov cx, ax  ;move lower half(16 bits) of result in cxpush ax
+push ecx
+pop ecx
+ pop eax
+ sub eax,ecx ; resultado en eax
+ push eax
+pop eax  ;FIN EXPRESION 
+
     ;saca registros
 funcion1 endp
 
-codigo ends
-end inicio
+start ENDP
+end start
