@@ -297,7 +297,6 @@ public class PilaSemantica {
                 }
             }
             generarArit = true;
-
         }
     }
     public void evalUnario(TablaSimbolos tabla){
@@ -447,7 +446,7 @@ public class PilaSemantica {
                 codigoActual = "";
                 numeroLineas = 0;//reseteamos
             }
-            
+            pop();
             huboElse = false;
         }
     }

@@ -107,9 +107,9 @@ non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista
 non terminal ElementosLista2, MasElementosLista2;
 non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario,OpBinarioB;
 non terminal Asignacion,Asignaciones;
-non terminal FuncionPredefinida,FuncionesPredefinidas, Input, Print,BloquePuntoComa;
+non terminal FuncionPredefinida,FuncionesPredefinidas, Input,InputFact, Print,BloquePuntoComa;
 non terminal CualquierCosas,CualquierCosa;
-non terminal TryExceptFinally, Try , Except , Finally,IntFuncion;
+non terminal TryExceptFinally, Try , Except , Finally,IntFuncion,IntFuncionFact;
 
 /* Prueba break,continue */
 non terminal BloquePuntoComaEspecial,CualquierCosaEspecial,CualquierCosasEspecial,errEspecial,IfEspecial,ElseEspecial,ElifEspecial,TryEspecial,ExceptEspecial,FinallyEspecial;
@@ -207,13 +207,13 @@ IfEspecial ::= iif:v {: pila.startIf(v,vleft,vright); :} ExpresionB {: pila.eval
  dosPuntos BloquePuntoComaEspecial ElifEspecial
 ;
 
-Elif ::= elif ExpresionB dosPuntos BloquePuntoComa Elif 
+Elif ::= elif ExpresionB {: pila.evalExpresion(tabla,null); pila.finExpresion();:} dosPuntos BloquePuntoComa Elif 
 | elif error:e {: parser.addError("Hay un error en la expresion del If" + 
 " (revisar dos puntos)."); :}
 dosPuntos BloquePuntoComa Elif
 | Else; 
 
-ElifEspecial ::= elif ExpresionB dosPuntos BloquePuntoComaEspecial ElifEspecial 
+ElifEspecial ::= elif ExpresionB {: pila.evalExpresion(tabla,null); pila.finExpresion();:} dosPuntos BloquePuntoComaEspecial ElifEspecial 
 | elif error:e {: parser.addError("Hay un error en la expresion del If" + 
 " (revisar dos puntos)."); :}
 dosPuntos BloquePuntoComaEspecial ElifEspecial
@@ -240,7 +240,7 @@ Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT 
 | range parenAbierto INT coma INT error:e {: parser.addError("Erro falta parentesis range o dos puntos."); :}
 | range errFor;
 
-While ::= wwhile ExpresionB dosPuntos BloquePuntoComaEspecial Else
+While ::= wwhile ExpresionB {: pila.evalExpresion(tabla,null); pila.finExpresion();:} dosPuntos BloquePuntoComaEspecial Else
 | wwhile parenAbierto parenCerrado dosPuntos BloquePuntoComaEspecial Else
 | wwhile error:e dosPuntos {: parser.addError("Hay un error en la expresionn del While" + 
 "."); :}  BloquePuntoComaEspecial Else
@@ -340,35 +340,38 @@ ExpresionesB ::= ExpresionesB ExpresionB | ;
 Asignaciones ::= Asignaciones Asignacion | ;
 FuncionesPredefinidas::= FuncionesPredefinidas FuncionPredefinida | ;
 
-FuncionPredefinida::= Input | Print | IntFuncion ;
-IntFuncion ::= intReservado:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto FuncionPredefinida parenCerrado 
-| intReservado:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto Funcion parenCerrado
-|intReservado:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto STRING parenCerrado 
+FuncionPredefinida::= InputFact | Print | IntFuncionFact ;
+IntFuncionFact ::= intReservado:v {:pila.registrarLiteral(v, "int" ,vleft, vright); pila.contadorExp+=1;pila.changeContInit(); :} parenAbierto IntFuncion
+| errInput;
+IntFuncion ::= STRING parenCerrado {: pila.changeContFin(); :} 
+| Funcion parenCerrado{: pila.changeContFin(); :}
+| FuncionPredefinida parenCerrado {: pila.changeContFin(); :}
 | errInput;
 
-Input ::= iinput:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto Expresion parenCerrado 
-| iinput:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto parenCerrado
-| iinput errInput 
+InputFact::= iinput:v {:pila.registrarLiteral(v, "string" ,vleft, vright); pila.contadorExp+=1; pila.changeContInit(); :} parenAbierto Input
+| iinput errInput ;
+Input ::=  Expresion {:pila.evalExpresion(tabla,null); pila.finExpresion();:} parenCerrado {: pila.changeContFin(); :}
+| parenCerrado {: pila.changeContFin(); :}
 | errInput;
-Print ::= pprint:v {:pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1; :} parenAbierto ElementosLista2 parenCerrado 
+Print ::= pprint parenAbierto ElementosLista2 parenCerrado 
 | errPrint
 | pprint parenAbierto errPrint parenCerrado;
 
-ElementosLista2::= Expresion MasElementosLista2;
-MasElementosLista2::= coma Expresion MasElementosLista2| ;
+ElementosLista2::= ExpresionGeneral {:pila.finExpresion();:} MasElementosLista2;
+MasElementosLista2::= coma ExpresionGeneral {:pila.finExpresion();:} MasElementosLista2| ;
 
 CodigoPrincipal::= {: pila.ambitoActual = "GLOBAL"; :} Variables CualquierCosas;
 CualquierCosas::= CualquierCosas CualquierCosa | ;
 CualquierCosasEspecial::= CualquierCosasEspecial CualquierCosaEspecial | ;
 
-CualquierCosa::= ExpresionGeneral {: pila.finExpresion(); :} |If | ForFact | While | Try | bbreak errEspecial |ccontinue errEspecial | rreturn Expresion 
+CualquierCosa::= ExpresionGeneral {: pila.finExpresion(); :} |If | ForFact | While | Try | bbreak errEspecial |ccontinue errEspecial | rreturn ExpresionGeneral {: pila.finExpresion(); :}
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
 | var errMalUbicacion | clas errMalUbicacion puntoComa 
 | ffinally errMalUbicacion dosPuntos
 | eelse errMalUbicacion dosPuntos 
 | elif errMalUbicacion dosPuntos;
 
-CualquierCosaEspecial::= ExpresionGeneral {: pila.finExpresion(); :} |IfEspecial | ForFact | While | TryEspecial | bbreak|ccontinue | rreturn Expresion 
+CualquierCosaEspecial::= ExpresionGeneral {: pila.finExpresion(); :} |IfEspecial | ForFact | While | TryEspecial | bbreak|ccontinue | rreturn ExpresionGeneral {: pila.finExpresion(); :} 
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
 | var errMalUbicacion | clas errMalUbicacion puntoComa 
 | ffinally errMalUbicacion dosPuntos

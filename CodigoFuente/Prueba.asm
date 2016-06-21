@@ -30,9 +30,26 @@ start PROC
     elseLabel2: ; no hubo else, va vacío
     exitLabel3: ;termina bloque if-else
 
-    JMP exitLabel3
-    elseLabel2: ; ahora viene codigo de else
-    exitLabel3: ;termina bloque if-else
+    JMP exitLabel1
+    elseLabel0: ; ahora viene codigo de else
+    MOV ecx,9  ;Codigo de suma
+    MOV eax,8
+    ADD eax,ecx ; resultado en eax
+    PUSH eax
+    MOV ecx,7  ;Codigo de multiplicacion
+    POP eax
+    MUL cx ; resultado en dx:ax
+    MOV cx, dx  ;move upper half(16 bits) of result in cx
+    SHL ecx, 16 ;shift the contents of ecx 16 bits to the left
+    MOV cx, ax  ;move lower half(16 bits) of result in cxpush ax
+    PUSH ecx
+    MOV ecx,8  ;Codigo de division
+    POP eax
+    DIV ecx ; resultado en eax
+    PUSH ecx
+    POP eax  ;FIN EXPRESION 
+    exitLabel1: ;termina bloque if-else
+
 
 
 
