@@ -47,16 +47,16 @@ public class GeneradorAritmetico {
         if(val1.valor == "POP")
             result += popCode();
         else
-            result += "mov ecx , " + val1.valor+"\n";
+            result += "    MOV ecx , " + val1.valor+"\n";
         
-        result += "mov edx,ecx" +"\n";
+        result += "    MOV edx,ecx" +"\n";
         
         if(val2.valor == "POP")
             result += popCode();
         else
-            result += "mov ecx , " + val2.valor +"\n";
+            result += "    MOV ecx , " + val2.valor +"\n";
         
-        result += "mov eax,ecx\nmul dx\npush eax\n";
+        result += "    MOV eax,ecx\n    MUL dx\n    PUSH eax\n";
         
         val1.valor = "POP";
         System.out.println(result);
@@ -66,23 +66,23 @@ public class GeneradorAritmetico {
         
     }
     private static String popCode(){
-        return "pop ecx\n ";
+        return "    POP ecx\n ";
     }
     private static void generarSuma(String val1,String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "pop ecx\n ";
+            pila.codigoActual += "    POP ecx\n ";
         else
-            pila.codigoActual += "mov ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"\n";
         
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "pop eax\n ";
+            pila.codigoActual += "    POP eax\n ";
         else
-            pila.codigoActual += "mov eax," + val1 + "\n";
+            pila.codigoActual += "    MOV eax," + val1 + "\n";
         
         pila.numeroLineas++;
-        pila.codigoActual += "add eax,ecx ; resultado en eax\n push eax\n";
+        pila.codigoActual += "    ADD eax,ecx ; resultado en eax\n    PUSH eax\n";
         pila.numeroLineas++;
         pila.numeroLineas++;
         
@@ -90,100 +90,100 @@ public class GeneradorAritmetico {
     
     private static void generarResta(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "pop ecx\n ";
+            pila.codigoActual += "    POP ecx\n ";
         else
-            pila.codigoActual += "mov ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "pop eax\n ";
+            pila.codigoActual += "    POP eax\n ";
         else
-            pila.codigoActual += "mov eax," + val1 + "\n";
+            pila.codigoActual += "    MOV eax," + val1 + "\n";
         
         pila.numeroLineas++;
-        pila.codigoActual += "sub eax,ecx ; resultado en eax\n push eax\n";
+        pila.codigoActual += "   SUB eax,ecx ; resultado en eax\n    PUSH eax\n";
         pila.numeroLineas++;
         pila.numeroLineas++;
     }
     
     private static void generarMul(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "pop ecx\n ";
+            pila.codigoActual += "    POP ecx\n";
         else
-            pila.codigoActual += "mov ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "pop eax\n ";
+            pila.codigoActual += "    POP eax\n";
         else
-            pila.codigoActual += "mov eax," + val1 + "\n";
+            pila.codigoActual += "    MOV eax," + val1 + "\n";
         
         pila.numeroLineas++;
         
-        pila.codigoActual += "mul cx ; resultado en dx:ax\n mov cx, dx  ;move upper half(16 bits) of result in cx\n" +
-       "shl ecx, 16 ;shift the contents of ecx 16 bits to the left\n" +
-       "mov cx, ax  ;move lower half(16 bits) of result in cxpush ax\n"+
-       "push ecx\n";
+        pila.codigoActual += "    MUL cx ; resultado en dx:ax\n    MOV cx, dx  ;move upper half(16 bits) of result in cx\n" +
+       "    SHL ecx, 16 ;shift the contents of ecx 16 bits to the left\n" +
+       "    MOV cx, ax  ;move lower half(16 bits) of result in cxpush ax\n"+
+       "    PUSH ecx\n";
         pila.numeroLineas += 5;
     }
      private static void generarDiv(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "pop ecx\n ";
+            pila.codigoActual += "    POP ecx\n ";
         else
-            pila.codigoActual += "mov ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "pop eax\n ";
+            pila.codigoActual += "    POP eax\n ";
         else
-            pila.codigoActual += "mov eax," + val1 + "\n";
+            pila.codigoActual += "    MOV eax," + val1 + "\n";
         
         pila.numeroLineas++;
         
-        pila.codigoActual += "div ecx ; resultado en eax"+"push ecx\n";
+        pila.codigoActual += "    DIV ecx ; resultado en eax\n"+"    PUSH ecx\n";
         pila.numeroLineas += 2;
     }
      private static void generarModulo(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "pop ecx\n ";
+            pila.codigoActual += "    POP ecx\n ";
         else
-            pila.codigoActual += "mov ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "pop eax\n ";
+            pila.codigoActual += "    POP eax\n ";
         else
-            pila.codigoActual += "mov eax," + val1 + "\n";
+            pila.codigoActual += "    MOV eax," + val1 + "\n";
         
         pila.numeroLineas++;
         
-        pila.codigoActual += "div ecx ; resultado en edx"+"push edx\n";
+        pila.codigoActual += "    DIV ecx ; resultado en edx\n"+"    PUSH edx\n";
         pila.numeroLineas += 2;
     }
      private static void generarPot(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "pop ecx\n ";
+            pila.codigoActual += "    POP ecx\n ";
         else
-            pila.codigoActual += "mov ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"\n";
         
         
-        pila.codigoActual += "shl ecx,16\nshr ecx,16 ;limpia ecx para que solo quede cx debido a un valor muy alto\n";
+        pila.codigoActual += "    SHL ecx,16\n    SHR ecx,16 ;limpia ecx para que solo quede cx debido a un valor muy alto\n";
         pila.numeroLineas+=3;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "pop eax\n ";
+            pila.codigoActual += "    POP eax\n ";
         else
-            pila.codigoActual += "mov eax," + val1 + "\n";
+            pila.codigoActual += "    MOV eax," + val1 + "\n";
         
-        pila.codigoActual += "shl eax,16\nshr eax,16 ;limpia eax para que solo quede ax debido a un valor muy alto\n";
-        pila.codigoActual += "sig:\n mul ax \n loop sig \n";
+        pila.codigoActual += "    SHL eax,16\n    SHR eax,16 ;limpia eax para que solo quede ax debido a un valor muy alto\n";
+        pila.codigoActual += "    sig:\n    MUL ax \n    LOOP sig \n";
         
         pila.numeroLineas += 6;
         
-        pila.codigoActual += "; resultado en dx:ax\n mov cx, dx  ;move upper half(16 bits) of result in cx\n" +
-       "shl ecx, 16 ;shift the contents of ecx 16 bits to the left\n" +
-       "mov cx, ax  ;move lower half(16 bits) of result in cxpush ax\n"+
-       "push ecx\n";
+        pila.codigoActual += "; resultado en dx:ax\n    MOV cx, dx  ;move upper half(16 bits) of result in cx\n" +
+       "    SHL ecx, 16 ;shift the contents of ecx 16 bits to the left\n" +
+       "    MOV cx, ax  ;move lower half(16 bits) of result in cxpush ax\n"+
+       "    PUSH ecx\n";
         pila.numeroLineas += 5;
     }
 }

@@ -25,8 +25,8 @@ public class GeneradorCodigo {
         writer.println("");
         writer.println(".CODE");
         writer.println("start PROC");
-        writer.println("mov ax, @data");
-        writer.println("mov ds, ax");
+        writer.println("    MOV ax, @data");
+        writer.println("    MOV ds, ax");
         writer.println();
         lineaA = 10;
         finalizarCodigo();

@@ -14,6 +14,7 @@ public class PilaSemantica {
     public Integer numeroLineas;//numero de lineas a aumentar
     public boolean errorSintactico;
     public boolean generarArit = true;
+    public boolean huboElse =  false;
     
     public PilaSemantica(){
         lista = new ArrayList();
@@ -271,7 +272,7 @@ public class PilaSemantica {
                 ar.print();
                 System.out.println("se genera expresion");
                 ar.generarCodigo(this);
-                codigoActual += "pop eax  ;FIN EXPRESION \n";
+                codigoActual += "    POP eax  ;FIN EXPRESION \n";
                 numeroLineas++;
                 if(ambitoActual.equals("GLOBAL")){
                     System.out.println(numeroLineas);
@@ -387,7 +388,9 @@ public class PilaSemantica {
     }
     
     public void startElse(){
+        
         if(!errorSintactico){
+            huboElse = true;
             RegistroSemantico iff =  this.getPrimerIF();
             codigoActual += "    JMP " + iff.exitLabel + "\n";
             numeroLineas++;
@@ -400,6 +403,12 @@ public class PilaSemantica {
     public void endIf(TablaSimbolos tabla){
         if(!errorSintactico){
             RegistroSemantico iff =  this.getPrimerIF();
+            if(!huboElse){
+                codigoActual += "    JMP " + iff.exitLabel + "\n";
+                numeroLineas++;
+                codigoActual += "    " + iff.elseLabel + ": ; no hubo else, va vacío\n";
+                numeroLineas++;
+            }
             codigoActual += "    " + iff.exitLabel + ": ;termina bloque if-else\n";
             numeroLineas++;
             numeroLineas++;
@@ -411,6 +420,7 @@ public class PilaSemantica {
                 numeroLineas = 0;//reseteamos
             }
             pop();
+            huboElse = false;
         }
     }
     /*private boolean validarTipos(RegistroSemantico Exp2, RegistroSemantico Exp1, TablaSimbolos tabla,ArrayList<RegistroSemantico> lista,RegistroSemantico op){
