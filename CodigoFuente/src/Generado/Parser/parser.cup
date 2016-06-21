@@ -103,7 +103,7 @@ non terminal NombreFuncion;
 
 
 /* Común para todos */
-non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionGeneral,ExpresionesB,ExpresionOP,ExpresionBol,ExpresionUnario,ExpresionBinaria ;
+non terminal Expresion,ExpresionB,Literal,Lista,ElementosLista,MasElementosLista, Expresiones,ExpresionGeneral,ExpresionesB,ExpresionOP,ExpresionBol,ExpresionUnario,ExpresionBinaria,ExpresionAsignacion ;
 non terminal ElementosLista2, MasElementosLista2;
 non terminal OpAritmeticos, OpLogicos, OpBinario, OpUnario,OpBinarioB;
 non terminal Asignacion,Asignaciones;
@@ -183,11 +183,11 @@ DefVariables::= coma identificador:v {: pila.recuerdaId(v,"VARIABLE",vleft,vrigh
 
 
 /*---------------------------------------------------------------------------------------*/
-Funcion::= identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); :} parenAbierto Parametros
+Funcion::= identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); pila.changeContInit(); :} parenAbierto Parametros
 | identificador:v {:pila.registrarFuncion(v, vleft, vright, tabla); :} errParen parenCerrado
 ;
 
-Parametros ::= ExpresionGeneral Parametro {:pila.evalFuncion(tabla); :} | parenCerrado {:pila.evalFuncion(tabla); :} 
+Parametros ::= ExpresionGeneral Parametro {:pila.evalFuncion(tabla); pila.changeContFin(); :} | parenCerrado {:pila.evalFuncion(tabla); pila.changeContFin(); :} 
 |errParen
 ;
 Parametro ::= coma ExpresionGeneral Parametro | parenCerrado | errParametro parenCerrado ;
@@ -294,7 +294,7 @@ FinallyEspecial::= ffinally dosPuntos BloquePuntoComaEspecial
 ;
 
 
-Literal ::= INT:v {:pila.registrarLiteral(v, "int" ,vleft, vright); System.out.println(v); RESULT = new Nodo(null,null, v); :}
+Literal ::= INT:v {:pila.registrarLiteral(v, "int" ,vleft, vright); RESULT = new Nodo(null,null, v); :}
 |FLOAT:v          {:pila.registrarLiteral(v, "float" ,vleft, vright); :}
 |CHAR:v           {:pila.registrarLiteral(v, "char" ,vleft, vright); :}
 |STRING:v         {:pila.registrarLiteral(v, "string" ,vleft, vright); :}
@@ -314,7 +314,8 @@ Expresion ::= Literal:v {: pila.contadorExp+=1; RESULT = v; :}|Lista|identificad
         | errParen parenCerrado;
 ExpresionOP ::= Expresion:e1 OpAritmeticos:v Expresion:e2 {: RESULT = new Nodo(e1,e2,v);:};
 ExpresionGeneral ::= Expresion:v {: pila.evalExpresion(tabla,v);   :}
-|ExpresionUnario ;
+|ExpresionUnario
+|ExpresionAsignacion ;
 
 ExpresionBol::= Expresion OpBinarioB Expresion ;
 ExpresionUnario ::= OpUnario Expresion:v {: pila.generarArit = false;pila.evalExpresion(tabla,null); pila.evalUnario(tabla);:};
@@ -325,13 +326,13 @@ ExpresionBinaria ::= Expresion OpBits Expresion;
 
 ExpresionB ::= ffalse:v {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1;pila.generarArit = false; :}
 | ttrue:v               {:pila.registrarLiteral(v, "boolean" ,vleft, vright); pila.contadorExp+=1;pila.generarArit = false;:}
-| Funcion {: pila.contadorExp++; :}
+| Funcion {: pila.contadorExp++;:}
 | opNot:v {:pila.registrarOperador(v, "NOT" ,vleft, vright); :} Expresion  
 | ExpresionBol 
 | parenAbierto ExpresionB parenCerrado ;
 
-Expresion ::= identificador:c {:pila.registrarId(c, cleft, cright, tabla); pila.contadorExp+=1; :} 
-opAsignaciones:v {:pila.registrarOperador(v, "ASIGNACION" ,vleft, vright); :} Expresion;
+ExpresionAsignacion ::= identificador:c {:pila.registrarId(c, cleft, cright, tabla); :} 
+opAsignaciones Expresion:v {: pila.generarArit = false;pila.evalExpresion(tabla,null); pila.evalAsignacion(tabla);:};
 
 
 Expresiones ::= Expresiones Expresion | ;

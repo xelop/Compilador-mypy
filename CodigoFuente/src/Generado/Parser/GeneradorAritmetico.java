@@ -13,7 +13,6 @@ import java.util.ArrayList;
  */
 public class GeneradorAritmetico {
     public static void generarOperacion(String operacion, String val1, String val2, PilaSemantica pila){
-        System.out.println(operacion);
         switch(operacion){
             case "+": 
                 generarSuma(val1,val2,pila);
@@ -63,9 +62,9 @@ public class GeneradorAritmetico {
     }
     private static void generarSuma(String val1,String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n";
+            pila.codigoActual += "    POP ecx  ;Codigo de suma\n";
         else
-            pila.codigoActual += "    MOV ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"  ;Codigo de suma\n";
         
         pila.numeroLineas++;
         
@@ -83,9 +82,9 @@ public class GeneradorAritmetico {
     
     private static void generarResta(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n";
+            pila.codigoActual += "    POP ecx  ;Codigo de resta\n";
         else
-            pila.codigoActual += "    MOV ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"  ;Codigo de resta\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
@@ -101,9 +100,9 @@ public class GeneradorAritmetico {
     
     private static void generarMul(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n";
+            pila.codigoActual += "    POP ecx  ;Codigo de multiplicacion\n";
         else
-            pila.codigoActual += "    MOV ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"  ;Codigo de multiplicacion\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
@@ -121,9 +120,9 @@ public class GeneradorAritmetico {
     }
      private static void generarDiv(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n";
+            pila.codigoActual += "    POP ecx  ;Codigo de division\n";
         else
-            pila.codigoActual += "    MOV ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"  ;Codigo de division\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
@@ -138,9 +137,9 @@ public class GeneradorAritmetico {
     }
      private static void generarModulo(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n";
+            pila.codigoActual += "    POP ecx  ;Codigo de modulo\n";
         else
-            pila.codigoActual += "    MOV ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"  ;Codigo de modulo\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
@@ -155,9 +154,9 @@ public class GeneradorAritmetico {
     }
      private static void generarPot(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n";
+            pila.codigoActual += "    POP ecx  ;Codigo de potencia\n";
         else
-            pila.codigoActual += "    MOV ecx," + val2 +"\n";
+            pila.codigoActual += "    MOV ecx," + val2 +"  ;Codigo de potencia\n";
         
         
         pila.codigoActual += "    SHL ecx,16\n    SHR ecx,16 ;limpia ecx para que solo quede cx debido a un valor muy alto\n";

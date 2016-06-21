@@ -1,20 +1,21 @@
 def funcion1(int x,int y):
 	
 ;
-def funcion2(int x,int y):
+def funcion2(int a):
 	6*7-8**9/9%8*(6+9)
 ;
 int a
 
 
+
 if True:
-	2+2
+	6+2
 	if True:
 	3+3
 	;	
 ;
 else:
-	4+4
+	
 ;
 
 

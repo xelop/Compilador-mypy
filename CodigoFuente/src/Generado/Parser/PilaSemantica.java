@@ -9,6 +9,7 @@ public class PilaSemantica {
     ArrayList<RegistroSemantico> lista;
     public String ambitoActual;//global, local, de clase, etc.
     public int contadorExp = 0;
+    public int contAux = 0;
     public int contador;//para generar etiquetas
     public String codigoActual;
     public Integer numeroLineas;//numero de lineas a aumentar
@@ -27,6 +28,16 @@ public class PilaSemantica {
     
     public void setError(){
         errorSintactico = true;
+    }
+    public void changeContInit(){
+        contAux = contadorExp;
+
+        contadorExp = 0;
+    }
+    public void changeContFin(){
+        contadorExp = contAux;
+
+        contAux = 0;
     }
     
     public void push(RegistroSemantico pRegistro){
@@ -111,6 +122,7 @@ public class PilaSemantica {
             RegistroSemantico registro = new RegistroSemantico("FUNCIONE",pValor, "","",pLinea,pColumna);
             tabla.buscarFuncion("FUNCION",pValor.toString(),pLinea);
             push(registro);
+            
         }
     }
     public void registrarId(Object pValor, int pLinea, int pColumna, TablaSimbolos tabla){
@@ -179,7 +191,7 @@ public class PilaSemantica {
         
     }
     public void evalExpresion(TablaSimbolos tabla, Object arbol){
-        
+
         if(!errorSintactico){
             boolean primerLiteral = false;
             boolean comparacion = false;
@@ -189,11 +201,14 @@ public class PilaSemantica {
             String literal = "";
             RegistroSemantico primerRegistro = null;
             //Cambiar idents por su tipo
+            if(contadorExp <= 1)
+                generarArit = false;
             for(int index = lista.size()-contadorExp; index < lista.size(); index++){
                 lista.set(index,transformarIdent(lista.get(index), tabla));
+                
             }
 
-            System.out.println(lista);
+
 
             for(int index = lista.size()-contadorExp; index < lista.size(); index++){
                 RegistroSemantico reg = lista.get(index);
@@ -202,7 +217,10 @@ public class PilaSemantica {
                     primerRegistro= reg;
                     primerLiteral = true;
                 }else{
-                    if(reg.tipo.equals("LITERAL")){
+                    if(reg.tipo.equals("FUNCIONE")){
+                            generarArit = false;
+                    }
+                    else if(reg.tipo.equals("LITERAL")){
                         if((literal.equals("int") || literal.equals("boolean") || literal.equals("float")) && 
                                 (reg.dato.equals("float") || (reg.dato.equals("int")) || (reg.dato.equals("boolean")) )){
                             error = "";
@@ -212,7 +230,7 @@ public class PilaSemantica {
                             error = "";
                             generarArit = false;
                         } else if (!reg.dato.equals(literal)){
-                            error = "3Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                            error = "Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
                             generarArit = false;
                             break;
                         }
@@ -220,7 +238,7 @@ public class PilaSemantica {
                             floatFound = true;
                             generarArit = false;
                             if(binary){
-                               error = "4Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                               error = "Error en los tipos de las expresion (solo ints). En el valor: "+ reg.valor+ " Linea: " + reg.linea;
                                break;
                             }
                         }
@@ -239,12 +257,12 @@ public class PilaSemantica {
                             generarArit = false;
                         }
                         else if((literal.equals("char") || literal.equals("string") ) && !(reg.tipo.equals("SUMA")|| reg.tipo.equals("COMPESPECIFICO"))){
-                            error = "5Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                            error = "Error en los tipos de las expresiones, string o char solo con suma o comparacion general. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
                             generarArit = false;
                         } else if(reg.tipo.equals("BINARIO")){
                             generarArit = false;
                             if(floatFound){
-                                error = "6Error en los tipos de las expresiones. En el valor: "+ reg.valor+ " Linea: " + reg.linea;
+                                error = "Error en los tipos de las expresiones (solo ints). En el valor: "+ reg.valor+ " Linea: " + reg.linea;
                                 break;
                             }else
                                 binary = true;
@@ -262,27 +280,24 @@ public class PilaSemantica {
                 tabla.errores.add(error);
             }
             vaciarPilaN(contadorExp);
-            System.out.println(lista);
+
             push(primerRegistro);
             contadorExp = 0;
-            System.out.println(lista);
-            System.out.println(generarArit);
+
             if(generarArit){
                 Nodo ar = (Nodo) arbol;
-                ar.print();
-                System.out.println("se genera expresion");
                 ar.generarCodigo(this);
                 codigoActual += "    POP eax  ;FIN EXPRESION \n";
                 numeroLineas++;
                 if(ambitoActual.equals("GLOBAL")){
-                    System.out.println(numeroLineas);
-                    System.out.println(codigoActual);
+
                     tabla.generador.insertarCodigo(codigoActual, "PROGRAMA", numeroLineas);
                     codigoActual = "";
                     numeroLineas = 0;
                 }
             }
             generarArit = true;
+
         }
     }
     public void evalUnario(TablaSimbolos tabla){
@@ -290,6 +305,19 @@ public class PilaSemantica {
         RegistroSemantico reg = lista.get(lista.size()-1);
         if(reg.dato.equals("char")||reg.dato.equals("string"))
             tabla.errores.add("Error en los tipos del operador unario. En el valor: "+ reg.valor+ " Linea: " + reg.linea);
+    }
+    public void evalAsignacion(TablaSimbolos tabla){
+        RegistroSemantico Exp1 = pop();
+        RegistroSemantico Exp2 = transformarIdent(pop(),tabla);
+        if(Exp1.dato.equals(Exp2.dato)){
+            push(Exp2);
+            contadorExp=0;
+        }else{
+            tabla.errores.add("Error en los tipos de la asignacion. En el valor: "+ Exp1.valor+ " Linea: " + Exp1.linea);
+            vaciarPilaN(contadorExp+contadorExp);
+            push(Exp2);
+            contadorExp = 0;
+        }
     }
     
     //Metodo para limpiar pila cuando se ejecuta desde CualquierCosa
@@ -324,7 +352,7 @@ public class PilaSemantica {
             if(registro.tipo.equals("IDENTIFICADORE")){
                 
                 String dato = registro.dato;
-                System.out.println(dato);
+               
                 RegistroSemantico funcion = getPrimeraFuncion();
                 if(funcion == null)
                     registro.dato = InfoFuncion.getTipoVariable( registro.valor.toString(), ambitoActual,
@@ -419,7 +447,7 @@ public class PilaSemantica {
                 codigoActual = "";
                 numeroLineas = 0;//reseteamos
             }
-            pop();
+            
             huboElse = false;
         }
     }
