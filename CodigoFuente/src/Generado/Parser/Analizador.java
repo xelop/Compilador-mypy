@@ -4818,7 +4818,7 @@ pila.registrarId(v, vleft, vright, tabla); pila.contadorExp+=1;
           case 233: // CualquierCosaEspecial ::= ExpresionGeneral 
             {
               Object RESULT =null;
-
+		 pila.finExpresion(); 
               CUP$Analizador$result = parser.getSymbolFactory().newSymbol("CualquierCosaEspecial",104, ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), ((java_cup.runtime.Symbol)CUP$Analizador$stack.peek()), RESULT);
             }
           return CUP$Analizador$result;

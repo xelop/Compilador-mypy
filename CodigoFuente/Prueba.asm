@@ -55,26 +55,27 @@ funcion2 proc near
     ADD eax,ecx ; resultado en eax
     PUSH eax
     MOV ecx,9
+    SHL ecx,16
+    SHR ecx,16 ;limpia ecx para que solo quede cx debido a un valor muy alto
     MOV eax,8
-    MUL cx ; resultado en dx:ax
+    SHL eax,16
+    SHR eax,16 ;limpia eax para que solo quede ax debido a un valor muy alto
+    sig:
+    MUL ax 
+    LOOP sig 
+; resultado en dx:ax
     MOV cx, dx  ;move upper half(16 bits) of result in cx
     SHL ecx, 16 ;shift the contents of ecx 16 bits to the left
     MOV cx, ax  ;move lower half(16 bits) of result in cxpush ax
     PUSH ecx
     MOV ecx,9
     POP eax
-    MUL cx ; resultado en dx:ax
-    MOV cx, dx  ;move upper half(16 bits) of result in cx
-    SHL ecx, 16 ;shift the contents of ecx 16 bits to the left
-    MOV cx, ax  ;move lower half(16 bits) of result in cxpush ax
+    DIV ecx ; resultado en eax
     PUSH ecx
     MOV ecx,8
     POP eax
-    MUL cx ; resultado en dx:ax
-    MOV cx, dx  ;move upper half(16 bits) of result in cx
-    SHL ecx, 16 ;shift the contents of ecx 16 bits to the left
-    MOV cx, ax  ;move lower half(16 bits) of result in cxpush ax
-    PUSH ecx
+    DIV ecx ; resultado en edx
+    PUSH edx
     POP ecx
     POP eax
     MUL cx ; resultado en dx:ax

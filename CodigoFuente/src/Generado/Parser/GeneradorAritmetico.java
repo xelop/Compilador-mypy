@@ -25,23 +25,18 @@ public class GeneradorAritmetico {
                 generarMul(val1,val2,pila);
                 break;
             case "/": 
-                generarMul(val1,val2,pila);
+                generarDiv(val1,val2,pila);
                 break;
             case "%": 
-                generarMul(val1,val2,pila);
+                generarModulo(val1,val2,pila);
                 break;
             case "**": 
-                generarMul(val1,val2,pila);
+                generarPot(val1,val2,pila);
                 break;
                 
         }
     }
-    private void evalParen(){
-        
-    }
-    private void evalPot(){
-        
-    }
+
     private static RegistroSemantico evalTercerNivel(RegistroSemantico val1, RegistroSemantico val2){
         String result = "";
         if(val1.valor == "POP")
@@ -62,9 +57,7 @@ public class GeneradorAritmetico {
         System.out.println(result);
         return val1;
     }
-    private void evalSuma(){
-        
-    }
+
     private static String popCode(){
         return "    POP ecx\n ";
     }

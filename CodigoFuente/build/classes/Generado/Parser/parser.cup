@@ -367,7 +367,7 @@ CualquierCosa::= ExpresionGeneral {: pila.finExpresion(); :} |If | ForFact | Whi
 | eelse errMalUbicacion dosPuntos 
 | elif errMalUbicacion dosPuntos;
 
-CualquierCosaEspecial::= ExpresionGeneral |IfEspecial | ForFact | While | TryEspecial | bbreak|ccontinue | rreturn Expresion 
+CualquierCosaEspecial::= ExpresionGeneral {: pila.finExpresion(); :} |IfEspecial | ForFact | While | TryEspecial | bbreak|ccontinue | rreturn Expresion 
 | def errMalUbicacion dosPuntos | eexcept errMalUbicacion dosPuntos 
 | var errMalUbicacion | clas errMalUbicacion puntoComa 
 | ffinally errMalUbicacion dosPuntos
