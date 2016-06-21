@@ -164,7 +164,15 @@ public class PilaSemantica {
         //evalua si una funcion cumple con numero de parmaetros y tipo adecuado
         if(!errorSintactico){
             RegistroSemantico funcionE = getPrimeraFuncionE();
-
+            Boolean encontrada = false;
+            for (Simbolo s: tabla.simbolos){
+                if(s.funcion.equals(funcionE.valor)){
+                    encontrada = true;
+                }
+            }
+            if(!encontrada){
+                return;
+            }
             Integer canParametrosActual = InfoFuncion.getNumParametros(funcionE.valor.toString(), this);
             Integer canParametrosReal = InfoFuncion.getNumParametros(funcionE.valor.toString(), tabla);
             if(!Objects.equals(canParametrosReal, canParametrosActual)){

@@ -32,7 +32,9 @@ public class GeneradorAritmetico {
             case "**": 
                 generarPot(val1,val2,pila);
                 break;
-                
+            /*case "//": 
+                generarDiv(val1,val2,pila); 
+                break; */
         }
     }
 
@@ -172,7 +174,7 @@ public class GeneradorAritmetico {
         
         pila.numeroLineas += 6;
         
-        pila.codigoActual += "; resultado en dx:ax\n    MOV cx, dx  ;move upper half(16 bits) of result in cx\n" +
+        pila.codigoActual += "    ; resultado en dx:ax\n    MOV cx, dx  ;move upper half(16 bits) of result in cx\n" +
        "    SHL ecx, 16 ;shift the contents of ecx 16 bits to the left\n" +
        "    MOV cx, ax  ;move lower half(16 bits) of result in cxpush ax\n"+
        "    PUSH ecx\n";

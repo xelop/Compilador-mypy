@@ -229,12 +229,12 @@ ElseEspecial::= eelse {: pila.startElse(); :} dosPuntos BloquePuntoComaEspecial
 |
 ;
 
-ForFact ::= ffor identificador in For dosPuntos BloquePuntoComaEspecial
+ForFact ::= ffor identificador:v {: pila.registrarId(v,vleft,vright, tabla); pila.finExpresion(); :} in For dosPuntos BloquePuntoComaEspecial
 | ffor errFor in For dosPuntos BloquePuntoComaEspecial
-| ffor identificador in For errFor dosPuntos BloquePuntoComaEspecial
-| ffor identificador errIn For dosPuntos BloquePuntoComaEspecial ;
+| ffor identificador:v {: pila.registrarId(v,vleft,vright, tabla); pila.finExpresion(); :}  in For errFor dosPuntos BloquePuntoComaEspecial
+| ffor identificador:v {: pila.registrarId(v,vleft,vright, tabla); pila.finExpresion(); :} errIn For dosPuntos BloquePuntoComaEspecial ;
 
-For ::= STRING | identificador | Range | errFor ;
+For ::= STRING | identificador:v {: pila.registrarId(v,vleft,vright, tabla); pila.finExpresion(); :} | Range | errFor ;
 Range ::= range parenAbierto INT coma INT parenCerrado | range parenAbierto INT parenCerrado | range errRange parenCerrado
 | range parenAbierto INT error:e  {: parser.addError("Erro falta parentesis range o puntoComa."); :} 
 | range parenAbierto INT coma INT error:e {: parser.addError("Erro falta parentesis range o dos puntos."); :}
@@ -409,7 +409,7 @@ HeaderOOP ::= clas identificador dosPuntos BloqueOOP| clas errHeaderOOP BloqueOO
 OpAritmeticos ::= Expresion:e1 opSuma:v Expresion:e2 {:pila.registrarOperador(v, "SUMA" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :} 
 | Expresion:e1 opResta:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :} 
 | Expresion:e1 opMultiplicacion:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
-| Expresion:e1 opDivisionE:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); pila.generarArit = false; :}  
+| Expresion:e1 opDivisionE:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); pila.generarArit = false; pila.contadorExp++; :}  
 | Expresion:e1 opDivision:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
 | Expresion:e1 opModulo:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  
 | Expresion:e1 opPotencia:v Expresion:e2 {:pila.registrarOperador(v, "OPERADOR" ,vleft, vright); RESULT = new Nodo(e1,e2,v); pila.contadorExp+=1; :}  ;
