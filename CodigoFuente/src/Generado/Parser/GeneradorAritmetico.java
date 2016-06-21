@@ -70,14 +70,14 @@ public class GeneradorAritmetico {
     }
     private static void generarSuma(String val1,String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n ";
+            pila.codigoActual += "    POP ecx\n";
         else
             pila.codigoActual += "    MOV ecx," + val2 +"\n";
         
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "    POP eax\n ";
+            pila.codigoActual += "    POP eax\n";
         else
             pila.codigoActual += "    MOV eax," + val1 + "\n";
         
@@ -90,18 +90,18 @@ public class GeneradorAritmetico {
     
     private static void generarResta(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n ";
+            pila.codigoActual += "    POP ecx\n";
         else
             pila.codigoActual += "    MOV ecx," + val2 +"\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "    POP eax\n ";
+            pila.codigoActual += "    POP eax\n";
         else
             pila.codigoActual += "    MOV eax," + val1 + "\n";
         
         pila.numeroLineas++;
-        pila.codigoActual += "   SUB eax,ecx ; resultado en eax\n    PUSH eax\n";
+        pila.codigoActual += "    SUB eax,ecx ; resultado en eax\n    PUSH eax\n";
         pila.numeroLineas++;
         pila.numeroLineas++;
     }
@@ -128,13 +128,13 @@ public class GeneradorAritmetico {
     }
      private static void generarDiv(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n ";
+            pila.codigoActual += "    POP ecx\n";
         else
             pila.codigoActual += "    MOV ecx," + val2 +"\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "    POP eax\n ";
+            pila.codigoActual += "    POP eax\n";
         else
             pila.codigoActual += "    MOV eax," + val1 + "\n";
         
@@ -145,13 +145,13 @@ public class GeneradorAritmetico {
     }
      private static void generarModulo(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n ";
+            pila.codigoActual += "    POP ecx\n";
         else
             pila.codigoActual += "    MOV ecx," + val2 +"\n";
         pila.numeroLineas++;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "    POP eax\n ";
+            pila.codigoActual += "    POP eax\n";
         else
             pila.codigoActual += "    MOV eax," + val1 + "\n";
         
@@ -162,7 +162,7 @@ public class GeneradorAritmetico {
     }
      private static void generarPot(String val1, String val2,PilaSemantica pila){
         if(val2.equals("POP"))
-            pila.codigoActual += "    POP ecx\n ";
+            pila.codigoActual += "    POP ecx\n";
         else
             pila.codigoActual += "    MOV ecx," + val2 +"\n";
         
@@ -171,7 +171,7 @@ public class GeneradorAritmetico {
         pila.numeroLineas+=3;
         
         if(val1.equals("POP"))
-            pila.codigoActual += "    POP eax\n ";
+            pila.codigoActual += "    POP eax\n";
         else
             pila.codigoActual += "    MOV eax," + val1 + "\n";
         

@@ -1282,21 +1282,21 @@ public class Analizador extends java_cup.runtime.lr_parser {
     "\025\116\032\102\037\135\040\103\060\074\071\105\075" +
     "\101\001\002\000\006\003\u0114\067\uffb3\001\002\000\004" +
     "\067\u0158\001\002\000\004\067\u0156\001\002\000\100\003" +
-    "\233\005\uff28\006\uff28\007\uff28\010\uff28\021\uff28\022\uff28" +
-    "\023\uff28\024\uff28\025\uff28\026\uff28\027\uff28\030\uff28\031" +
-    "\uff28\032\uff28\033\uff28\036\uff28\037\uff28\040\uff28\041\uff28" +
-    "\042\uff28\043\uff28\044\uff28\045\uff28\046\uff28\047\uff28\050" +
-    "\uff28\060\uff28\070\uff28\071\uff28\075\uff28\001\002\000\102" +
+    "\233\005\uff2a\006\uff2a\007\uff2a\010\uff2a\021\uff2a\022\uff2a" +
+    "\023\uff2a\024\uff2a\025\uff2a\026\uff2a\027\uff2a\030\uff2a\031" +
+    "\uff2a\032\uff2a\033\uff2a\036\uff2a\037\uff2a\040\uff2a\041\uff2a" +
+    "\042\uff2a\043\uff2a\044\uff2a\045\uff2a\046\uff2a\047\uff2a\050" +
+    "\uff2a\060\uff2a\070\uff2a\071\uff2a\075\uff2a\001\002\000\102" +
     "\002\uffb1\003\uffb1\005\uffb1\006\uffb1\007\uffb1\010\uffb1\021" +
     "\uffb1\022\uffb1\023\uffb1\024\uffb1\025\uffb1\026\uffb1\027\uffb1" +
     "\030\uffb1\031\uffb1\032\uffb1\033\uffb1\036\uffb1\037\uffb1\040" +
     "\uffb1\041\uffb1\042\uffb1\043\uffb1\044\uffb1\045\uffb1\046\uffb1" +
     "\047\uffb1\050\uffb1\060\uffb1\070\uffb1\071\uffb1\075\uffb1\001" +
-    "\002\000\100\003\233\005\uff28\006\uff28\007\uff28\010\uff28" +
-    "\021\uff28\022\uff28\023\uff28\024\uff28\025\uff28\026\uff28\027" +
-    "\uff28\030\uff28\031\uff28\032\uff28\033\uff28\036\uff28\037\uff28" +
-    "\040\uff28\041\uff28\042\uff28\043\uff28\044\uff28\045\uff28\046" +
-    "\uff28\047\uff28\050\uff28\060\uff28\070\uff28\071\uff28\075\uff28" +
+    "\002\000\100\003\233\005\uff2a\006\uff2a\007\uff2a\010\uff2a" +
+    "\021\uff2a\022\uff2a\023\uff2a\024\uff2a\025\uff2a\026\uff2a\027" +
+    "\uff2a\030\uff2a\031\uff2a\032\uff2a\033\uff2a\036\uff2a\037\uff2a" +
+    "\040\uff2a\041\uff2a\042\uff2a\043\uff2a\044\uff2a\045\uff2a\046" +
+    "\uff2a\047\uff2a\050\uff2a\060\uff2a\070\uff2a\071\uff2a\075\uff2a" +
     "\001\002\000\102\002\uffb2\003\uffb2\005\uffb2\006\uffb2\007" +
     "\uffb2\010\uffb2\021\uffb2\022\uffb2\023\uffb2\024\uffb2\025\uffb2" +
     "\026\uffb2\027\uffb2\030\uffb2\031\uffb2\032\uffb2\033\uffb2\036" +
@@ -2143,9 +2143,9 @@ public class Analizador extends java_cup.runtime.lr_parser {
     "\065\132\104\130\107\u0100\110\u0159\111\066\112\071\121" +
     "\125\123\077\126\117\135\140\137\143\140\127\150\133" +
     "\001\001\000\006\075\u0154\210\u0153\001\001\000\002\001" +
-    "\001\000\002\001\001\000\010\056\310\151\u0156\153\311" +
-    "\001\001\000\002\001\001\000\010\056\310\151\u0158\153" +
-    "\311\001\001\000\002\001\001\000\002\001\001\000\004" +
+    "\001\000\002\001\001\000\010\056\234\141\u0156\142\233" +
+    "\001\001\000\002\001\001\000\010\056\234\141\u0158\142" +
+    "\233\001\001\000\002\001\001\000\002\001\001\000\004" +
     "\206\u015b\001\001\000\002\001\001\000\010\056\234\141" +
     "\u015d\142\233\001\001\000\006\030\u014f\031\u015e\001\001" +
     "\000\002\001\001\000\010\056\234\141\u0160\142\233\001" +
@@ -3253,7 +3253,7 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 79: // Else ::= eelse NT$21 dosPuntos BloquePuntoComaEspecial 
+          case 79: // Else ::= eelse NT$21 dosPuntos BloquePuntoComa 
             {
               Object RESULT =null;
               // propagate RESULT from NT$21
@@ -3267,7 +3267,7 @@ pila.registrarFuncion(v, vleft, vright, tabla);
           return CUP$Analizador$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 80: // Else ::= eelse errElse dosPuntos BloquePuntoComaEspecial 
+          case 80: // Else ::= eelse errElse dosPuntos BloquePuntoComa 
             {
               Object RESULT =null;
 

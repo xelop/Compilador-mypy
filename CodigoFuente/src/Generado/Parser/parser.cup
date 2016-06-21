@@ -219,8 +219,8 @@ ElifEspecial ::= elif ExpresionB dosPuntos BloquePuntoComaEspecial ElifEspecial
 dosPuntos BloquePuntoComaEspecial ElifEspecial
 | ElseEspecial; 
 
-Else::= eelse:v {: pila.startElse(); :} dosPuntos BloquePuntoComaEspecial
-| eelse errElse dosPuntos BloquePuntoComaEspecial
+Else::= eelse:v {: pila.startElse(); :} dosPuntos BloquePuntoComa
+| eelse errElse dosPuntos BloquePuntoComa
 |
 ;
 
